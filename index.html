@@ -752,12 +752,12 @@
           const blob = new Blob([updatedHtml], { type: "text/html;charset=utf-8" });
           const link = document.createElement("a");
           link.href = URL.createObjectURL(blob);
-          link.download = "interactive_portfolio.html";
+          link.download = "index.html"; // GitHub 배포를 위해 파일명을 index.html로 다운로드
           document.body.appendChild(link);
           link.click();
           document.body.removeChild(link);
 
-          alert("수정한 카테고리/글/설정이 하드코딩으로 적용된 최신 interactive_portfolio.html 파일이 다운로드되었습니다!");
+          alert("수정한 내용이 모두 적용된 index.html 파일이 다운로드되었습니다!\n이 파일을 GitHub 저장소에 다시 올려주시면 웹에 반영됩니다.");
         })
         .catch(err => {
           let currentDoc = document.documentElement.outerHTML;
@@ -770,12 +770,12 @@
           const blob = new Blob(["<!DOCTYPE html>\n" + currentDoc], { type: "text/html;charset=utf-8" });
           const link = document.createElement("a");
           link.href = URL.createObjectURL(blob);
-          link.download = "interactive_portfolio.html";
+          link.download = "index.html";
           document.body.appendChild(link);
           link.click();
           document.body.removeChild(link);
 
-          alert("수정사항이 적용된 최신 HTML 파일이 다운로드되었습니다!");
+          alert("수정사항이 적용된 최신 index.html 파일이 다운로드되었습니다!");
         });
     }
 
