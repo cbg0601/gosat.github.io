@@ -146,7 +146,7 @@
     /* 가로 스크롤 컨테이너 (Horizontal Scroll) */
     .work-scroll-container {
       display: flex;
-      gap: 50px;
+      gap: 60px;
       overflow-x: auto;
       overflow-y: hidden;
       padding-bottom: 25px;
@@ -156,35 +156,38 @@
       -webkit-overflow-scrolling: touch;
     }
 
-    /* 얇고 은은한 회색 커스텀 스크롤바 */
+    /* 마우스를 가져갔을 때만 나타나는 스크롤바 */
     .work-scroll-container::-webkit-scrollbar {
-      height: 4px; /* 얇은 두께로 수정 */
+      height: 4px;
     }
     .work-scroll-container::-webkit-scrollbar-track {
-      background: rgba(255, 255, 255, 0.02);
+      background: transparent;
       border-radius: 4px;
     }
     .work-scroll-container::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.15); /* 눈에 안 띄는 은은한 회색 */
+      background: transparent; /* 기본 숨김 상태 */
       border-radius: 4px;
       transition: background 0.3s ease;
     }
+    .work-scroll-container:hover::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.2); /* 마우스 올렸을 때만 노출되는 은은한 회색 */
+    }
     .work-scroll-container::-webkit-scrollbar-thumb:hover {
-      background: rgba(255, 255, 255, 0.35); /* 마우스 올렸을 때만 살짝 강조 */
+      background: rgba(255, 255, 255, 0.45);
     }
 
-    /* 기존 메인 카드 사이즈 복원 (flex-basis: 580px) */
+    /* 카드 사이즈 대폭 키움 (flex: 0 0 720px) */
     .work-card-wrapper {
-      flex: 0 0 580px;
+      flex: 0 0 720px;
       perspective: 1000px;
       position: relative;
       scroll-snap-align: start;
     }
 
     .work-card {
-      position: relative; border-radius: 12px; overflow: hidden;
+      position: relative; border-radius: 14px; overflow: hidden;
       cursor: pointer; background-color: #121212; aspect-ratio: 16/9;
-      box-shadow: 0 15px 35px rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 20px 45px rgba(0,0,0,0.7); border: 1px solid rgba(255,255,255,0.08);
       will-change: transform; transform-style: preserve-3d;
       -webkit-tap-highlight-color: transparent; user-select: none;
     }
@@ -196,21 +199,21 @@
 
     .work-card-info {
       position: absolute; inset: 0;
-      background: linear-gradient(0deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.2) 60%, rgba(0,0,0,0) 100%);
-      padding: 35px; display: flex; flex-direction: column; justify-content: flex-end;
+      background: linear-gradient(0deg, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.2) 60%, rgba(0,0,0,0) 100%);
+      padding: 40px; display: flex; flex-direction: column; justify-content: flex-end;
       pointer-events: none; transform: translateZ(30px);
     }
 
     .work-card:hover img, .work-card:hover video { filter: brightness(1); }
 
-    .work-category { font-family: 'Syncopate', sans-serif; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 3px; color: #ffb703; margin-bottom: 8px; }
+    .work-category { font-family: 'Syncopate', sans-serif; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 3px; color: #ffb703; margin-bottom: 10px; }
     
     .work-title {
-      font-size: 1.8rem; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.5px;
+      font-size: 2rem; font-weight: 700; margin-bottom: 10px; letter-spacing: -0.5px;
       white-space: pre-line; line-height: 1.25;
     }
     .work-desc {
-      font-size: 0.95rem; color: #aaa; margin-bottom: 15px;
+      font-size: 1rem; color: #aaa; margin-bottom: 15px;
       white-space: pre-line; line-height: 1.5;
     }
 
