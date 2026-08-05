@@ -201,9 +201,7 @@
     .detail-category { font-family: 'Syncopate', sans-serif; color: #ffb703; letter-spacing: 3px; margin-bottom: 12px; font-size: 1rem; }
     .detail-title { font-size: 3.5rem; font-weight: 700; margin-bottom: 10px; word-break: break-word; }
 
-    /* 세부 페이지 통합 블록 컨테이너 (텍스트 & 미디어) */
     .detail-content-blocks { display: flex; flex-direction: column; gap: 40px; margin-top: 40px; }
-    
     .detail-block-item { position: relative; width: 100%; border-radius: 12px; }
     
     .detail-media-wrapper {
@@ -263,19 +261,13 @@
       width: 100%; padding: 12px; background: #222; border: 1px solid #444; border-radius: 6px;
       color: #fff; font-size: 0.95rem; font-family: inherit;
     }
-    .form-group textarea { resize: vertical; height: 100px; }
+    .form-group textarea { resize: vertical; height: 120px; }
     .modal-btns { display: flex; justify-content: flex-end; gap: 12px; margin-top: 30px; }
     .btn-cancel { background: transparent; border: 1px solid #555; color: #ccc; padding: 10px 20px; border-radius: 6px; cursor: pointer; }
     .btn-save { background: #fff; color: #000; border: none; padding: 10px 24px; border-radius: 6px; font-weight: bold; cursor: pointer; }
 
     .cat-input-row { display: flex; gap: 10px; margin-bottom: 10px; align-items: center; }
     .btn-delete-cat { background: #e63946; color: #fff; border: none; padding: 10px 14px; border-radius: 6px; cursor: pointer; }
-
-    .media-input-row { display: flex; gap: 8px; margin-bottom: 10px; align-items: center; }
-    .media-input-row input { flex: 1; }
-    .order-btn { background: #333; color: #fff; border: 1px solid #555; padding: 10px 12px; border-radius: 6px; cursor: pointer; }
-    .order-btn:hover { background: #ffb703; color: #000; }
-    .remove-media-row-btn { background: #e63946; color: #fff; border: none; padding: 10px 12px; border-radius: 6px; cursor: pointer; }
 
     /* Footer */
     footer { padding: 60px 50px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; background: #050505; }
@@ -322,7 +314,7 @@
 
   <header>
     <div class="logo-container">
-      <div class="logo" id="siteLogoText" onclick="showMainView()"></div>
+      <div class="logo" id="siteLogoText" onclick="handleLogoClick()"></div>
       <i class="fa-solid fa-pen-to-square inline-edit-icon" onclick="openSiteConfigModal()" title="Edit Logo Text"></i>
     </div>
     
@@ -358,7 +350,7 @@
   <!-- 세부 페이지 뷰 -->
   <div id="detailView">
     <div class="detail-nav-bar">
-      <button class="back-btn" onclick="showMainView()"><i class="fa-solid fa-arrow-left"></i> BACK TO LIST</button>
+      <button class="back-btn" onclick="handleBackBtnClick()"><i class="fa-solid fa-arrow-left"></i> BACK TO LIST</button>
       <div class="detail-admin-bar">
         <button class="action-btn btn-edit" onclick="editCurrentDetailWork()"><i class="fa-solid fa-pen-to-square"></i> EDIT WORK INFO</button>
         <button class="action-btn btn-delete" onclick="deleteCurrentDetailWork()"><i class="fa-solid fa-trash"></i> DELETE WORK</button>
@@ -376,8 +368,8 @@
     <div class="detail-add-panel">
       <h4 style="font-family:'Syncopate';"><i class="fa-solid fa-plus-circle"></i> ADD NEW BLOCK TO DETAIL PAGE</h4>
       <div class="add-panel-btns">
-        <button class="panel-btn" onclick="addTextBlockPrompt()"><i class="fa-solid fa-font"></i> ADD TEXT BLOCK</button>
-        <button class="panel-btn" onclick="addMediaBlockPrompt()"><i class="fa-solid fa-photo-film"></i> ADD MEDIA (IMAGE / VIDEO / YOUTUBE)</button>
+        <button class="panel-btn" onclick="openTextBlockModal()"><i class="fa-solid fa-font"></i> ADD TEXT BLOCK</button>
+        <button class="panel-btn" onclick="openMediaBlockModal()"><i class="fa-solid fa-photo-film"></i> ADD MEDIA (IMAGE / VIDEO / YOUTUBE)</button>
       </div>
     </div>
   </div>
@@ -488,6 +480,41 @@
     </div>
   </div>
 
+  <!-- 커스텀 텍스트 블록 생성/수정 모달 -->
+  <div class="modal-overlay" id="textBlockModal">
+    <div class="modal-box">
+      <h3 class="modal-title" id="textBlockModalTitle">TEXT BLOCK</h3>
+      <form id="textBlockForm" onsubmit="saveTextBlockModal(event)">
+        <input type="hidden" id="textBlockEditIndex" value="-1">
+        <div class="form-group">
+          <label>TEXT CONTENT (ENTER NEW LINES FREELY)</label>
+          <textarea id="textBlockInput" placeholder="Enter concepts, credits, or narrative text here..." required></textarea>
+        </div>
+        <div class="modal-btns">
+          <button type="button" class="btn-cancel" onclick="closeTextBlockModal()">CANCEL</button>
+          <button type="submit" class="btn-save">SAVE TEXT</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 커스텀 미디어 블록 추가 모달 -->
+  <div class="modal-overlay" id="mediaBlockModal">
+    <div class="modal-box">
+      <h3 class="modal-title">ADD MEDIA BLOCK</h3>
+      <form id="mediaBlockForm" onsubmit="saveMediaBlockModal(event)">
+        <div class="form-group">
+          <label>MEDIA URL (IMAGE / VIDEO / YOUTUBE)</label>
+          <input type="url" id="mediaBlockUrlInput" placeholder="https://..." required>
+        </div>
+        <div class="modal-btns">
+          <button type="button" class="btn-cancel" onclick="closeMediaBlockModal()">CANCEL</button>
+          <button type="submit" class="btn-save">ADD MEDIA</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <footer>
     <div style="color:#666; font-size:0.9rem;" id="siteFooterText"></div>
     <i class="fa-solid fa-pen-to-square inline-edit-icon" onclick="openSiteConfigModal()" title="Edit Footer"></i>
@@ -514,6 +541,48 @@
       social: { instagram: "", vimeo: "", youtube: "" }
     };
     const defaultWorks = [];
+
+    // -------------------------------------------------------------
+    // 브라우저 히스토리 (뒤로가기 버튼) 처리
+    // -------------------------------------------------------------
+    window.onpopstate = function(event) {
+      if (document.getElementById('detailView').style.display === 'block') {
+        showMainView(false); // history.back() 중복 발생 방지
+      }
+    };
+
+    function handleNavCategoryClick(catId) {
+      if (document.getElementById('detailView').style.display === 'block') {
+        if (window.history.state && window.history.state.view === 'detail') {
+          window.history.back();
+        } else {
+          showMainView(false);
+        }
+      } else {
+        showMainView(false);
+      }
+      closeMobileNav();
+    }
+
+    function handleLogoClick() {
+      if (document.getElementById('detailView').style.display === 'block') {
+        if (window.history.state && window.history.state.view === 'detail') {
+          window.history.back();
+        } else {
+          showMainView(false);
+        }
+      } else {
+        showMainView(false);
+      }
+    }
+
+    function handleBackBtnClick() {
+      if (window.history.state && window.history.state.view === 'detail') {
+        window.history.back();
+      } else {
+        showMainView(false);
+      }
+    }
 
     async function fetchCloudData() {
       try {
@@ -577,13 +646,11 @@
       return stored ? JSON.parse(stored) : defaultSiteConfig;
     }
 
-    // 작품 데이터 조회 및 블록 데이터 마이그레이션
     function getWorks() {
       const stored = localStorage.getItem('portfolio_works_3d_v1');
       if (!stored) return defaultWorks;
       const works = JSON.parse(stored);
 
-      // 구버전 구조(desc/extraMedia)를 신규 통합 blocks 구조로 자동 마이그레이션
       return works.map(w => {
         if (!w.blocks) {
           w.blocks = [];
@@ -612,7 +679,7 @@
         (config.categories || []).forEach(cat => {
           navHtml += `
             <li>
-              <a href="#${cat.id}" onclick="showMainView(); closeMobileNav()">${cat.name}</a>
+              <a href="#${cat.id}" onclick="handleNavCategoryClick('${cat.id}')">${cat.name}</a>
               <i class="fa-solid fa-pen-to-square inline-edit-icon" onclick="openSiteConfigModal()" title="Edit Categories"></i>
             </li>
           `;
@@ -736,7 +803,6 @@
             mediaHtml = `<img src="${parsedMedia.src}" alt="${work.title}">`;
           }
 
-          // 커버 설명글 추출
           const firstTextBlock = (work.blocks || []).find(b => b.type === 'text');
           const previewText = firstTextBlock ? firstTextBlock.content : '';
 
@@ -798,14 +864,15 @@
       document.getElementById('mainView').style.display = 'none';
       document.getElementById('detailView').style.display = 'block';
       window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      // 히스토리 상태 기록 (브라우저 뒤로가기 연동)
+      history.pushState({ view: 'detail', id: id }, '');
     }
 
-    // 세부 페이지 통합 블록(텍스트 및 미디어) 동적 렌더링
     function renderDetailContentBlocks(work) {
       const container = document.getElementById('detailBlocksList');
       container.innerHTML = '';
 
-      // 메인 커버 미디어 블록을 최상단에 배치
       const fullBlocks = [
         { type: 'media', content: work.mediaUrl, isCover: true },
         ...(work.blocks || [])
@@ -821,7 +888,7 @@
 
         if (block.type === 'text') {
           innerContentHtml = `<div class="detail-text-wrapper">${block.content}</div>`;
-        } else { // media
+        } else {
           const parsed = parseMediaUrl(block.content);
           let mediaElement = '';
           if (parsed.type === 'youtube') {
@@ -840,7 +907,7 @@
             ${block.isCover ? '<span style="font-size:0.75rem; background:#ffb703; color:#000; font-weight:bold; padding:6px 10px; border-radius:4px;">MAIN COVER</span>' : ''}
             ${!block.isCover ? `<button class="block-action-btn" onclick="moveBlockItem(${index - 1}, -1)" title="Move Up"><i class="fa-solid fa-arrow-up"></i></button>` : ''}
             ${!block.isCover ? `<button class="block-action-btn" onclick="moveBlockItem(${index - 1}, 1)" title="Move Down"><i class="fa-solid fa-arrow-down"></i></button>` : ''}
-            ${block.type === 'text' ? `<button class="block-action-btn" onclick="editTextBlockPrompt(${index - 1})" title="Edit Text"><i class="fa-solid fa-pen"></i> EDIT</button>` : ''}
+            ${block.type === 'text' ? `<button class="block-action-btn" onclick="openTextBlockModalForEdit(${index - 1})" title="Edit Text"><i class="fa-solid fa-pen"></i> EDIT</button>` : ''}
             ${!block.isCover ? `<button class="block-action-btn" style="background:#e63946;" onclick="removeBlockItem(${index - 1})" title="Delete"><i class="fa-solid fa-trash"></i></button>` : ''}
           </div>
         `;
@@ -848,57 +915,84 @@
       });
     }
 
-    // 텍스트 블록 추가 함수
-    function addTextBlockPrompt() {
+    function openTextBlockModal() {
       if (!currentDetailId || !isAdmin) return;
-      const text = prompt("추가할 텍스트 내용을 입력하세요 (줄바꿈 가능):");
-      if (!text || !text.trim()) return;
-
-      let works = getWorks();
-      const work = works.find(w => w.id === currentDetailId);
-      if (!work) return;
-
-      if (!work.blocks) work.blocks = [];
-      work.blocks.push({ type: 'text', content: text.trim() });
-
-      saveWorks(works);
-      openDetailPage(currentDetailId);
+      document.getElementById('textBlockModalTitle').innerText = 'ADD TEXT BLOCK';
+      document.getElementById('textBlockEditIndex').value = "-1";
+      document.getElementById('textBlockInput').value = "";
+      document.getElementById('textBlockModal').classList.add('active');
     }
 
-    // 미디어 블록 추가 함수
-    function addMediaBlockPrompt() {
+    function openTextBlockModalForEdit(blockIndex) {
       if (!currentDetailId || !isAdmin) return;
-      const url = prompt("추가할 이미지 / 영상 / 유튜브 URL을 입력하세요:");
-      if (!url || !url.trim()) return;
-
-      let works = getWorks();
-      const work = works.find(w => w.id === currentDetailId);
-      if (!work) return;
-
-      if (!work.blocks) work.blocks = [];
-      work.blocks.push({ type: 'media', content: url.trim() });
-
-      saveWorks(works);
-      openDetailPage(currentDetailId);
-    }
-
-    // 텍스트 블록 수정 함수
-    function editTextBlockPrompt(blockIndex) {
-      if (!currentDetailId || !isAdmin) return;
-      let works = getWorks();
+      const works = getWorks();
       const work = works.find(w => w.id === currentDetailId);
       if (!work || !work.blocks[blockIndex]) return;
 
-      const oldText = work.blocks[blockIndex].content;
-      const newText = prompt("텍스트 내용을 수정하세요:", oldText);
-      if (newText === null) return;
+      document.getElementById('textBlockModalTitle').innerText = 'EDIT TEXT BLOCK';
+      document.getElementById('textBlockEditIndex').value = blockIndex;
+      document.getElementById('textBlockInput').value = work.blocks[blockIndex].content || "";
+      document.getElementById('textBlockModal').classList.add('active');
+    }
 
-      work.blocks[blockIndex].content = newText.trim();
+    function closeTextBlockModal() {
+      document.getElementById('textBlockModal').classList.remove('active');
+    }
+
+    function saveTextBlockModal(e) {
+      e.preventDefault();
+      if (!currentDetailId || !isAdmin) return;
+
+      const editIndex = parseInt(document.getElementById('textBlockEditIndex').value);
+      const textContent = document.getElementById('textBlockInput').value.trim();
+      if (!textContent) return;
+
+      let works = getWorks();
+      const work = works.find(w => w.id === currentDetailId);
+      if (!work) return;
+
+      if (!work.blocks) work.blocks = [];
+
+      if (editIndex >= 0) {
+        work.blocks[editIndex].content = textContent;
+      } else {
+        work.blocks.push({ type: 'text', content: textContent });
+      }
+
       saveWorks(works);
+      closeTextBlockModal();
       openDetailPage(currentDetailId);
     }
 
-    // 블록 순서 이동 함수
+    function openMediaBlockModal() {
+      if (!currentDetailId || !isAdmin) return;
+      document.getElementById('mediaBlockUrlInput').value = "";
+      document.getElementById('mediaBlockModal').classList.add('active');
+    }
+
+    function closeMediaBlockModal() {
+      document.getElementById('mediaBlockModal').classList.remove('active');
+    }
+
+    function saveMediaBlockModal(e) {
+      e.preventDefault();
+      if (!currentDetailId || !isAdmin) return;
+
+      const url = document.getElementById('mediaBlockUrlInput').value.trim();
+      if (!url) return;
+
+      let works = getWorks();
+      const work = works.find(w => w.id === currentDetailId);
+      if (!work) return;
+
+      if (!work.blocks) work.blocks = [];
+      work.blocks.push({ type: 'media', content: url });
+
+      saveWorks(works);
+      closeMediaBlockModal();
+      openDetailPage(currentDetailId);
+    }
+
     function moveBlockItem(index, direction) {
       let works = getWorks();
       const work = works.find(w => w.id === currentDetailId);
@@ -915,7 +1009,6 @@
       openDetailPage(currentDetailId);
     }
 
-    // 블록 삭제 함수
     function removeBlockItem(index) {
       if (!confirm('이 블록을 삭제하시겠습니까?')) return;
       let works = getWorks();
@@ -943,11 +1036,15 @@
       });
     }
 
-    function showMainView() {
+    function showMainView(triggerHistoryBack = true) {
       stopDetailMedia();
       currentDetailId = null;
       document.getElementById('detailView').style.display = 'none';
       document.getElementById('mainView').style.display = 'block';
+
+      if (triggerHistoryBack && window.history.state && window.history.state.view === 'detail') {
+        window.history.back();
+      }
     }
 
     function editCurrentDetailWork() {
