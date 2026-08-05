@@ -320,6 +320,7 @@
     footer { padding: 60px 50px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; background: #050505; }
     .social-links { display: flex; gap: 25px; font-size: 1.3rem; align-items: center; }
 
+    /* 모바일 전용 반응형 스타일 */
     @media (max-width: 768px) {
       header { padding: 20px; mix-blend-mode: normal; background: rgba(5,5,5,0.9); backdrop-filter: blur(10px); }
       .mobile-menu-btn { display: block; }
@@ -336,7 +337,10 @@
       .hero-subtitle { font-size: 0.75rem; letter-spacing: 4px; }
 
       .section { padding: 50px 0px 50px 20px; }
-      .section-title-wrap { margin-right: 20px; }
+      .section-title-wrap { margin-right: 20px; margin-bottom: 25px; }
+      
+      /* 메인 페이지 카테고리 섹션 제목 폰트 크기 20% 축소 (1.8rem -> 1.44rem) */
+      .section-title { font-size: 1.44rem; letter-spacing: 2px; }
       
       .work-scroll-container { gap: 15px; padding-right: 20px; }
       .work-card-wrapper { flex: 0 0 78vw; }
@@ -891,7 +895,7 @@
       });
 
       initScrollAnimations();
-      initIframeBlurHandler(); // 마우스 오버 해제 시 유튜브 Controls 자동 숨김 바인딩
+      initIframeBlurHandler();
     }
 
     function moveWorkOrder(id, direction, e) {
@@ -1010,7 +1014,6 @@
       initIframeBlurHandler();
     }
 
-    // 마우스가 유튜브 영역을 이탈할 때 유튜브 컨트롤바가 사라지도록 포커스를 강제로 해제하는 함수
     function initIframeBlurHandler() {
       const mediaWrappers = document.querySelectorAll('.detail-media-wrapper, .work-card');
       mediaWrappers.forEach(wrapper => {
