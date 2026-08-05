@@ -318,13 +318,13 @@
       .detail-meta { font-size: 0.95rem; }
 
       footer { flex-direction: column; gap: 20px; text-align: center; padding: 40px 20px; }
-      .custom-cursor { display: none !important; } /* 모바일에서는 커서 숨김 */
+      .custom-cursor { display: none !important; }
     }
   </style>
 </head>
 <body>
 
-  <!-- 초기 데이터 로딩 스피너 (깜빡임 완벽 제거) -->
+  <!-- 초기 데이터 로딩 스피너 -->
   <div id="app-loader"><div class="spinner"></div></div>
 
   <!-- 3D Three.js WebGL Particle Background -->
@@ -523,13 +523,10 @@
     let isAdmin = false;
     let currentDetailId = null;
 
-    // -------------------------------------------------------------
-    // 요청해주신 사용자 전용 클라우드 API KEY & BIN ID 고정 적용
-    // -------------------------------------------------------------
+    // 사용자 전용 클라우드 API KEY & BIN ID
     const CLOUD_API_KEY = "$2a$10$STrJtNXDgV2ITq3pF1PHzuJtjeHvJhEHjYS5fu302XnpdwLPdm9ai";
     const BIN_ID = "6a720229f5f4af5e29ea5959";
 
-    // 디폴트 템플릿 구조
     const defaultSiteConfig = {
       logoText: "STUDIO.",
       heroSubtitle: "SL8IGHT VISUAL LAB",
@@ -709,7 +706,6 @@
           const card = document.createElement('div');
           card.className = 'work-card hover-target';
           
-          // 터치 모바일 환경 및 싱글 클릭 터치 완벽 호환
           card.onclick = (e) => {
             if (e.target.closest('.card-admin-actions')) return;
             openDetailPage(work.id);
@@ -882,7 +878,29 @@
       openDetailPage(currentDetailId);
     }
 
+    // 메인 리스트로 복귀할 때 재생 중인 비디오/유튜브 중지 처리
+    function stopDetailMedia() {
+      const detailMediaContainer = document.getElementById('detailMediaList');
+      if (!detailMediaContainer) return;
+
+      // 1. HTML5 비디오 정지
+      const videos = detailMediaContainer.querySelectorAll('video');
+      videos.forEach(v => {
+        v.pause();
+        v.currentTime = 0;
+      });
+
+      // 2. 유튜브 iframe 소리 정지 (src 재설정 및 postMessage 정지 명령)
+      const iframes = detailMediaContainer.querySelectorAll('iframe');
+      iframes.forEach(iframe => {
+        const src = iframe.src;
+        iframe.src = '';
+        iframe.src = src;
+      });
+    }
+
     function showMainView() {
+      stopDetailMedia(); // 세부 페이지 재생 미디어 일시정지 및 정지
       currentDetailId = null;
       document.getElementById('detailView').style.display = 'none';
       document.getElementById('mainView').style.display = 'block';
@@ -1210,7 +1228,7 @@
       });
     }
 
-    // 파이프라인: 클라우드 동기화 -> UI 적용 -> 로더 제거
+    // 초기화 파이프라인
     async function initApp() {
       const loader = document.getElementById('app-loader');
       await fetchCloudData();
