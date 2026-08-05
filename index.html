@@ -179,15 +179,15 @@
       white-space: pre-line; line-height: 1.5;
     }
 
-    /* 카드 관리자 액션 버튼 (이동, 편집, 삭제) */
+    /* 카드 관리자 버튼 스타일 */
     .card-admin-actions { display: none; gap: 8px; margin-top: 10px; z-index: 20; pointer-events: auto; flex-wrap: wrap; }
     body.admin-mode .card-admin-actions { display: flex; }
 
     .action-btn { padding: 8px 12px; border-radius: 4px; font-size: 0.8rem; border: none; cursor: pointer; font-weight: bold; transition: background 0.2s; }
     .btn-edit { background: #ffb703; color: #000; }
     .btn-delete { background: #e63946; color: #fff; }
-    .btn-order { background: #333; color: #fff; border: 1px solid rgba(255,255,255,0.3); }
-    .btn-order:hover { background: #ffb703; color: #000; }
+    .btn-order { background: rgba(255,255,255,0.2); color: #fff; border: 1px solid rgba(255,255,255,0.4); }
+    .btn-order:hover { background: #ffb703; color: #000; border-color: #ffb703; }
 
     /* DETAIL PAGE VIEW */
     #detailView {
@@ -772,7 +772,7 @@
           return;
         }
 
-        catWorks.forEach((work, idx) => {
+        catWorks.forEach((work) => {
           const wrapper = document.createElement('div');
           wrapper.className = 'work-card-wrapper';
 
@@ -841,21 +841,30 @@
       initScrollAnimations();
     }
 
-    // 작품 카드의 메인페이지 노출 순서 이동 함수
+    // 동일 카테고리 내에서의 작품 순서 교체 함수
     function moveWorkOrder(id, direction, e) {
       if (e) e.stopPropagation();
       if (!isAdmin) return;
 
       let works = getWorks();
-      const index = works.findIndex(w => w.id === id);
-      if (index === -1) return;
+      const currentWork = works.find(w => w.id === id);
+      if (!currentWork) return;
 
-      const targetIndex = index + direction;
-      if (targetIndex < 0 || targetIndex >= works.length) return;
+      // 동일 카테고리의 작품 목록 추출
+      const catWorks = works.filter(w => w.category === currentWork.category);
+      const catIndex = catWorks.findIndex(w => w.id === id);
+      const targetCatIndex = catIndex + direction;
 
-      const temp = works[index];
-      works[index] = works[targetIndex];
-      works[targetIndex] = temp;
+      if (targetCatIndex < 0 || targetCatIndex >= catWorks.length) return;
+
+      // 전체 works 배열 내에서 두 대상의 인덱스 탐색 후 위치 교체
+      const targetWork = catWorks[targetCatIndex];
+      const realIndex1 = works.findIndex(w => w.id === currentWork.id);
+      const realIndex2 = works.findIndex(w => w.id === targetWork.id);
+
+      const temp = works[realIndex1];
+      works[realIndex1] = works[realIndex2];
+      works[realIndex2] = temp;
 
       saveWorks(works);
     }
