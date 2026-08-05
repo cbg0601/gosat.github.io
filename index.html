@@ -176,7 +176,6 @@
       background: rgba(255, 255, 255, 0.45);
     }
 
-    /* 카드 사이즈 대폭 키움 (flex: 0 0 720px) */
     .work-card-wrapper {
       flex: 0 0 720px;
       perspective: 1000px;
@@ -322,7 +321,6 @@
     footer { padding: 60px 50px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; background: #050505; }
     .social-links { display: flex; gap: 25px; font-size: 1.3rem; align-items: center; }
 
-    /* 모바일 스크린 반응형 (다음 카드 걸침 연출 및 카드 텍스트 30% 축소 적용) */
     @media (max-width: 768px) {
       header { padding: 20px; mix-blend-mode: normal; background: rgba(5,5,5,0.9); backdrop-filter: blur(10px); }
       .mobile-menu-btn { display: block; }
@@ -338,14 +336,12 @@
       .hero-title { font-size: 2.2rem; }
       .hero-subtitle { font-size: 0.75rem; letter-spacing: 4px; }
 
-      .section { padding: 50px 0px 50px 20px; } /* 오른쪽 여백을 비워 다음 카드가 걸치게 설정 */
+      .section { padding: 50px 0px 50px 20px; }
       .section-title-wrap { margin-right: 20px; }
       
-      /* 1. 다음 카드가 살짝 걸치도록 간격 및 너비 재설정 (78vw, gap: 15px) */
       .work-scroll-container { gap: 15px; padding-right: 20px; }
       .work-card-wrapper { flex: 0 0 78vw; }
       
-      /* 2. 모바일 카드 내부 텍스트 30% 축소 및 패딩 최적화 */
       .work-card-info { padding: 16px; }
       .work-category { font-size: 0.7rem; letter-spacing: 2px; margin-bottom: 4px; }
       .work-title { font-size: 1.05rem; margin-bottom: 4px; line-height: 1.2; }
@@ -683,10 +679,13 @@
       document.getElementById('mobileNav').classList.toggle('active');
     }
 
+    // 유튜브 일반, Shorts, 비디오, 이미지 URL 파싱 정규식 최적화
     function parseMediaUrl(url) {
       if (!url) return { type: 'image', src: '' };
       const trimmed = url.trim();
-      const ytRegExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+
+      // 유튜브 일반 링크, Shorts, 임베드 등 다양한 주소 지원 정규식
+      const ytRegExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|shorts\/|watch\?v=|\&v=)([^#\&\?]*).*/;
       const match = trimmed.match(ytRegExp);
 
       if (match && match[2].length === 11) {
