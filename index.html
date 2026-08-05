@@ -165,12 +165,12 @@
       border-radius: 4px;
     }
     .work-scroll-container::-webkit-scrollbar-thumb {
-      background: transparent; /* 기본 숨김 상태 */
+      background: transparent;
       border-radius: 4px;
       transition: background 0.3s ease;
     }
     .work-scroll-container:hover::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.2); /* 마우스 올렸을 때만 노출되는 은은한 회색 */
+      background: rgba(255, 255, 255, 0.2);
     }
     .work-scroll-container::-webkit-scrollbar-thumb:hover {
       background: rgba(255, 255, 255, 0.45);
@@ -322,6 +322,7 @@
     footer { padding: 60px 50px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; background: #050505; }
     .social-links { display: flex; gap: 25px; font-size: 1.3rem; align-items: center; }
 
+    /* 모바일 스크린 반응형 (다음 카드 걸침 연출 및 카드 텍스트 30% 축소 적용) */
     @media (max-width: 768px) {
       header { padding: 20px; mix-blend-mode: normal; background: rgba(5,5,5,0.9); backdrop-filter: blur(10px); }
       .mobile-menu-btn { display: block; }
@@ -337,13 +338,18 @@
       .hero-title { font-size: 2.2rem; }
       .hero-subtitle { font-size: 0.75rem; letter-spacing: 4px; }
 
-      .section { padding: 60px 20px; }
-      .section-title { font-size: 1.8rem; }
+      .section { padding: 50px 0px 50px 20px; } /* 오른쪽 여백을 비워 다음 카드가 걸치게 설정 */
+      .section-title-wrap { margin-right: 20px; }
       
-      .work-scroll-container { gap: 20px; }
-      .work-card-wrapper { flex: 0 0 85vw; }
-      .work-card-info { padding: 20px; }
-      .work-title { font-size: 1.3rem; }
+      /* 1. 다음 카드가 살짝 걸치도록 간격 및 너비 재설정 (78vw, gap: 15px) */
+      .work-scroll-container { gap: 15px; padding-right: 20px; }
+      .work-card-wrapper { flex: 0 0 78vw; }
+      
+      /* 2. 모바일 카드 내부 텍스트 30% 축소 및 패딩 최적화 */
+      .work-card-info { padding: 16px; }
+      .work-category { font-size: 0.7rem; letter-spacing: 2px; margin-bottom: 4px; }
+      .work-title { font-size: 1.05rem; margin-bottom: 4px; line-height: 1.2; }
+      .work-desc { font-size: 0.75rem; margin-bottom: 6px; line-height: 1.35; color: #bbb; }
 
       #detailView { padding: 90px 20px 60px 20px; }
       .detail-title { font-size: 2rem; }
