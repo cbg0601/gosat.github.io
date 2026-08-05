@@ -143,7 +143,7 @@
     .add-post-btn:hover { background: #fff; color: #000; }
     body.admin-mode .add-post-btn { display: inline-flex; }
 
-    /* 가로 스크롤 컨테이너 (Horizontal Scroll) */
+    /* 가로 스크롤 컨테이너 */
     .work-scroll-container {
       display: flex;
       gap: 60px;
@@ -156,7 +156,6 @@
       -webkit-overflow-scrolling: touch;
     }
 
-    /* 마우스를 가져갔을 때만 나타나는 스크롤바 */
     .work-scroll-container::-webkit-scrollbar {
       height: 4px;
     }
@@ -679,12 +678,10 @@
       document.getElementById('mobileNav').classList.toggle('active');
     }
 
-    // 유튜브 일반, Shorts, 재생목록(Playlist) 정규식 지원 파서
     function parseMediaUrl(url) {
       if (!url) return { type: 'image', src: '' };
       const trimmed = url.trim();
 
-      // 1. 유튜브 재생목록(Playlist) 감지 (list=...)
       const playlistRegExp = /[?&]list=([^#\&\?]+)/;
       const playlistMatch = trimmed.match(playlistRegExp);
 
@@ -695,7 +692,6 @@
         };
       }
 
-      // 2. 일반 영상 및 Shorts 감지
       const ytRegExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|shorts\/|watch\?v=|\&v=)([^#\&\?]*).*/;
       const match = trimmed.match(ytRegExp);
 
@@ -895,6 +891,7 @@
       });
 
       initScrollAnimations();
+      initIframeBlurHandler(); // 마우스 오버 해제 시 유튜브 Controls 자동 숨김 바인딩
     }
 
     function moveWorkOrder(id, direction, e) {
@@ -1008,6 +1005,21 @@
           </div>
         `;
         container.appendChild(itemDiv);
+      });
+
+      initIframeBlurHandler();
+    }
+
+    // 마우스가 유튜브 영역을 이탈할 때 유튜브 컨트롤바가 사라지도록 포커스를 강제로 해제하는 함수
+    function initIframeBlurHandler() {
+      const mediaWrappers = document.querySelectorAll('.detail-media-wrapper, .work-card');
+      mediaWrappers.forEach(wrapper => {
+        wrapper.addEventListener('mouseleave', () => {
+          if (document.activeElement && document.activeElement.tagName === 'IFRAME') {
+            document.activeElement.blur();
+            window.focus();
+          }
+        });
       });
     }
 
