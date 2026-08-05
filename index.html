@@ -679,12 +679,10 @@
       document.getElementById('mobileNav').classList.toggle('active');
     }
 
-    // 유튜브 일반, Shorts, 비디오, 이미지 URL 파싱 정규식 최적화
     function parseMediaUrl(url) {
       if (!url) return { type: 'image', src: '' };
       const trimmed = url.trim();
 
-      // 유튜브 일반 링크, Shorts, 임베드 등 다양한 주소 지원 정규식
       const ytRegExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|shorts\/|watch\?v=|\&v=)([^#\&\?]*).*/;
       const match = trimmed.match(ytRegExp);
 
@@ -953,14 +951,18 @@
       history.pushState({ view: 'detail', id: id }, '');
     }
 
+    // 세부 페이지 내 메인 커버 제외하고 추가된 블록만 노출하도록 수정
     function renderDetailContentBlocks(work) {
       const container = document.getElementById('detailBlocksList');
       container.innerHTML = '';
 
-      const fullBlocks = [
-        { type: 'media', content: work.mediaUrl, isCover: true },
-        ...(work.blocks || [])
-      ];
+      // 메인 커버 자동합성(isCover) 제거: 사용자가 추가한 블록들만 배치
+      const fullBlocks = work.blocks || [];
+
+      if (fullBlocks.length === 0) {
+        container.innerHTML = `<div style="color:#555; padding:20px 0;">No detail content added yet.</div>`;
+        return;
+      }
 
       fullBlocks.forEach((block, index) => {
         if (!block.content || !block.content.trim()) return;
@@ -988,11 +990,10 @@
         itemDiv.innerHTML = `
           ${innerContentHtml}
           <div class="block-item-actions">
-            ${block.isCover ? '<span style="font-size:0.75rem; background:#ffb703; color:#000; font-weight:bold; padding:6px 10px; border-radius:4px;">MAIN COVER</span>' : ''}
-            ${!block.isCover ? `<button class="block-action-btn" onclick="moveBlockItem(${index - 1}, -1)" title="Move Up"><i class="fa-solid fa-arrow-up"></i></button>` : ''}
-            ${!block.isCover ? `<button class="block-action-btn" onclick="moveBlockItem(${index - 1}, 1)" title="Move Down"><i class="fa-solid fa-arrow-down"></i></button>` : ''}
-            ${block.type === 'text' ? `<button class="block-action-btn" onclick="openTextBlockModalForEdit(${index - 1})" title="Edit Text"><i class="fa-solid fa-pen"></i> EDIT</button>` : ''}
-            ${!block.isCover ? `<button class="block-action-btn" style="background:#e63946;" onclick="removeBlockItem(${index - 1})" title="Delete"><i class="fa-solid fa-trash"></i></button>` : ''}
+            <button class="block-action-btn" onclick="moveBlockItem(${index}, -1)" title="Move Up"><i class="fa-solid fa-arrow-up"></i></button>
+            <button class="block-action-btn" onclick="moveBlockItem(${index}, 1)" title="Move Down"><i class="fa-solid fa-arrow-down"></i></button>
+            ${block.type === 'text' ? `<button class="block-action-btn" onclick="openTextBlockModalForEdit(${index})" title="Edit Text"><i class="fa-solid fa-pen"></i> EDIT</button>` : ''}
+            <button class="block-action-btn" style="background:#e63946;" onclick="removeBlockItem(${index})" title="Delete"><i class="fa-solid fa-trash"></i></button>
           </div>
         `;
         container.appendChild(itemDiv);
