@@ -104,6 +104,7 @@
     .mobile-menu-btn {
       display: none; background: none; border: none; color: #fff;
       font-size: 1.5rem; cursor: pointer; z-index: 10002; width: 40px; height: 40px;
+      pointer-events: auto;
     }
 
     /* Hero Section */
@@ -320,7 +321,7 @@
     footer { padding: 60px 50px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; background: #050505; }
     .social-links { display: flex; gap: 25px; font-size: 1.3rem; align-items: center; }
 
-    /* 모바일 반응형 스타일 (햄버거 메뉴 열고 닫기 완벽 보완) */
+    /* 모바일 반응형 스타일 (햄버거 터치 영역 및 레이어 우선순위 완전 교정) */
     @media (max-width: 768px) {
       header { padding: 20px; mix-blend-mode: normal; background: rgba(5,5,5,0.9); backdrop-filter: blur(10px); }
       .mobile-menu-btn { display: block; }
@@ -373,7 +374,7 @@
       <i class="fa-solid fa-pen-to-square inline-edit-icon" onclick="openSiteConfigModal()" title="Edit Logo Text"></i>
     </div>
     
-    <button class="mobile-menu-btn" id="mobileMenuBtn" onclick="toggleMobileMenu()"><i class="fa-solid fa-bars"></i></button>
+    <button class="mobile-menu-btn" id="mobileMenuBtn" onclick="toggleMobileMenu(event)"><i class="fa-solid fa-bars"></i></button>
 
     <nav id="mobileNav">
       <ul id="navCategoryList">
@@ -676,8 +677,9 @@
       }
     }
 
-    // 모바일 햄버거 메뉴 토글 및 아이콘 변환 (열기 / 닫기 완벽 지원)
-    function toggleMobileMenu() {
+    // 모바일 햄버거 메뉴 토글 함수 보완 (이벤트 전파 차단)
+    function toggleMobileMenu(e) {
+      if (e) e.stopPropagation();
       const nav = document.getElementById('mobileNav');
       const btn = document.getElementById('mobileMenuBtn');
       const isActive = nav.classList.toggle('active');
