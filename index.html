@@ -144,7 +144,7 @@
     body.admin-mode .add-post-btn { display: inline-flex; }
 
     .work-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 60px; }
-    .work-card-wrapper { perspective: 1000px; }
+    .work-card-wrapper { perspective: 1000px; position: relative; }
 
     .work-card {
       position: relative; border-radius: 12px; overflow: hidden;
@@ -170,7 +170,6 @@
 
     .work-category { font-family: 'Syncopate', sans-serif; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 3px; color: #ffb703; margin-bottom: 8px; }
     
-    /* 엔터 키(줄바꿈)가 적용되도록 white-space: pre-line 추가 */
     .work-title {
       font-size: 1.8rem; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.5px;
       white-space: pre-line; line-height: 1.25;
@@ -180,12 +179,15 @@
       white-space: pre-line; line-height: 1.5;
     }
 
-    .card-admin-actions { display: none; gap: 10px; margin-top: 10px; z-index: 20; pointer-events: auto; }
+    /* 카드 관리자 액션 버튼 (이동, 편집, 삭제) */
+    .card-admin-actions { display: none; gap: 8px; margin-top: 10px; z-index: 20; pointer-events: auto; flex-wrap: wrap; }
     body.admin-mode .card-admin-actions { display: flex; }
 
-    .action-btn { padding: 8px 14px; border-radius: 4px; font-size: 0.8rem; border: none; cursor: pointer; font-weight: bold; }
+    .action-btn { padding: 8px 12px; border-radius: 4px; font-size: 0.8rem; border: none; cursor: pointer; font-weight: bold; transition: background 0.2s; }
     .btn-edit { background: #ffb703; color: #000; }
     .btn-delete { background: #e63946; color: #fff; }
+    .btn-order { background: #333; color: #fff; border: 1px solid rgba(255,255,255,0.3); }
+    .btn-order:hover { background: #ffb703; color: #000; }
 
     /* DETAIL PAGE VIEW */
     #detailView {
@@ -455,7 +457,7 @@
     </div>
   </div>
 
-  <!-- 포스트 편집 모달 (줄바꿈 입력을 위한 textarea 적용) -->
+  <!-- 포스트 편집 모달 -->
   <div class="modal-overlay" id="postModal">
     <div class="modal-box">
       <h3 class="modal-title" id="modalHeaderTitle">ADD NEW WORK</h3>
@@ -770,7 +772,7 @@
           return;
         }
 
-        catWorks.forEach(work => {
+        catWorks.forEach((work, idx) => {
           const wrapper = document.createElement('div');
           wrapper.className = 'work-card-wrapper';
 
@@ -824,6 +826,8 @@
               <h3 class="work-title">${work.title}</h3>
               <p class="work-desc">${previewText}</p>
               <div class="card-admin-actions">
+                <button class="action-btn btn-order" onclick="moveWorkOrder('${work.id}', -1, event)" title="Move Up"><i class="fa-solid fa-arrow-up"></i></button>
+                <button class="action-btn btn-order" onclick="moveWorkOrder('${work.id}', 1, event)" title="Move Down"><i class="fa-solid fa-arrow-down"></i></button>
                 <button class="action-btn btn-edit" onclick="editPost('${work.id}', event)">EDIT</button>
                 <button class="action-btn btn-delete" onclick="deletePost('${work.id}', event)">DELETE</button>
               </div>
@@ -835,6 +839,25 @@
       });
 
       initScrollAnimations();
+    }
+
+    // 작품 카드의 메인페이지 노출 순서 이동 함수
+    function moveWorkOrder(id, direction, e) {
+      if (e) e.stopPropagation();
+      if (!isAdmin) return;
+
+      let works = getWorks();
+      const index = works.findIndex(w => w.id === id);
+      if (index === -1) return;
+
+      const targetIndex = index + direction;
+      if (targetIndex < 0 || targetIndex >= works.length) return;
+
+      const temp = works[index];
+      works[index] = works[targetIndex];
+      works[targetIndex] = temp;
+
+      saveWorks(works);
     }
 
     function initScrollAnimations() {
