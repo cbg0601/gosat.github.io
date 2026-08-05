@@ -129,7 +129,7 @@
     /* Section & Cards */
     .section { padding: 120px 50px; position: relative; z-index: 3; }
     .section-title-wrap {
-      display: flex; justify-content: space-between; align-items: center; margin-bottom: 60px;
+      display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px;
       border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 20px;
     }
     .section-title { font-family: 'Syncopate', sans-serif; font-size: 2.5rem; letter-spacing: 3px; }
@@ -143,8 +143,41 @@
     .add-post-btn:hover { background: #fff; color: #000; }
     body.admin-mode .add-post-btn { display: inline-flex; }
 
-    .work-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 60px; }
-    .work-card-wrapper { perspective: 1000px; position: relative; }
+    /* 가로 스크롤 컨테이너 (Horizontal Scroll) */
+    .work-scroll-container {
+      display: flex;
+      gap: 40px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      padding-bottom: 30px;
+      padding-top: 10px;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* 커스텀 스크롤바 디자인 */
+    .work-scroll-container::-webkit-scrollbar {
+      height: 6px;
+    }
+    .work-scroll-container::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+    }
+    .work-scroll-container::-webkit-scrollbar-thumb {
+      background: rgba(255, 183, 3, 0.5);
+      border-radius: 10px;
+    }
+    .work-scroll-container::-webkit-scrollbar-thumb:hover {
+      background: #ffb703;
+    }
+
+    .work-card-wrapper {
+      flex: 0 0 520px;
+      perspective: 1000px;
+      position: relative;
+      scroll-snap-align: start;
+    }
 
     .work-card {
       position: relative; border-radius: 12px; overflow: hidden;
@@ -162,7 +195,7 @@
     .work-card-info {
       position: absolute; inset: 0;
       background: linear-gradient(0deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.2) 60%, rgba(0,0,0,0) 100%);
-      padding: 35px; display: flex; flex-direction: column; justify-content: flex-end;
+      padding: 30px; display: flex; flex-direction: column; justify-content: flex-end;
       pointer-events: none; transform: translateZ(30px);
     }
 
@@ -171,11 +204,11 @@
     .work-category { font-family: 'Syncopate', sans-serif; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 3px; color: #ffb703; margin-bottom: 8px; }
     
     .work-title {
-      font-size: 1.8rem; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.5px;
+      font-size: 1.6rem; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.5px;
       white-space: pre-line; line-height: 1.25;
     }
     .work-desc {
-      font-size: 0.95rem; color: #aaa; margin-bottom: 15px;
+      font-size: 0.9rem; color: #aaa; margin-bottom: 15px;
       white-space: pre-line; line-height: 1.5;
     }
 
@@ -301,9 +334,11 @@
 
       .section { padding: 60px 20px; }
       .section-title { font-size: 1.8rem; }
-      .work-grid { grid-template-columns: 1fr; gap: 30px; }
+      
+      .work-scroll-container { gap: 20px; }
+      .work-card-wrapper { flex: 0 0 85vw; }
       .work-card-info { padding: 20px; }
-      .work-title { font-size: 1.4rem; }
+      .work-title { font-size: 1.3rem; }
 
       #detailView { padding: 90px 20px 60px 20px; }
       .detail-title { font-size: 2rem; }
@@ -710,6 +745,7 @@
         }
       }
 
+      // 좌우 가로 스크롤 컨테이너 구조 적용
       const sectionsContainer = document.getElementById('sectionsContainer');
       if (sectionsContainer) {
         let sectionsHtml = '';
@@ -720,7 +756,7 @@
                 <h2 class="section-title">${cat.name}</h2>
                 <button class="add-post-btn" onclick="openModal('${cat.id}')"><i class="fa-solid fa-plus"></i> ADD WORK</button>
               </div>
-              <div class="work-grid" id="grid-${cat.id}"></div>
+              <div class="work-scroll-container" id="grid-${cat.id}"></div>
             </section>
           `;
         });
@@ -768,7 +804,7 @@
         const catWorks = works.filter(w => w.category === cat.id);
 
         if (catWorks.length === 0) {
-          grid.innerHTML = `<div style="grid-column:1/-1; color:#555; text-align:center; padding:40px;">No works registered yet in this category.</div>`;
+          grid.innerHTML = `<div style="color:#555; padding:20px;">No works registered yet in this category.</div>`;
           return;
         }
 
@@ -826,8 +862,8 @@
               <h3 class="work-title">${work.title}</h3>
               <p class="work-desc">${previewText}</p>
               <div class="card-admin-actions">
-                <button class="action-btn btn-order" onclick="moveWorkOrder('${work.id}', -1, event)" title="Move Up"><i class="fa-solid fa-arrow-up"></i></button>
-                <button class="action-btn btn-order" onclick="moveWorkOrder('${work.id}', 1, event)" title="Move Down"><i class="fa-solid fa-arrow-down"></i></button>
+                <button class="action-btn btn-order" onclick="moveWorkOrder('${work.id}', -1, event)" title="Move Left"><i class="fa-solid fa-arrow-left"></i></button>
+                <button class="action-btn btn-order" onclick="moveWorkOrder('${work.id}', 1, event)" title="Move Right"><i class="fa-solid fa-arrow-right"></i></button>
                 <button class="action-btn btn-edit" onclick="editPost('${work.id}', event)">EDIT</button>
                 <button class="action-btn btn-delete" onclick="deletePost('${work.id}', event)">DELETE</button>
               </div>
@@ -841,7 +877,7 @@
       initScrollAnimations();
     }
 
-    // 동일 카테고리 내에서의 작품 순서 교체 함수
+    // 동일 카테고리 내에서 좌우 순서 변경 처리
     function moveWorkOrder(id, direction, e) {
       if (e) e.stopPropagation();
       if (!isAdmin) return;
@@ -850,14 +886,12 @@
       const currentWork = works.find(w => w.id === id);
       if (!currentWork) return;
 
-      // 동일 카테고리의 작품 목록 추출
       const catWorks = works.filter(w => w.category === currentWork.category);
       const catIndex = catWorks.findIndex(w => w.id === id);
       const targetCatIndex = catIndex + direction;
 
       if (targetCatIndex < 0 || targetCatIndex >= catWorks.length) return;
 
-      // 전체 works 배열 내에서 두 대상의 인덱스 탐색 후 위치 교체
       const targetWork = catWorks[targetCatIndex];
       const realIndex1 = works.findIndex(w => w.id === currentWork.id);
       const realIndex2 = works.findIndex(w => w.id === targetWork.id);
