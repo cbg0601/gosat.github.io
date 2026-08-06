@@ -109,23 +109,148 @@
 
     /* Hero Section */
     .hero {
-      position: relative; width: 100%; height: 100vh;
-      display: flex; align-items: center; justify-content: center;
+      position: relative; width: 100%; min-height: 100vh;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 80px; overflow: hidden;
     }
-    .hero-content { position: relative; z-index: 3; text-align: center; max-width: 1000px; padding: 0 20px; }
-    .hero-subtitle-wrap { display: flex; justify-content: center; align-items: center; margin-bottom: 20px; }
+    .hero-content {
+      position: relative; z-index: 3; text-align: left; max-width: 600px;
+    }
+    .hero-subtitle-wrap { display: flex; align-items: center; margin-bottom: 20px; }
     .hero-subtitle {
       font-family: 'Syncopate', sans-serif; font-size: 0.95rem;
       letter-spacing: 8px; text-transform: uppercase; color: rgba(255, 255, 255, 0.6);
     }
-    .hero-title-wrap { display: flex; justify-content: center; align-items: center; margin-bottom: 30px; }
+    .hero-title-wrap { display: flex; align-items: center; margin-bottom: 30px; }
     .hero-title {
-      font-family: 'Syncopate', sans-serif; font-size: 4.5rem;
-      font-weight: 700; line-height: 1.05; letter-spacing: -1px;
+      font-family: 'Syncopate', sans-serif; font-size: 3.8rem;
+      font-weight: 700; line-height: 1.1; letter-spacing: -1px;
       background: linear-gradient(135deg, #ffffff 0%, #888888 100%);
       -webkit-background-clip: text; -webkit-text-fill-color: transparent;
       text-shadow: 0 20px 40px rgba(0,0,0,0.8); white-space: pre-line;
     }
+
+    /* 랜야드 메인 피벗 시스템 */
+    .lanyard-container {
+      position: absolute; top: 0; right: 200px; width: 320px; z-index: 5;
+      display: flex; flex-direction: column; align-items: center;
+      perspective: 1200px; user-select: none;
+      transform-origin: top center;
+    }
+
+    /* 끈 스트랩 */
+    .lanyard-strap-wrapper {
+      position: relative; width: 22px; height: 110px; display: flex;
+      flex-direction: column; align-items: center; justify-content: flex-end;
+      transform-origin: top center; will-change: height, transform;
+    }
+    .lanyard-strap {
+      width: 100%; height: 100%; background: #181818;
+      border: 1px solid rgba(255,255,255,0.15); border-radius: 2px;
+      display: flex; justify-content: center; align-items: center;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.6); overflow: hidden;
+      position: absolute; top: 0; bottom: 0;
+    }
+    .lanyard-strap-text {
+      writing-mode: vertical-rl; font-family: 'Syncopate', sans-serif;
+      font-size: 0.55rem; letter-spacing: 3px; color: #ffb703; font-weight: bold;
+      opacity: 0.85;
+    }
+    .lanyard-ring {
+      width: 28px; height: 28px; border: 3px solid #ccc;
+      border-radius: 50%; background: #222; margin-bottom: -14px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.8); z-index: 6; flex-shrink: 0;
+    }
+
+    /* 사원증 전용 개별 수정 버튼 */
+    .id-card-edit-btn {
+      position: relative; margin-top: 15px; z-index: 30;
+      background: #ffb703; color: #000; border: none; padding: 8px 20px;
+      border-radius: 20px; font-weight: bold; font-size: 0.8rem;
+      cursor: pointer; display: none; align-items: center; gap: 8px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.5); font-family: 'Syncopate', sans-serif;
+      transition: transform 0.2s, background 0.2s;
+    }
+    .id-card-edit-btn:hover { transform: scale(1.08); background: #fff; }
+    body.admin-mode .id-card-edit-btn { display: inline-flex; }
+
+    /* 카드 본체 */
+    .id-card-flipper {
+      position: relative; width: 320px; height: 460px;
+      transform-style: preserve-3d; flex-shrink: 0; margin-top: 10px;
+      cursor: grab; transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      transform-origin: top center;
+    }
+    .id-card-flipper:active { cursor: grabbing; }
+    .id-card-flipper.flipped {
+      transform: rotateY(180deg);
+    }
+
+    /* 어두운 메탈릭 재질 카드 스타일 */
+    .id-card-face {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      background: linear-gradient(145deg, #1f2124 0%, #111215 50%, #08090b 100%);
+      border-radius: 20px; padding: 20px; color: #ffffff;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.9), inset 0 0 3px rgba(255,255,255,0.15);
+      display: flex; flex-direction: column; justify-content: space-between;
+      backface-visibility: hidden; -webkit-backface-visibility: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.12); overflow: hidden;
+    }
+
+    /* 실시간 조명 반사 광택 레이어 */
+    .id-card-glare {
+      position: absolute; inset: -150%;
+      background: linear-gradient(
+        115deg,
+        transparent 20%,
+        rgba(255, 255, 255, 0.15) 45%,
+        rgba(255, 255, 255, 0.3) 50%,
+        rgba(255, 255, 255, 0.15) 55%,
+        transparent 80%
+      );
+      pointer-events: none; mix-blend-mode: overlay; opacity: 0.5;
+      transform: translate(-30%, -30%);
+      transition: transform 0.15s ease-out, opacity 0.3s ease;
+    }
+
+    .id-card-front { z-index: 2; transform: rotateY(0deg); }
+    .id-card-back {
+      transform: rotateY(180deg);
+      background: linear-gradient(145deg, #16181b 0%, #0c0d0f 100%);
+      border: 1px solid rgba(255, 183, 3, 0.3);
+    }
+
+    /* 사진 영역 비율 3:4 적용 (너비 기준 자동 계산) 및 여백 밀착 조정 */
+    .id-card-photo-wrapper {
+      width: 100%; aspect-ratio: 3 / 4; border-radius: 12px; overflow: hidden;
+      background: #000; position: relative; box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
+    }
+    .id-card-photo-wrapper img {
+      width: 100%; height: 100%; object-fit: cover; filter: grayscale(10%) contrast(1.1);
+    }
+
+    .id-card-info-box {
+      display: flex; flex-direction: column; gap: 2px; margin-top: 4px; position: relative; z-index: 2;
+    }
+    .id-card-name {
+      font-size: 1.35rem; font-weight: 700; color: #ffffff; letter-spacing: -0.5px; line-height: 1.2;
+    }
+    .id-card-role {
+      font-size: 0.78rem; color: #a0a0a0; font-weight: bold; font-family: 'Syncopate', sans-serif;
+    }
+    
+    .id-card-tags-container {
+      display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px;
+    }
+    .id-card-tag {
+      display: inline-block;
+      padding: 3px 8px; background: rgba(255, 255, 255, 0.08); color: #ffb703;
+      border: 1px solid rgba(255, 183, 3, 0.2);
+      border-radius: 12px; font-size: 0.65rem; font-family: 'Syncopate', sans-serif; font-weight: bold;
+    }
+
+    .id-card-back .id-card-name { color: #ffb703; }
+    .id-card-back .id-card-role { color: #888; }
 
     /* Section & Cards */
     .section { padding: 120px 50px; position: relative; z-index: 3; }
@@ -146,41 +271,21 @@
 
     /* 가로 스크롤 컨테이너 */
     .work-scroll-container {
-      display: flex;
-      gap: 60px;
-      overflow-x: auto;
-      overflow-y: hidden;
-      padding-bottom: 25px;
-      padding-top: 10px;
-      scroll-snap-type: x mandatory;
-      scroll-behavior: smooth;
-      -webkit-overflow-scrolling: touch;
+      display: flex; gap: 60px; overflow-x: auto; overflow-y: hidden;
+      padding-bottom: 25px; padding-top: 10px; scroll-snap-type: x mandatory;
+      scroll-behavior: smooth; -webkit-overflow-scrolling: touch;
     }
 
-    .work-scroll-container::-webkit-scrollbar {
-      height: 4px;
-    }
-    .work-scroll-container::-webkit-scrollbar-track {
-      background: transparent;
-      border-radius: 4px;
-    }
+    .work-scroll-container::-webkit-scrollbar { height: 4px; }
+    .work-scroll-container::-webkit-scrollbar-track { background: transparent; border-radius: 4px; }
     .work-scroll-container::-webkit-scrollbar-thumb {
-      background: transparent;
-      border-radius: 4px;
-      transition: background 0.3s ease;
+      background: transparent; border-radius: 4px; transition: background 0.3s ease;
     }
-    .work-scroll-container:hover::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.2);
-    }
-    .work-scroll-container::-webkit-scrollbar-thumb:hover {
-      background: rgba(255, 255, 255, 0.45);
-    }
+    .work-scroll-container:hover::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); }
+    .work-scroll-container::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.45); }
 
     .work-card-wrapper {
-      flex: 0 0 720px;
-      perspective: 1000px;
-      position: relative;
-      scroll-snap-align: start;
+      flex: 0 0 720px; perspective: 1000px; position: relative; scroll-snap-align: start;
     }
 
     .work-card {
@@ -255,12 +360,10 @@
       position: relative; width: 100%; display: flex; flex-direction: column;
     }
 
-    /* 정렬 전용 유틸리티 클래스 */
     .align-left { align-items: flex-start; text-align: left; }
     .align-center { align-items: center; text-align: center; }
     .align-right { align-items: flex-end; text-align: right; }
 
-    /* 블로그형 미디어 크기 옵션 */
     .media-size-full { width: 100%; }
     .media-size-medium { width: 80%; }
     .media-size-small { width: 50%; }
@@ -278,7 +381,6 @@
       margin-top: 10px; font-size: 0.85rem; color: #888; font-style: italic; line-height: 1.4;
     }
 
-    /* 블로그형 텍스트 스타일 종류 */
     .detail-text-wrapper {
       width: 100%; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08);
       padding: 30px; border-radius: 12px; color: #d0d0d0;
@@ -344,6 +446,16 @@
     .social-links { display: flex; gap: 25px; font-size: 1.3rem; align-items: center; }
 
     /* 모바일 반응형 스타일 */
+    @media (max-width: 992px) {
+      .hero { flex-direction: column; justify-content: center; padding: 120px 20px 60px 20px; gap: 40px; }
+      .hero-content { max-width: 100%; text-align: center; }
+      .hero-title { font-size: 2.5rem; }
+      .lanyard-container { position: relative; right: auto; top: auto; width: 300px; height: 480px; }
+      .id-card-flipper { width: 280px; height: 390px; }
+      .id-card-face { padding: 18px; }
+      .id-card-photo-wrapper { aspect-ratio: 3 / 4; }
+    }
+
     @media (max-width: 768px) {
       header { padding: 20px; mix-blend-mode: normal; background: rgba(5,5,5,0.9); backdrop-filter: blur(10px); }
       .mobile-menu-btn { display: block; }
@@ -355,9 +467,6 @@
       nav.active { right: 0; }
       nav ul { flex-direction: column; align-items: flex-start; gap: 25px; }
       nav a { font-size: 1.1rem; }
-
-      .hero-title { font-size: 2.2rem; }
-      .hero-subtitle { font-size: 0.75rem; letter-spacing: 4px; }
 
       .section { padding: 50px 0px 50px 20px; }
       .section-title-wrap { margin-right: 20px; margin-bottom: 25px; }
@@ -374,8 +483,6 @@
       #detailView { padding: 90px 20px 60px 20px; }
       .detail-title { font-size: 2rem; }
       .detail-text-wrapper { font-size: 0.88rem; padding: 20px; line-height: 1.7; }
-      
-      /* 모바일에서는 미디어 너비 자동 반응형 처리 */
       .media-size-medium, .media-size-small { width: 100% !important; }
 
       footer { flex-direction: column; gap: 20px; text-align: center; padding: 40px 20px; }
@@ -421,6 +528,53 @@
           <i class="fa-solid fa-pen-to-square inline-edit-icon" onclick="openSiteConfigModal()" style="margin-left: 15px;"></i>
         </div>
       </div>
+
+      <!-- 3D Lanyard ID Card (어두운 메탈릭 재질 & 3:4 사진 비율 & 컴팩트 여백 & 다중 태그) -->
+      <div class="lanyard-container" id="lanyardCard">
+        <div class="lanyard-strap-wrapper" id="lanyardStrapWrapper">
+          <div class="lanyard-strap">
+            <span class="lanyard-strap-text" id="idStrapText">GOSAT LAB</span>
+          </div>
+          <div class="lanyard-ring"></div>
+        </div>
+        
+        <div class="id-card-flipper" id="idCardFlipper">
+          <!-- 앞면 -->
+          <div class="id-card-face id-card-front">
+            <div class="id-card-glare" id="idCardFrontGlare"></div>
+            <div class="id-card-photo-wrapper">
+              <img id="idCardPhoto" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=800&auto=format&fit=crop" alt="Profile Photo">
+            </div>
+            <div class="id-card-info-box">
+              <div class="id-card-name" id="idCardName">GOSAT CREATOR</div>
+              <div class="id-card-role" id="idCardRole">VFX Director & Producer</div>
+              <div class="id-card-tags-container" id="idCardTagsContainer">
+                <!-- 다중 태그 동적 삽입 -->
+              </div>
+            </div>
+          </div>
+
+          <!-- 뒷면 (더블클릭 시 노출) -->
+          <div class="id-card-face id-card-back">
+            <div class="id-card-glare" id="idCardBackGlare"></div>
+            <div class="id-card-photo-wrapper">
+              <img id="idCardBackPhoto" src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop" alt="Easter Egg Back Photo">
+            </div>
+            <div class="id-card-info-box">
+              <div class="id-card-name" id="idCardBackTitle">SECRET EASTER EGG</div>
+              <div class="id-card-role" id="idCardBackRole">Special Thanks & Concept Art</div>
+              <div class="id-card-tags-container">
+                <span class="id-card-tag">SPECIAL VISUAL</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 사원증 카드 하단에 배치된 수정 버튼 -->
+        <button class="id-card-edit-btn" id="idCardEditBtn" onclick="openIdCardConfigModal(event)">
+          <i class="fa-solid fa-pen"></i> EDIT CARD
+        </button>
+      </div>
     </section>
 
     <main id="sectionsContainer">
@@ -455,7 +609,57 @@
     </div>
   </div>
 
-  <!-- 사이트 설정 모달 -->
+  <!-- 사원증 전용 개별 수정 모달 (다중 태그 지원) -->
+  <div class="modal-overlay" id="idCardConfigModal">
+    <div class="modal-box">
+      <h3 class="modal-title">EDIT ID CARD</h3>
+      <form id="idCardConfigForm" onsubmit="saveIdCardConfig(event)">
+        <h4 style="font-family:'Syncopate'; font-size:0.95rem; color:#ffb703; margin-bottom:15px;">FRONT SIDE CONFIG (앞면)</h4>
+        <div class="form-group">
+          <label>PROFILE PHOTO URL</label>
+          <input type="url" id="cardFormPhoto" required placeholder="https://...">
+        </div>
+        <div class="form-group">
+          <label>NAME</label>
+          <input type="text" id="cardFormName" required placeholder="GOSAT CREATOR">
+        </div>
+        <div class="form-group">
+          <label>ROLE / SUBTITLE</label>
+          <input type="text" id="cardFormRole" required placeholder="VFX Director & Producer">
+        </div>
+        <div class="form-group">
+          <label>STUDIO / TAGS (쉼표로 구분하여 여러 개 입력)</label>
+          <input type="text" id="cardFormTag" required placeholder="GOSAT VISUAL LAB, CREATOR">
+        </div>
+        <div class="form-group">
+          <label>STRAP TEXT</label>
+          <input type="text" id="cardFormStrap" required placeholder="GOSAT LAB">
+        </div>
+
+        <hr style="border:none; border-top:1px solid #333; margin:20px 0;">
+        <h4 style="font-family:'Syncopate'; font-size:0.95rem; color:#ffb703; margin-bottom:15px;">BACK SIDE EASTER EGG (뒷면)</h4>
+        <div class="form-group">
+          <label>BACK PHOTO URL</label>
+          <input type="url" id="cardFormBackPhoto" required placeholder="https://...">
+        </div>
+        <div class="form-group">
+          <label>BACK TITLE</label>
+          <input type="text" id="cardFormBackTitle" required placeholder="SECRET EASTER EGG">
+        </div>
+        <div class="form-group">
+          <label>BACK SUBTITLE / TEXT</label>
+          <input type="text" id="cardFormBackRole" required placeholder="Special Thanks & Concept Art">
+        </div>
+
+        <div class="modal-btns">
+          <button type="button" class="btn-cancel" onclick="closeIdCardConfigModal()">CANCEL</button>
+          <button type="submit" class="btn-save">SAVE ID CARD</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 사이트 기본 설정 모달 -->
   <div class="modal-overlay" id="siteConfigModal">
     <div class="modal-box">
       <h3 class="modal-title">EDIT SITE CONFIG</h3>
@@ -663,8 +867,18 @@
 
     const defaultSiteConfig = {
       logoText: "STUDIO.",
-      heroSubtitle: "SL8IGHT VISUAL LAB",
+      heroSubtitle: "GOSAT VISUAL LAB",
       heroTitle: "CINEMATIC 3D\nPORTFOLIO",
+      idCard: {
+        photo: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=800&auto=format&fit=crop",
+        name: "GOSAT CREATOR",
+        role: "VFX Director & Producer",
+        tag: "GOSAT VISUAL LAB, CREATOR",
+        strap: "GOSAT LAB",
+        backPhoto: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop",
+        backTitle: "SECRET EASTER EGG",
+        backRole: "Special Thanks & Concept Art"
+      },
       categories: [
         { id: "mv", name: "MUSIC VIDEO" },
         { id: "commercial", name: "CF / BRAND FILM" }
@@ -839,6 +1053,29 @@
       document.getElementById('siteLogoText').innerText = config.logoText || "STUDIO.";
       document.getElementById('siteHeroSubtitle').innerText = config.heroSubtitle || "";
       document.getElementById('siteHeroTitle').innerHTML = (config.heroTitle || "").replace(/\n/g, '<br>');
+
+      const idCard = config.idCard || defaultSiteConfig.idCard;
+      document.getElementById('idCardPhoto').src = idCard.photo || defaultSiteConfig.idCard.photo;
+      document.getElementById('idCardName').innerText = idCard.name || defaultSiteConfig.idCard.name;
+      document.getElementById('idCardRole').innerText = idCard.role || defaultSiteConfig.idCard.role;
+      document.getElementById('idStrapText').innerText = idCard.strap || defaultSiteConfig.idCard.strap;
+
+      const tagsContainer = document.getElementById('idCardTagsContainer');
+      if (tagsContainer) {
+        let tagsHtml = '';
+        const rawTags = idCard.tag || defaultSiteConfig.idCard.tag;
+        rawTags.split(',').forEach(t => {
+          const trimmed = t.trim();
+          if (trimmed) {
+            tagsHtml += `<span class="id-card-tag">${trimmed}</span>`;
+          }
+        });
+        tagsContainer.innerHTML = tagsHtml;
+      }
+
+      document.getElementById('idCardBackPhoto').src = idCard.backPhoto || defaultSiteConfig.idCard.backPhoto;
+      document.getElementById('idCardBackTitle').innerText = idCard.backTitle || defaultSiteConfig.idCard.backTitle;
+      document.getElementById('idCardBackRole').innerText = idCard.backRole || defaultSiteConfig.idCard.backRole;
 
       const navList = document.getElementById('navCategoryList');
       if (navList) {
@@ -1058,7 +1295,6 @@
       history.pushState({ view: 'detail', id: id }, '');
     }
 
-    // 블로그형 미디어/텍스트 동적 블록 렌더링 함수
     function renderDetailContentBlocks(work) {
       const container = document.getElementById('detailBlocksList');
       container.innerHTML = '';
@@ -1132,9 +1368,6 @@
       });
     }
 
-    // -------------------------------------------------------------
-    // 블로그형 텍스트 블록 모달 관리
-    // -------------------------------------------------------------
     function openTextBlockModal() {
       if (!currentDetailId || !isAdmin) return;
       document.getElementById('textBlockModalTitle').innerText = 'ADD TEXT BLOCK';
@@ -1193,9 +1426,6 @@
       openDetailPage(currentDetailId);
     }
 
-    // -------------------------------------------------------------
-    // 블로그형 미디어 블록 모달 관리
-    // -------------------------------------------------------------
     function openMediaBlockModal() {
       if (!currentDetailId || !isAdmin) return;
       document.getElementById('mediaBlockModalTitle').innerText = 'ADD MEDIA BLOCK';
@@ -1363,6 +1593,52 @@
       container.appendChild(row);
     }
 
+    function openIdCardConfigModal(e) {
+      if (e) e.stopPropagation();
+      if (!isAdmin) return;
+      const config = getSiteConfig();
+      const idCard = config.idCard || defaultSiteConfig.idCard;
+
+      document.getElementById('cardFormPhoto').value = idCard.photo || "";
+      document.getElementById('cardFormName').value = idCard.name || "";
+      document.getElementById('cardFormRole').value = idCard.role || "";
+      document.getElementById('cardFormTag').value = idCard.tag || "";
+      document.getElementById('cardFormStrap').value = idCard.strap || "";
+
+      document.getElementById('cardFormBackPhoto').value = idCard.backPhoto || "";
+      document.getElementById('cardFormBackTitle').value = idCard.backTitle || "";
+      document.getElementById('cardFormBackRole').value = idCard.backRole || "";
+
+      document.getElementById('idCardConfigModal').classList.add('active');
+    }
+
+    function closeIdCardConfigModal() {
+      document.getElementById('idCardConfigModal').classList.remove('active');
+    }
+
+    async function saveIdCardConfig(e) {
+      e.preventDefault();
+      if (!isAdmin) return;
+
+      const config = getSiteConfig();
+      config.idCard = {
+        photo: document.getElementById('cardFormPhoto').value,
+        name: document.getElementById('cardFormName').value,
+        role: document.getElementById('cardFormRole').value,
+        tag: document.getElementById('cardFormTag').value,
+        strap: document.getElementById('cardFormStrap').value,
+        backPhoto: document.getElementById('cardFormBackPhoto').value,
+        backTitle: document.getElementById('cardFormBackTitle').value,
+        backRole: document.getElementById('cardFormBackRole').value
+      };
+
+      localStorage.setItem('site_config_v3_dynamic', JSON.stringify(config));
+      applySiteConfig();
+      closeIdCardConfigModal();
+
+      await syncToCloudData();
+    }
+
     function openSiteConfigModal() {
       if (!isAdmin) return;
       const config = getSiteConfig();
@@ -1404,7 +1680,9 @@
         }
       });
 
+      const config = getSiteConfig();
       const newConfig = {
+        ...config,
         logoText: document.getElementById('configLogoText').value,
         heroSubtitle: document.getElementById('configHeroSubtitle').value,
         heroTitle: document.getElementById('configHeroTitle').value,
@@ -1507,6 +1785,130 @@
       }
     }
 
+    // -------------------------------------------------------------
+    // 끈과 카드가 한 몸으로 늘어나는 탄성 물리 연산 로직 (분리 현상 차단 및 더블클릭 복원)
+    // -------------------------------------------------------------
+    function initLanyardPhysics() {
+      const lanyardContainer = document.getElementById('lanyardCard');
+      const cardFlipper = document.getElementById('idCardFlipper');
+      const strapWrapper = document.getElementById('lanyardStrapWrapper');
+      const frontGlare = document.getElementById('idCardFrontGlare');
+      const backGlare = document.getElementById('idCardBackGlare');
+
+      if (!lanyardContainer || !cardFlipper || !strapWrapper) return;
+
+      let isDragging = false;
+      let startX = 0, startY = 0;
+      const baseStrapHeight = 110; // 기본 끈 높이
+
+      // 초기 등장 바운스
+      gsap.from(lanyardContainer, {
+        y: -250,
+        rotation: 12,
+        duration: 1.8,
+        ease: "bounce.out"
+      });
+
+      // 더블클릭 시 뒷면(이스터에그) 뒤집기 기능 (드래그와 충돌 방지)
+      cardFlipper.addEventListener('dblclick', (e) => {
+        e.stopPropagation();
+        cardFlipper.classList.toggle('flipped');
+      });
+
+      // 마우스 드래그 시작
+      cardFlipper.addEventListener('mousedown', (e) => {
+        if (e.target.closest('#idCardEditBtn')) return;
+        isDragging = true;
+        startX = e.clientX;
+        startY = e.clientY;
+        gsap.killTweensOf(lanyardContainer);
+        gsap.killTweensOf(strapWrapper);
+      });
+
+      window.addEventListener('mousemove', (e) => {
+        if (isDragging) {
+          const deltaX = e.clientX - startX;
+          const deltaY = e.clientY - startY;
+
+          // 피벗 상단 앵커점 기준으로 카드가 당겨진 거리 및 각도 계산
+          const currentAnchorX = 0;
+          const currentAnchorY = -baseStrapHeight;
+
+          const vectorX = deltaX - currentAnchorX;
+          const vectorY = deltaY - currentAnchorY;
+
+          const distance = Math.hypot(vectorX, vectorY);
+          const angleRad = Math.atan2(vectorX, vectorY);
+          const angleDeg = -angleRad * (180 / Math.PI);
+
+          // 끈의 높이(height)와 회전각이 카드 위치에 맞춰 실시간 연장
+          gsap.to(strapWrapper, {
+            height: Math.max(baseStrapHeight, distance),
+            rotation: angleDeg,
+            duration: 0.1,
+            overwrite: "auto"
+          });
+
+          gsap.to(lanyardContainer, {
+            x: deltaX,
+            y: deltaY,
+            rotation: angleDeg * 0.5,
+            duration: 0.1,
+            overwrite: "auto"
+          });
+
+          // 실시간 조명 광택 반사 하이라이트 위치 이동
+          const glareX = deltaX * 1.5;
+          const glareY = deltaY * 1.5;
+
+          if (frontGlare) {
+            frontGlare.style.transform = `translate(${glareX}px, ${glareY}px) rotate(25deg)`;
+            frontGlare.style.opacity = '0.9';
+          }
+          if (backGlare) {
+            backGlare.style.transform = `translate(${-glareX}px, ${glareY}px) rotate(25deg)`;
+            backGlare.style.opacity = '0.9';
+          }
+
+        } else if (window.innerWidth > 768) {
+          const rect = cardFlipper.getBoundingClientRect();
+          if (e.clientX >= rect.left && e.clientX <= rect.right && e.clientY >= rect.top && e.clientY <= rect.bottom) {
+            const x = (e.clientX - rect.left - rect.width / 2) * 2;
+            const y = (e.clientY - rect.top - rect.height / 2) * 2;
+            if (frontGlare) {
+              frontGlare.style.transform = `translate(${x}px, ${y}px) rotate(25deg)`;
+              frontGlare.style.opacity = '0.65';
+            }
+          }
+        }
+      });
+
+      window.addEventListener('mouseup', () => {
+        if (isDragging) {
+          isDragging = false;
+
+          // 손을 뗬을 때 탄성 스프링 반동과 함께 원래 길이와 자리로 복귀
+          gsap.to(lanyardContainer, {
+            x: 0,
+            y: 0,
+            rotation: 0,
+            duration: 2.2,
+            ease: "elastic.out(1.2, 0.25)"
+          });
+
+          gsap.to(strapWrapper, {
+            height: baseStrapHeight,
+            rotation: 0,
+            duration: 2.2,
+            ease: "elastic.out(1.2, 0.25)"
+          });
+
+          if (frontGlare) gsap.to(frontGlare, { opacity: 0.5, duration: 0.8 });
+          if (backGlare) gsap.to(backGlare, { opacity: 0.5, duration: 0.8 });
+        }
+      });
+    }
+
     // Custom Interactive Cursor
     const cursor = document.querySelector('.custom-cursor');
     if (window.innerWidth > 768) {
@@ -1581,6 +1983,7 @@
       applySiteConfig();
       renderWorks();
       initThreeJS();
+      initLanyardPhysics();
 
       if (loader) {
         loader.style.opacity = '0';
