@@ -130,17 +130,17 @@
       text-shadow: 0 20px 40px rgba(0,0,0,0.8); white-space: pre-line;
     }
 
-    /* 랜야드 메인 피벗 시스템 */
+    /* 랜야드 메인 피벗 시스템 (모바일 포함 맨 위 top: 0 에서 시작하도록 고정) */
     .lanyard-container {
-      position: absolute; top: 0; right: 200px; width: 320px; z-index: 5;
+      position: absolute; top: 0; right: 180px; width: 320px; z-index: 5;
       display: flex; flex-direction: column; align-items: center;
       perspective: 1200px; user-select: none;
       transform-origin: top center;
     }
 
-    /* 끈 스트랩 */
+    /* 끈 스트랩 (상단 맨 위 화면 끝까지 연장) */
     .lanyard-strap-wrapper {
-      position: relative; width: 22px; height: 110px; display: flex;
+      position: relative; width: 22px; height: 130px; display: flex;
       flex-direction: column; align-items: center; justify-content: flex-end;
       transform-origin: top center; will-change: height, transform;
     }
@@ -220,7 +220,7 @@
       border: 1px solid rgba(255, 183, 3, 0.3);
     }
 
-    /* 사진 영역 비율 3:4 적용 (너비 기준 자동 계산) 및 여백 밀착 조정 */
+    /* 3:4 사진 비율 */
     .id-card-photo-wrapper {
       width: 100%; aspect-ratio: 3 / 4; border-radius: 12px; overflow: hidden;
       background: #000; position: relative; box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
@@ -445,14 +445,14 @@
     footer { padding: 60px 50px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; background: #050505; }
     .social-links { display: flex; gap: 25px; font-size: 1.3rem; align-items: center; }
 
-    /* 모바일 반응형 스타일 */
+    /* 모바일 반응형 스타일 (모바일에서도 끈이 맨 위 top: 0 에서 시작하도록 통일) */
     @media (max-width: 992px) {
       .hero { flex-direction: column; justify-content: center; padding: 120px 20px 60px 20px; gap: 40px; }
       .hero-content { max-width: 100%; text-align: center; }
       .hero-title { font-size: 2.5rem; }
-      .lanyard-container { position: relative; right: auto; top: auto; width: 300px; height: 480px; }
+      .lanyard-container { position: absolute; top: 0; right: calc(50% - 150px); width: 300px; height: auto; }
       .id-card-flipper { width: 280px; height: 390px; }
-      .id-card-face { padding: 18px; }
+      .id-card-face { padding: 16px; }
       .id-card-photo-wrapper { aspect-ratio: 3 / 4; }
     }
 
@@ -529,7 +529,7 @@
         </div>
       </div>
 
-      <!-- 3D Lanyard ID Card (어두운 메탈릭 재질 & 3:4 사진 비율 & 컴팩트 여백 & 다중 태그) -->
+      <!-- 3D Lanyard ID Card (모바일/PC 터치&마우스 인터랙션, 맨 위 top:0 끈 연결, 3:4 사진 비율) -->
       <div class="lanyard-container" id="lanyardCard">
         <div class="lanyard-strap-wrapper" id="lanyardStrapWrapper">
           <div class="lanyard-strap">
@@ -554,7 +554,7 @@
             </div>
           </div>
 
-          <!-- 뒷면 (더블클릭 시 노출) -->
+          <!-- 뒷면 (더블클릭 또는 모바일 더블탭 시 노출) -->
           <div class="id-card-face id-card-back">
             <div class="id-card-glare" id="idCardBackGlare"></div>
             <div class="id-card-photo-wrapper">
@@ -1786,7 +1786,7 @@
     }
 
     // -------------------------------------------------------------
-    // 끈과 카드가 한 몸으로 늘어나는 탄성 물리 연산 로직 (분리 현상 차단 및 더블클릭 복원)
+    // PC(마우스) 및 모바일(터치) 공용 탄성 물리 연산 & 더블클릭/더블탭 뒤집기 로직
     // -------------------------------------------------------------
     function initLanyardPhysics() {
       const lanyardContainer = document.getElementById('lanyardCard');
@@ -1799,7 +1799,7 @@
 
       let isDragging = false;
       let startX = 0, startY = 0;
-      const baseStrapHeight = 110; // 기본 끈 높이
+      const baseStrapHeight = 110;
 
       // 초기 등장 바운스
       gsap.from(lanyardContainer, {
@@ -1809,104 +1809,119 @@
         ease: "bounce.out"
       });
 
-      // 더블클릭 시 뒷면(이스터에그) 뒤집기 기능 (드래그와 충돌 방지)
+      // 더블클릭 및 모바일 더블탭(방식 통일) 시 뒷면 뒤집기
+      let lastTapTime = 0;
+      cardFlipper.addEventListener('click', (e) => {
+        if (e.target.closest('#idCardEditBtn')) return;
+        const currentTime = new Date().getTime();
+        const tapLength = currentTime - lastTapTime;
+        if (tapLength < 300 && tapLength > 0) {
+          e.stopPropagation();
+          cardFlipper.classList.toggle('flipped');
+        }
+        lastTapTime = currentTime;
+      });
+
       cardFlipper.addEventListener('dblclick', (e) => {
+        if (e.target.closest('#idCardEditBtn')) return;
         e.stopPropagation();
         cardFlipper.classList.toggle('flipped');
       });
 
-      // 마우스 드래그 시작
-      cardFlipper.addEventListener('mousedown', (e) => {
-        if (e.target.closest('#idCardEditBtn')) return;
+      // 드래그 시작 (마우스 및 터치 통합 핸들러)
+      function startDrag(clientX, clientY, target) {
+        if (target.closest && target.closest('#idCardEditBtn')) return;
         isDragging = true;
-        startX = e.clientX;
-        startY = e.clientY;
+        startX = clientX;
+        startY = clientY;
         gsap.killTweensOf(lanyardContainer);
         gsap.killTweensOf(strapWrapper);
-      });
+      }
 
-      window.addEventListener('mousemove', (e) => {
-        if (isDragging) {
-          const deltaX = e.clientX - startX;
-          const deltaY = e.clientY - startY;
+      function moveDrag(clientX, clientY) {
+        if (!isDragging) return;
+        const deltaX = clientX - startX;
+        const deltaY = clientY - startY;
 
-          // 피벗 상단 앵커점 기준으로 카드가 당겨진 거리 및 각도 계산
-          const currentAnchorX = 0;
-          const currentAnchorY = -baseStrapHeight;
+        const currentAnchorX = 0;
+        const currentAnchorY = -baseStrapHeight;
 
-          const vectorX = deltaX - currentAnchorX;
-          const vectorY = deltaY - currentAnchorY;
+        const vectorX = deltaX - currentAnchorX;
+        const vectorY = deltaY - currentAnchorY;
 
-          const distance = Math.hypot(vectorX, vectorY);
-          const angleRad = Math.atan2(vectorX, vectorY);
-          const angleDeg = -angleRad * (180 / Math.PI);
+        const distance = Math.hypot(vectorX, vectorY);
+        const angleRad = Math.atan2(vectorX, vectorY);
+        const angleDeg = -angleRad * (180 / Math.PI);
 
-          // 끈의 높이(height)와 회전각이 카드 위치에 맞춰 실시간 연장
-          gsap.to(strapWrapper, {
-            height: Math.max(baseStrapHeight, distance),
-            rotation: angleDeg,
-            duration: 0.1,
-            overwrite: "auto"
-          });
+        gsap.to(strapWrapper, {
+          height: Math.max(baseStrapHeight, distance),
+          rotation: angleDeg,
+          duration: 0.1,
+          overwrite: "auto"
+        });
 
-          gsap.to(lanyardContainer, {
-            x: deltaX,
-            y: deltaY,
-            rotation: angleDeg * 0.5,
-            duration: 0.1,
-            overwrite: "auto"
-          });
+        gsap.to(lanyardContainer, {
+          x: deltaX,
+          y: deltaY,
+          rotation: angleDeg * 0.5,
+          duration: 0.1,
+          overwrite: "auto"
+        });
 
-          // 실시간 조명 광택 반사 하이라이트 위치 이동
-          const glareX = deltaX * 1.5;
-          const glareY = deltaY * 1.5;
+        const glareX = deltaX * 1.5;
+        const glareY = deltaY * 1.5;
 
-          if (frontGlare) {
-            frontGlare.style.transform = `translate(${glareX}px, ${glareY}px) rotate(25deg)`;
-            frontGlare.style.opacity = '0.9';
-          }
-          if (backGlare) {
-            backGlare.style.transform = `translate(${-glareX}px, ${glareY}px) rotate(25deg)`;
-            backGlare.style.opacity = '0.9';
-          }
-
-        } else if (window.innerWidth > 768) {
-          const rect = cardFlipper.getBoundingClientRect();
-          if (e.clientX >= rect.left && e.clientX <= rect.right && e.clientY >= rect.top && e.clientY <= rect.bottom) {
-            const x = (e.clientX - rect.left - rect.width / 2) * 2;
-            const y = (e.clientY - rect.top - rect.height / 2) * 2;
-            if (frontGlare) {
-              frontGlare.style.transform = `translate(${x}px, ${y}px) rotate(25deg)`;
-              frontGlare.style.opacity = '0.65';
-            }
-          }
+        if (frontGlare) {
+          frontGlare.style.transform = `translate(${glareX}px, ${glareY}px) rotate(25deg)`;
+          frontGlare.style.opacity = '0.9';
         }
-      });
-
-      window.addEventListener('mouseup', () => {
-        if (isDragging) {
-          isDragging = false;
-
-          // 손을 뗬을 때 탄성 스프링 반동과 함께 원래 길이와 자리로 복귀
-          gsap.to(lanyardContainer, {
-            x: 0,
-            y: 0,
-            rotation: 0,
-            duration: 2.2,
-            ease: "elastic.out(1.2, 0.25)"
-          });
-
-          gsap.to(strapWrapper, {
-            height: baseStrapHeight,
-            rotation: 0,
-            duration: 2.2,
-            ease: "elastic.out(1.2, 0.25)"
-          });
-
-          if (frontGlare) gsap.to(frontGlare, { opacity: 0.5, duration: 0.8 });
-          if (backGlare) gsap.to(backGlare, { opacity: 0.5, duration: 0.8 });
+        if (backGlare) {
+          backGlare.style.transform = `translate(${-glareX}px, ${glareY}px) rotate(25deg)`;
+          backGlare.style.opacity = '0.9';
         }
-      });
+      }
+
+      function endDrag() {
+        if (!isDragging) return;
+        isDragging = false;
+
+        gsap.to(lanyardContainer, {
+          x: 0,
+          y: 0,
+          rotation: 0,
+          duration: 2.2,
+          ease: "elastic.out(1.2, 0.25)"
+        });
+
+        gsap.to(strapWrapper, {
+          height: baseStrapHeight,
+          rotation: 0,
+          duration: 2.2,
+          ease: "elastic.out(1.2, 0.25)"
+        });
+
+        if (frontGlare) gsap.to(frontGlare, { opacity: 0.5, duration: 0.8 });
+        if (backGlare) gsap.to(backGlare, { opacity: 0.5, duration: 0.8 });
+      }
+
+      // 이벤트 리스너 등록 (마우스 & 터치)
+      cardFlipper.addEventListener('mousedown', (e) => startDrag(e.clientX, e.clientY, e.target));
+      window.addEventListener('mousemove', (e) => moveDrag(e.clientX, e.clientY));
+      window.addEventListener('mouseup', endDrag);
+
+      cardFlipper.addEventListener('touchstart', (e) => {
+        if (e.touches.length === 1) {
+          startDrag(e.touches[0].clientX, e.touches[0].clientY, e.target);
+        }
+      }, { passive: true });
+
+      window.addEventListener('touchmove', (e) => {
+        if (e.touches.length === 1) {
+          moveDrag(e.touches[0].clientX, e.touches[0].clientY);
+        }
+      }, { passive: true });
+
+      window.addEventListener('touchend', endDrag);
     }
 
     // Custom Interactive Cursor
