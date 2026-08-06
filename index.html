@@ -130,17 +130,17 @@
       text-shadow: 0 20px 40px rgba(0,0,0,0.8); white-space: pre-line;
     }
 
-    /* 데스크톱 사원 카드 위치 */
+    /* 사원 카드를 위쪽으로 10% 더 끌어올림 (top: -8%) */
     .lanyard-container {
-      position: absolute; top: 10%; right: calc(150px + 5vw); width: 320px; z-index: 5;
+      position: absolute; top: -8%; right: calc(150px + 5vw); width: 320px; z-index: 5;
       display: flex; flex-direction: column; align-items: center;
       perspective: 1200px; user-select: none;
       transform-origin: top center;
     }
 
-    /* 긴 끈 스트랩 */
+    /* 천장부터 이어지는 긴 끈 스트랩 */
     .lanyard-strap-wrapper {
-      position: relative; width: 22px; height: 240px; display: flex;
+      position: relative; width: 22px; height: 260px; display: flex;
       flex-direction: column; align-items: center; justify-content: flex-end;
       transform-origin: top center; will-change: height, transform;
     }
@@ -180,10 +180,11 @@
       transform-style: preserve-3d; flex-shrink: 0; margin-top: 10px;
       cursor: grab;
       transform-origin: top center;
+      transition: transform 0.9s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
     .id-card-flipper:active { cursor: grabbing; }
     .id-card-flipper.flipped {
-      transform: rotateY(180deg);
+      transform: rotateY(180deg) scale(1.03);
     }
 
     /* 앞면 / 뒷면 공통 스타일 */
@@ -445,7 +446,7 @@
     footer { padding: 60px 50px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; background: #050505; }
     .social-links { display: flex; gap: 25px; font-size: 1.3rem; align-items: center; }
 
-    /* 모바일 반응형 스타일 (모바일 사원 카드 위치 최초 상태 복원) */
+    /* 모바일 반응형 스타일 */
     @media (max-width: 992px) {
       .hero { flex-direction: column; justify-content: center; padding: 120px 20px 60px 20px; gap: 40px; }
       .hero-content { max-width: 100%; text-align: center; }
@@ -529,8 +530,8 @@
         </div>
       </div>
 
-      <!-- 3D Lanyard ID Card (모바일 위치 원복 및 양방향 더블클릭/더블탭 토글 뒤집기) -->
-      <div class="lanyard-container" id="lanyardCard">
+      <!-- 3D Lanyard ID Card (위치 위로 10% 더 끌어올림: top: -8%) -->
+      <div class="lanyard-container" id="lanyardCard" style="top: -8%;">
         <div class="lanyard-strap-wrapper" id="lanyardStrapWrapper">
           <div class="lanyard-strap">
             <span class="lanyard-strap-text" id="idStrapText">GOSAT LAB</span>
@@ -554,7 +555,7 @@
             </div>
           </div>
 
-          <!-- 뒷면 (모바일 더블탭 / PC 더블클릭 시 앞뒤 토글) -->
+          <!-- 뒷면 (더블클릭/더블탭 시 앞면/뒷면 토글) -->
           <div class="id-card-face id-card-back">
             <div class="id-card-glare" id="idCardBackGlare"></div>
             <div class="id-card-photo-wrapper">
@@ -1786,7 +1787,7 @@
     }
 
     // -------------------------------------------------------------
-    // 탄성 물리학 및 모바일/데스크톱 공용 더블클릭/더블탭 뒤집기 토글 로직
+    // 탄성 물리학 및 더블클릭/더블탭 토글 뒤집기 완벽 지원 (천장 240px 길이 반영)
     // -------------------------------------------------------------
     function initLanyardPhysics() {
       const lanyardContainer = document.getElementById('lanyardCard');
@@ -1800,7 +1801,7 @@
       let isDragging = false;
       let startX = 0, startY = 0;
       let hasMoved = false;
-      const baseStrapHeight = 240;
+      const baseStrapHeight = 240; // 천장(top: 0)부터 시작하는 긴 끈 높이
 
       // 초기 등장 바운스
       gsap.from(lanyardContainer, {
@@ -1810,20 +1811,20 @@
         ease: "bounce.out"
       });
 
-      // 데스크톱 더블클릭 이벤트 토글
+      // 데스크톱 더블클릭 시 앞/뒤 토글 뒤집기 보장
       cardFlipper.addEventListener('dblclick', (e) => {
         if (e.target.closest('#idCardEditBtn')) return;
         e.stopPropagation();
         cardFlipper.classList.toggle('flipped');
       });
 
-      // 모바일 및 터치 환경 더블탭 토글 (앞면 <-> 뒷면 왕복 완벽 지원)
+      // 모바일 더블탭 지원
       let lastTap = 0;
       cardFlipper.addEventListener('touchend', (e) => {
         if (e.target.closest('#idCardEditBtn')) return;
         const currentTime = new Date().getTime();
         const tapLength = currentTime - lastTap;
-        if (tapLength < 350 && tapLength > 0 && !hasMoved) {
+        if (tapLength < 300 && tapLength > 0 && !hasMoved) {
           e.preventDefault();
           cardFlipper.classList.toggle('flipped');
         }
