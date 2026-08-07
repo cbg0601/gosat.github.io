@@ -495,7 +495,6 @@
         height: 460px;
         z-index: 10;
         margin: 0 auto;
-        /* 모바일 GSAP X축 자율 이동을 위한 마진 상쇄 */
         margin-left: -150px;
       }
       .id-card-flipper { width: 280px; height: 390px; }
@@ -596,7 +595,7 @@
               <div class="id-card-name" id="idCardName">GOSAT CREATOR</div>
               <div class="id-card-role" id="idCardRole">VFX Director & Producer</div>
               <div class="id-card-tags-container" id="idCardTagsContainer">
-                <!-- 다중 태그 동적 삽입 -->
+                <!-- 앞면 다중 태그 동적 삽입 -->
               </div>
             </div>
           </div>
@@ -610,8 +609,8 @@
             <div class="id-card-info-box">
               <div class="id-card-name" id="idCardBackTitle">SECRET EASTER EGG</div>
               <div class="id-card-role" id="idCardBackRole">Special Thanks & Concept Art</div>
-              <div class="id-card-tags-container">
-                <span class="id-card-tag">SPECIAL VISUAL</span>
+              <div class="id-card-tags-container" id="idCardBackTagsContainer">
+                <!-- 뒷면 다중 태그 동적 삽입 -->
               </div>
             </div>
           </div>
@@ -656,7 +655,7 @@
     </div>
   </div>
 
-  <!-- 사원증 전용 개별 수정 모달 (다중 태그 지원) -->
+  <!-- 사원증 전용 개별 수정 모달 (앞면 / 뒷면 태그 각각 수정 가능) -->
   <div class="modal-overlay" id="idCardConfigModal">
     <div class="modal-box">
       <h3 class="modal-title">EDIT ID CARD</h3>
@@ -675,7 +674,7 @@
           <input type="text" id="cardFormRole" required placeholder="VFX Director & Producer">
         </div>
         <div class="form-group">
-          <label>STUDIO / TAGS (쉼표로 구분하여 여러 개 입력)</label>
+          <label>FRONT TAGS (쉼표로 구분하여 여러 개 입력)</label>
           <input type="text" id="cardFormTag" required placeholder="GOSAT VISUAL LAB, CREATOR">
         </div>
         <div class="form-group">
@@ -696,6 +695,10 @@
         <div class="form-group">
           <label>BACK SUBTITLE / TEXT</label>
           <input type="text" id="cardFormBackRole" required placeholder="Special Thanks & Concept Art">
+        </div>
+        <div class="form-group">
+          <label>BACK TAGS (쉼표로 구분하여 여러 개 입력)</label>
+          <input type="text" id="cardFormBackTag" placeholder="SPECIAL VISUAL, CONCEPT">
         </div>
 
         <div class="modal-btns">
@@ -924,7 +927,8 @@
         strap: "GOSAT LAB",
         backPhoto: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop",
         backTitle: "SECRET EASTER EGG",
-        backRole: "Special Thanks & Concept Art"
+        backRole: "Special Thanks & Concept Art",
+        backTag: "SPECIAL VISUAL"
       },
       categories: [
         { id: "mv", name: "MUSIC VIDEO" },
@@ -1114,6 +1118,7 @@
       document.getElementById('idCardRole').innerText = idCard.role || defaultSiteConfig.idCard.role;
       document.getElementById('idStrapText').innerText = idCard.strap || defaultSiteConfig.idCard.strap;
 
+      // 앞면 태그 동적 삽입
       const tagsContainer = document.getElementById('idCardTagsContainer');
       if (tagsContainer) {
         let tagsHtml = '';
@@ -1127,9 +1132,23 @@
         tagsContainer.innerHTML = tagsHtml;
       }
 
+      // 뒷면 태그 동적 삽입
       document.getElementById('idCardBackPhoto').src = idCard.backPhoto || defaultSiteConfig.idCard.backPhoto;
       document.getElementById('idCardBackTitle').innerText = idCard.backTitle || defaultSiteConfig.idCard.backTitle;
       document.getElementById('idCardBackRole').innerText = idCard.backRole || defaultSiteConfig.idCard.backRole;
+
+      const backTagsContainer = document.getElementById('idCardBackTagsContainer');
+      if (backTagsContainer) {
+        let backTagsHtml = '';
+        const rawBackTags = idCard.backTag || defaultSiteConfig.idCard.backTag || "SPECIAL VISUAL";
+        rawBackTags.split(',').forEach(t => {
+          const trimmed = t.trim();
+          if (trimmed) {
+            backTagsHtml += `<span class="id-card-tag">${trimmed}</span>`;
+          }
+        });
+        backTagsContainer.innerHTML = backTagsHtml;
+      }
 
       const navList = document.getElementById('navCategoryList');
       if (navList) {
@@ -1662,6 +1681,7 @@
       document.getElementById('cardFormBackPhoto').value = idCard.backPhoto || "";
       document.getElementById('cardFormBackTitle').value = idCard.backTitle || "";
       document.getElementById('cardFormBackRole').value = idCard.backRole || "";
+      document.getElementById('cardFormBackTag').value = idCard.backTag || "";
 
       document.getElementById('idCardConfigModal').classList.add('active');
     }
@@ -1683,7 +1703,8 @@
         strap: document.getElementById('cardFormStrap').value,
         backPhoto: document.getElementById('cardFormBackPhoto').value,
         backTitle: document.getElementById('cardFormBackTitle').value,
-        backRole: document.getElementById('cardFormBackRole').value
+        backRole: document.getElementById('cardFormBackRole').value,
+        backTag: document.getElementById('cardFormBackTag').value
       };
 
       localStorage.setItem('site_config_v3_dynamic', JSON.stringify(config));
@@ -1840,7 +1861,7 @@
     }
 
     // -------------------------------------------------------------
-    // 탄성 물리학 및 더블클릭/더블탭 토글 뒤집기 완벽 지원 (모바일 상하좌우 다방향 이동)
+    // 탄성 물리학 및 더블클릭/더블탭 토글 뒤집기 완벽 지원
     // -------------------------------------------------------------
     function initLanyardPhysics() {
       const lanyardContainer = document.getElementById('lanyardCard');
@@ -1924,7 +1945,6 @@
           overwrite: "auto"
         });
 
-        // lanyardContainer의 x, y축 및 회전값 이동 지정 (모바일 상하좌우 자율 연동)
         gsap.to(lanyardContainer, {
           x: deltaX,
           y: deltaY,
