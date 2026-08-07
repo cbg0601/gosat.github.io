@@ -130,7 +130,7 @@
       text-shadow: 0 20px 40px rgba(0,0,0,0.8); white-space: pre-line;
     }
 
-    /* 데스크톱 사원 카드 */
+    /* 데스크톱 사원 카드 (top: -4%) */
     .lanyard-container {
       position: absolute; top: -4%; right: calc(150px + 5vw); width: 320px; z-index: 5;
       display: flex; flex-direction: column; align-items: center;
@@ -448,7 +448,7 @@
     footer { padding: 60px 50px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; background: #050505; }
     .social-links { display: flex; gap: 25px; font-size: 1.3rem; align-items: center; }
 
-    /* 모바일 반응형 스타일 (모바일 사원 카드 위치 40% 추가 하향 조정) */
+    /* 모바일 반응형 스타일 (모바일 사원 카드 위치 15% 하향에 추가로 40% 더 내린 top: -56px) */
     @media (max-width: 992px) {
       .hero {
         position: relative;
@@ -489,7 +489,7 @@
         left: 50% !important;
         right: auto !important;
         transform: translateX(-50%) !important;
-        top: -160px !important; /* 이전 -266px 대비 40% 아래로 하향 조정 */
+        top: -56px !important; /* 이전 -160px 위치에서 40% 추가 하향 조정 */
         width: 300px;
         height: 460px;
         z-index: 10;
