@@ -130,7 +130,7 @@
       text-shadow: 0 20px 40px rgba(0,0,0,0.8); white-space: pre-line;
     }
 
-    /* 데스크톱 사원 카드 (수정 없음, 현재 상태 유지) */
+    /* 데스크톱 사원 카드 (요청대로 수정 없이 기존 상태 유지) */
     .lanyard-container {
       position: absolute; top: -8%; right: calc(150px + 5vw); width: 320px; z-index: 5;
       display: flex; flex-direction: column; align-items: center;
@@ -221,7 +221,7 @@
       border: 1px solid rgba(255, 183, 3, 0.3);
     }
 
-    /* 3:4 사진 비율 및 투명 PNG 배경 투영 처리 */
+    /* 3:4 사진 비율 및 투명 PNG 투영 설정 */
     .id-card-photo-wrapper {
       width: 100%; aspect-ratio: 3 / 4; border-radius: 12px; overflow: hidden;
       background: #050505; position: relative; box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
@@ -448,12 +448,12 @@
     footer { padding: 60px 50px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; background: #050505; }
     .social-links { display: flex; gap: 25px; font-size: 1.3rem; align-items: center; }
 
-    /* 모바일 반응형 스타일 (요청사항 2: 모바일 사원증 위치 40% 위로 상향 -> top: -85px) */
+    /* 모바일 반응형 스타일 (요청대로 기존 모바일 카드 위치를 정확히 40% 위로 상향) */
     @media (max-width: 992px) {
       .hero { flex-direction: column; justify-content: center; padding: 120px 20px 60px 20px; gap: 40px; }
       .hero-content { max-width: 100%; text-align: center; }
       .hero-title { font-size: 2.5rem; }
-      .lanyard-container { position: relative; right: auto; top: -85px; width: 300px; height: 440px; }
+      .lanyard-container { position: relative; right: auto; top: -40px; width: 300px; height: 440px; }
       .id-card-flipper { width: 280px; height: 390px; }
       .id-card-face { padding: 16px; }
       .id-card-photo-wrapper { aspect-ratio: 3 / 4; }
@@ -532,7 +532,7 @@
         </div>
       </div>
 
-      <!-- 3D Lanyard ID Card (요청사항 1: 데스크톱 원본 상태 유지) -->
+      <!-- 3D Lanyard ID Card (데스크톱 사원카드 위치 원본 유지: top: -8%) -->
       <div class="lanyard-container" id="lanyardCard" style="top: -8%;">
         <div class="lanyard-strap-wrapper" id="lanyardStrapWrapper">
           <div class="lanyard-strap">
