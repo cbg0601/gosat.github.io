@@ -130,7 +130,7 @@
       text-shadow: 0 20px 40px rgba(0,0,0,0.8); white-space: pre-line;
     }
 
-    /* 데스크톱 사원 카드 */
+    /* 데스크톱 사원 카드 (top: -4%) */
     .lanyard-container {
       position: absolute; top: -4%; right: calc(150px + 5vw); width: 320px; z-index: 5;
       display: flex; flex-direction: column; align-items: center;
@@ -490,12 +490,13 @@
         position: absolute;
         left: 50% !important;
         right: auto !important;
-        transform: translateX(-50%) !important;
         top: -56px !important;
         width: 300px;
         height: 460px;
         z-index: 10;
         margin: 0 auto;
+        /* 모바일 GSAP X축 자율 이동을 위한 마진 상쇄 */
+        margin-left: -150px;
       }
       .id-card-flipper { width: 280px; height: 390px; }
       .id-card-face { padding: 16px; }
@@ -1839,7 +1840,7 @@
     }
 
     // -------------------------------------------------------------
-    // 탄성 물리학 및 더블클릭/더블탭 토글 뒤집기 완벽 지원 (모바일 터치 연동 수정)
+    // 탄성 물리학 및 더블클릭/더블탭 토글 뒤집기 완벽 지원 (모바일 상하좌우 다방향 이동)
     // -------------------------------------------------------------
     function initLanyardPhysics() {
       const lanyardContainer = document.getElementById('lanyardCard');
@@ -1853,7 +1854,7 @@
       let isDragging = false;
       let startX = 0, startY = 0;
       let hasMoved = false;
-      const baseStrapHeight = 240; // 천장(top: 0)부터 시작하는 긴 끈 높이
+      const baseStrapHeight = 240;
 
       // 초기 등장 바운스
       gsap.from(lanyardContainer, {
@@ -1923,6 +1924,7 @@
           overwrite: "auto"
         });
 
+        // lanyardContainer의 x, y축 및 회전값 이동 지정 (모바일 상하좌우 자율 연동)
         gsap.to(lanyardContainer, {
           x: deltaX,
           y: deltaY,
@@ -1972,7 +1974,7 @@
       window.addEventListener('mousemove', (e) => moveDrag(e.clientX, e.clientY));
       window.addEventListener('mouseup', endDrag);
 
-      // 모바일 터치 이벤트 (전체 lanyardContainer 바인딩 및 브라우저 스크롤 방지 연동)
+      // 모바일 터치 이벤트
       lanyardContainer.addEventListener('touchstart', (e) => {
         if (e.touches.length === 1) {
           startDrag(e.touches[0].clientX, e.touches[0].clientY, e.target);
