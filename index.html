@@ -595,7 +595,7 @@
           <div class="id-card-face id-card-front">
             <div class="id-card-glare" id="idCardFrontGlare"></div>
             <div class="id-card-photo-wrapper">
-              <img id="idCardPhoto" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=800&auto=format&fit=crop" alt="Profile Photo" crossorigin="anonymous" loading="eager" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=800&auto=format&fit=crop';">
+              <img id="idCardPhoto" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=800&auto=format&fit=crop" alt="Profile Photo" loading="eager" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=800&auto=format&fit=crop';">
             </div>
             <div class="id-card-info-box">
               <div class="id-card-name" id="idCardName">GOSAT CREATOR</div>
@@ -610,7 +610,7 @@
           <div class="id-card-face id-card-back">
             <div class="id-card-glare" id="idCardBackGlare"></div>
             <div class="id-card-photo-wrapper">
-              <img id="idCardBackPhoto" src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop" alt="Easter Egg Back Photo" crossorigin="anonymous" loading="eager" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop';">
+              <img id="idCardBackPhoto" src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop" alt="Easter Egg Back Photo" loading="eager" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop';">
             </div>
             <div class="id-card-info-box">
               <div class="id-card-name" id="idCardBackTitle">SECRET EASTER EGG</div>
@@ -1280,7 +1280,7 @@
           } else if (work.type === 'video' || parsedMedia.type === 'video') {
             mediaHtml = `<video src="${parsedMedia.src}" autoplay loop muted playsinline></video>`;
           } else {
-            mediaHtml = `<img src="${parsedMedia.src}" alt="${work.title}" crossorigin="anonymous" loading="eager">`;
+            mediaHtml = `<img src="${parsedMedia.src}" alt="${work.title}" loading="eager">`;
           }
 
           const previewText = work.cardDesc || '';
@@ -1408,7 +1408,7 @@
           } else if (parsed.type === 'video') {
             mediaElement = `<video src="${parsed.src}" controls loop muted playsinline></video>`;
           } else {
-            mediaElement = `<img src="${parsed.src}" alt="Detail Media" crossorigin="anonymous" loading="eager">`;
+            mediaElement = `<img src="${parsed.src}" alt="Detail Media" loading="eager">`;
           }
 
           const captionHtml = block.caption ? `<div class="media-caption">${block.caption}</div>` : '';
