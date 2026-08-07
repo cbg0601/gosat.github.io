@@ -130,12 +130,13 @@
       text-shadow: 0 20px 40px rgba(0,0,0,0.8); white-space: pre-line;
     }
 
-    /* 데스크톱 사원 카드 (top: -4%) */
+    /* 데스크톱 사원 카드 */
     .lanyard-container {
       position: absolute; top: -4%; right: calc(150px + 5vw); width: 320px; z-index: 5;
       display: flex; flex-direction: column; align-items: center;
       perspective: 1200px; user-select: none;
       transform-origin: top center;
+      touch-action: none;
     }
 
     /* 천장부터 이어지는 긴 끈 스트랩 */
@@ -181,6 +182,7 @@
       cursor: grab;
       transform-origin: top center;
       transition: transform 0.9s cubic-bezier(0.34, 1.56, 0.64, 1);
+      touch-action: none;
     }
     .id-card-flipper:active { cursor: grabbing; }
     .id-card-flipper.flipped {
@@ -448,7 +450,7 @@
     footer { padding: 60px 50px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; background: #050505; }
     .social-links { display: flex; gap: 25px; font-size: 1.3rem; align-items: center; }
 
-    /* 모바일 반응형 스타일 (모바일 사원 카드 위치 15% 하향에 추가로 40% 더 내린 top: -56px) */
+    /* 모바일 반응형 스타일 */
     @media (max-width: 992px) {
       .hero {
         position: relative;
@@ -489,7 +491,7 @@
         left: 50% !important;
         right: auto !important;
         transform: translateX(-50%) !important;
-        top: -56px !important; /* 이전 -160px 위치에서 40% 추가 하향 조정 */
+        top: -56px !important;
         width: 300px;
         height: 460px;
         z-index: 10;
@@ -1837,7 +1839,7 @@
     }
 
     // -------------------------------------------------------------
-    // 탄성 물리학 및 더블클릭/더블탭 토글 뒤집기 완벽 지원 (천장 240px 길이 반영)
+    // 탄성 물리학 및 더블클릭/더블탭 토글 뒤집기 완벽 지원 (모바일 터치 연동 수정)
     // -------------------------------------------------------------
     function initLanyardPhysics() {
       const lanyardContainer = document.getElementById('lanyardCard');
@@ -1861,7 +1863,7 @@
         ease: "bounce.out"
       });
 
-      // 데스크톱 더블클릭 시 앞/뒤 토글 뒤집기 보장
+      // 데스크톱 더블클릭 시 앞/뒤 토글 뒤집기
       cardFlipper.addEventListener('dblclick', (e) => {
         if (e.target.closest('#idCardEditBtn')) return;
         e.stopPropagation();
@@ -1874,10 +1876,13 @@
         if (e.target.closest('#idCardEditBtn')) return;
         const currentTime = new Date().getTime();
         const tapLength = currentTime - lastTap;
+        
         if (tapLength < 300 && tapLength > 0 && !hasMoved) {
-          e.preventDefault();
+          if (e.cancelable) e.preventDefault();
           cardFlipper.classList.toggle('flipped');
         }
+        
+        endDrag();
         lastTap = currentTime;
       });
 
@@ -1962,24 +1967,27 @@
         if (backGlare) gsap.to(backGlare, { opacity: 0.5, duration: 0.8 });
       }
 
-      // 이벤트 리스너 등록
-      cardFlipper.addEventListener('mousedown', (e) => startDrag(e.clientX, e.clientY, e.target));
+      // 마우스 이벤트
+      lanyardContainer.addEventListener('mousedown', (e) => startDrag(e.clientX, e.clientY, e.target));
       window.addEventListener('mousemove', (e) => moveDrag(e.clientX, e.clientY));
       window.addEventListener('mouseup', endDrag);
 
-      cardFlipper.addEventListener('touchstart', (e) => {
+      // 모바일 터치 이벤트 (전체 lanyardContainer 바인딩 및 브라우저 스크롤 방지 연동)
+      lanyardContainer.addEventListener('touchstart', (e) => {
         if (e.touches.length === 1) {
           startDrag(e.touches[0].clientX, e.touches[0].clientY, e.target);
         }
       }, { passive: true });
 
       window.addEventListener('touchmove', (e) => {
-        if (e.touches.length === 1) {
+        if (isDragging && e.touches.length === 1) {
+          if (e.cancelable) e.preventDefault();
           moveDrag(e.touches[0].clientX, e.touches[0].clientY);
         }
-      }, { passive: true });
+      }, { passive: false });
 
       window.addEventListener('touchend', endDrag);
+      window.addEventListener('touchcancel', endDrag);
     }
 
     // Custom Interactive Cursor
