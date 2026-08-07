@@ -130,9 +130,9 @@
       text-shadow: 0 20px 40px rgba(0,0,0,0.8); white-space: pre-line;
     }
 
-    /* 데스크톱 사원 카드 (요청대로 수정 없이 기존 상태 유지) */
+    /* 데스크톱 사원 카드 (기존 -8%에서 5% 내린 -3% 적용) */
     .lanyard-container {
-      position: absolute; top: -8%; right: calc(150px + 5vw); width: 320px; z-index: 5;
+      position: absolute; top: -3%; right: calc(150px + 5vw); width: 320px; z-index: 5;
       display: flex; flex-direction: column; align-items: center;
       perspective: 1200px; user-select: none;
       transform-origin: top center;
@@ -221,7 +221,7 @@
       border: 1px solid rgba(255, 183, 3, 0.3);
     }
 
-    /* 3:4 사진 비율 및 투명 PNG 투영 설정 */
+    /* 3:4 사진 비율 및 투명 PNG 배경 투영 처리 */
     .id-card-photo-wrapper {
       width: 100%; aspect-ratio: 3 / 4; border-radius: 12px; overflow: hidden;
       background: #050505; position: relative; box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
@@ -448,12 +448,33 @@
     footer { padding: 60px 50px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; background: #050505; }
     .social-links { display: flex; gap: 25px; font-size: 1.3rem; align-items: center; }
 
-    /* 모바일 반응형 스타일 (요청대로 기존 모바일 카드 위치를 정확히 40% 위로 상향) */
+    /* 모바일 반응형 스타일 (HERO SUBTITLE / MAIN TITLE 위치에 사원카드가 위치하도록 레이어 중첩) */
     @media (max-width: 992px) {
-      .hero { flex-direction: column; justify-content: center; padding: 120px 20px 60px 20px; gap: 40px; }
-      .hero-content { max-width: 100%; text-align: center; }
+      .hero {
+        display: grid;
+        grid-template-areas: "stack";
+        align-items: center;
+        justify-items: center;
+        padding: 120px 20px 60px 20px;
+        min-height: 100vh;
+      }
+      .hero-content {
+        grid-area: stack;
+        max-width: 100%;
+        text-align: center;
+        z-index: 2;
+      }
       .hero-title { font-size: 2.5rem; }
-      .lanyard-container { position: relative; right: auto; top: -40px; width: 300px; height: 440px; }
+      .lanyard-container {
+        grid-area: stack;
+        position: relative;
+        right: auto;
+        top: 0;
+        width: 300px;
+        height: 460px;
+        z-index: 5;
+        margin: 0 auto;
+      }
       .id-card-flipper { width: 280px; height: 390px; }
       .id-card-face { padding: 16px; }
       .id-card-photo-wrapper { aspect-ratio: 3 / 4; }
@@ -532,8 +553,8 @@
         </div>
       </div>
 
-      <!-- 3D Lanyard ID Card (데스크톱 사원카드 위치 원본 유지: top: -8%) -->
-      <div class="lanyard-container" id="lanyardCard" style="top: -8%;">
+      <!-- 3D Lanyard ID Card (데스크톱 사원카드 위치 기존 -8%에서 5% 상향/하향 조정된 top: -3%) -->
+      <div class="lanyard-container" id="lanyardCard" style="top: -3%;">
         <div class="lanyard-strap-wrapper" id="lanyardStrapWrapper">
           <div class="lanyard-strap">
             <span class="lanyard-strap-text" id="idStrapText">GOSAT LAB</span>
