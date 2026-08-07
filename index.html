@@ -130,9 +130,9 @@
       text-shadow: 0 20px 40px rgba(0,0,0,0.8); white-space: pre-line;
     }
 
-    /* 데스크톱 사원 카드 (기존 -8%에서 5% 내린 -3% 적용) */
+    /* 데스크톱 사원 카드 (기존 -3%에서 2% 위로 올려 top: -5% 적용) */
     .lanyard-container {
-      position: absolute; top: -3%; right: calc(150px + 5vw); width: 320px; z-index: 5;
+      position: absolute; top: -5%; right: calc(150px + 5vw); width: 320px; z-index: 5;
       display: flex; flex-direction: column; align-items: center;
       perspective: 1200px; user-select: none;
       transform-origin: top center;
@@ -448,7 +448,7 @@
     footer { padding: 60px 50px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; background: #050505; }
     .social-links { display: flex; gap: 25px; font-size: 1.3rem; align-items: center; }
 
-    /* 모바일 반응형 스타일 (HERO SUBTITLE / MAIN TITLE 위치에 사원카드가 위치하도록 레이어 중첩) */
+    /* 모바일 반응형 스타일 (히어로 타이틀 & 사원카드 완벽 중앙 정렬 및 60% 상향 배치) */
     @media (max-width: 992px) {
       .hero {
         display: grid;
@@ -460,19 +460,29 @@
       }
       .hero-content {
         grid-area: stack;
+        width: 100%;
         max-width: 100%;
         text-align: center;
         z-index: 2;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
       }
-      .hero-title { font-size: 2.5rem; }
+      .hero-subtitle-wrap, .hero-title-wrap {
+        justify-content: center;
+        width: 100%;
+      }
+      .hero-title { font-size: 2.5rem; text-align: center; }
+      
       .lanyard-container {
         grid-area: stack;
         position: relative;
         right: auto;
-        top: 0;
+        top: -240px; /* 기존 대비 60% 위로 상향되어 타이틀을 완전히 가림 */
         width: 300px;
         height: 460px;
-        z-index: 5;
+        z-index: 10;
         margin: 0 auto;
       }
       .id-card-flipper { width: 280px; height: 390px; }
@@ -553,8 +563,8 @@
         </div>
       </div>
 
-      <!-- 3D Lanyard ID Card (데스크톱 사원카드 위치 기존 -8%에서 5% 상향/하향 조정된 top: -3%) -->
-      <div class="lanyard-container" id="lanyardCard" style="top: -3%;">
+      <!-- 3D Lanyard ID Card (데스크톱 2% 위로 끌어올린 top: -5%) -->
+      <div class="lanyard-container" id="lanyardCard" style="top: -5%;">
         <div class="lanyard-strap-wrapper" id="lanyardStrapWrapper">
           <div class="lanyard-strap">
             <span class="lanyard-strap-text" id="idStrapText">GOSAT LAB</span>
