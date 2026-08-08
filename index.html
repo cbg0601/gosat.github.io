@@ -8,8 +8,9 @@
   <meta property="og:type" content="website">
   <meta property="og:title" content="GOSAT">
   <meta property="og:description" content="">
-  <!-- ⬇️ 아래 YOUR_IMAGE_URL_HERE 위치에 공유할 이미지 URL(https://...)을 꼭 넣어주세요 -->
-  <meta property="og:image" content="https://media.discordapp.net/attachments/1534425028521627661/1535219235578712114/9db75d9b16b0a2e4.png?ex=6a76f7d4&is=6a75a654&hm=df97c0d0a4fabc386c324bb7be25166c6c877443ed947692f59cbc684a81b7fc&=&format=webp&quality=lossless">
+  <meta property="og:site_name" content="GOSAT">
+  <!-- ⬇️ 아래 YOUR_IMAGE_URL_HERE 위치에 공유할 이미지 URL(https://...)을 입력하세요 -->
+  <meta property="og:image" content="YOUR_IMAGE_URL_HERE">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
 
@@ -17,8 +18,8 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="GOSAT">
   <meta name="twitter:description" content="">
-  <!-- ⬇️ 아래 YOUR_IMAGE_URL_HERE 위치에 공유할 이미지 URL(https://...)을 꼭 넣어주세요 -->
-  <meta name="twitter:image" content="https://media.discordapp.net/attachments/1534425028521627661/1535219235578712114/9db75d9b16b0a2e4.png?ex=6a76f7d4&is=6a75a654&hm=df97c0d0a4fabc386c324bb7be25166c6c877443ed947692f59cbc684a81b7fc&=&format=webp&quality=lossless">
+  <!-- ⬇️ 아래 YOUR_IMAGE_URL_HERE 위치에 공유할 이미지 URL(https://...)을 입력하세요 -->
+  <meta name="twitter:image" content="YOUR_IMAGE_URL_HERE">
 
   <!-- 인앱 브라우저(카카오톡, 인스타그램) 캐시 방지 메타 태그 -->
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
@@ -611,7 +612,7 @@
           <div class="id-card-face id-card-front">
             <div class="id-card-glare" id="idCardFrontGlare"></div>
             <div class="id-card-photo-wrapper">
-              <img id="idCardPhoto" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=800&auto=format&fit=crop" alt="Profile Photo" loading="eager" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=800&auto=format&fit=crop';">
+              <img id="idCardPhoto" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=800&auto=format&fit=crop" alt="Profile Photo" loading="eager">
             </div>
             <div class="id-card-info-box">
               <div class="id-card-name" id="idCardName">GOSAT CREATOR</div>
@@ -626,7 +627,7 @@
           <div class="id-card-face id-card-back">
             <div class="id-card-glare" id="idCardBackGlare"></div>
             <div class="id-card-photo-wrapper">
-              <img id="idCardBackPhoto" src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop" alt="Easter Egg Back Photo" loading="eager" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop';">
+              <img id="idCardBackPhoto" src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop" alt="Easter Egg Back Photo" loading="eager">
             </div>
             <div class="id-card-info-box">
               <div class="id-card-name" id="idCardBackTitle">SECRET EASTER EGG</div>
@@ -936,6 +937,7 @@
 
     const CLOUD_API_KEY = "$2a$10$STrJtNXDgV2ITq3pF1PHzuJtjeHvJhEHjYS5fu302XnpdwLPdm9ai";
     const BIN_ID = "6a720229f5f4af5e29ea5959";
+    const APP_VERSION = "v3.2_img_fix";
 
     const defaultSiteConfig = {
       logoText: "STUDIO.",
@@ -960,6 +962,15 @@
       social: { instagram: "", vimeo: "", youtube: "" }
     };
     const defaultWorks = [];
+
+    function checkCacheVersion() {
+      const savedVersion = localStorage.getItem('app_data_version');
+      if (savedVersion !== APP_VERSION) {
+        localStorage.removeItem('site_config_v3_dynamic');
+        localStorage.removeItem('portfolio_works_3d_v1');
+        localStorage.setItem('app_data_version', APP_VERSION);
+      }
+    }
 
     // 브라우저 뒤로가기 연동
     window.onpopstate = function(event) {
@@ -1001,7 +1012,6 @@
       }
     }
 
-    // 타임아웃(2.5초) 안전장치 및 인앱 브라우저 캐시 방지(no-store)를 포함한 클라우드 데이터 가져오기
     async function fetchCloudData() {
       try {
         const controller = new AbortController();
@@ -1019,6 +1029,9 @@
           if (resJson.record) {
             if (resJson.record.config) localStorage.setItem('site_config_v3_dynamic', JSON.stringify(resJson.record.config));
             if (resJson.record.works) localStorage.setItem('portfolio_works_3d_v1', JSON.stringify(resJson.record.works));
+            
+            applySiteConfig();
+            renderWorks();
           }
         }
       } catch (e) {
@@ -1136,7 +1149,13 @@
       document.getElementById('siteHeroTitle').innerHTML = (config.heroTitle || "").replace(/\n/g, '<br>');
 
       const idCard = config.idCard || defaultSiteConfig.idCard;
-      document.getElementById('idCardPhoto').src = idCard.photo || defaultSiteConfig.idCard.photo;
+
+      // 앞면 사원증 이미지 갱신 보장
+      const idCardPhotoElem = document.getElementById('idCardPhoto');
+      if (idCardPhotoElem) {
+        idCardPhotoElem.src = idCard.photo || defaultSiteConfig.idCard.photo;
+      }
+
       document.getElementById('idCardName').innerText = idCard.name || defaultSiteConfig.idCard.name;
       document.getElementById('idCardRole').innerText = idCard.role || defaultSiteConfig.idCard.role;
       document.getElementById('idStrapText').innerText = idCard.strap || defaultSiteConfig.idCard.strap;
@@ -1155,8 +1174,12 @@
         tagsContainer.innerHTML = tagsHtml;
       }
 
-      // 뒷면 태그 동적 삽입
-      document.getElementById('idCardBackPhoto').src = idCard.backPhoto || defaultSiteConfig.idCard.backPhoto;
+      // 뒷면 사원증 이미지 갱신 보장
+      const idCardBackPhotoElem = document.getElementById('idCardBackPhoto');
+      if (idCardBackPhotoElem) {
+        idCardBackPhotoElem.src = idCard.backPhoto || defaultSiteConfig.idCard.backPhoto;
+      }
+
       document.getElementById('idCardBackTitle').innerText = idCard.backTitle || defaultSiteConfig.idCard.backTitle;
       document.getElementById('idCardBackRole').innerText = idCard.backRole || defaultSiteConfig.idCard.backRole;
 
@@ -2105,9 +2128,13 @@
     // 초기화 파이프라인
     async function initApp() {
       const loader = document.getElementById('app-loader');
-      await fetchCloudData();
+      checkCacheVersion();
+      
       applySiteConfig();
       renderWorks();
+
+      await fetchCloudData();
+
       initThreeJS();
       initLanyardPhysics();
 
