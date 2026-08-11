@@ -9,7 +9,6 @@
   <meta property="og:title" content="GOSAT">
   <meta property="og:description" content="">
   <meta property="og:site_name" content="GOSAT">
-  <!-- ⬇️ 아래 YOUR_IMAGE_URL_HERE 위치에 공유할 이미지 URL(https://...)을 입력하세요 -->
   <meta property="og:image" content="https://github.com/cbg0601/gosat.github.io/blob/cbg0601-patch-1/images/%E1%84%89%E1%85%A1%E1%84%8B%E1%85%B5%E1%84%90%E1%85%B3%20%E1%84%86%E1%85%B5%E1%84%85%E1%85%B5%20%E1%84%87%E1%85%A9%E1%84%80%E1%85%B5%20%E1%84%8B%E1%85%B5%E1%84%86%E1%85%B5%E1%84%8C%E1%85%B5.png?raw=true">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -18,7 +17,6 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="GOSAT">
   <meta name="twitter:description" content="">
-  <!-- ⬇️ 아래 YOUR_IMAGE_URL_HERE 위치에 공유할 이미지 URL(https://...)을 입력하세요 -->
   <meta name="twitter:image" content="https://github.com/cbg0601/gosat.github.io/blob/cbg0601-patch-1/images/%E1%84%89%E1%85%A1%E1%84%8B%E1%85%B5%E1%84%90%E1%85%B3%20%E1%84%86%E1%85%B5%E1%84%85%E1%85%B5%20%E1%84%87%E1%85%A9%E1%84%80%E1%85%B5%20%E1%84%8B%E1%85%B5%E1%84%86%E1%85%B5%E1%84%8C%E1%85%B5.png?raw=true">
 
   <!-- 인앱 브라우저(카카오톡, 인스타그램) 캐시 방지 메타 태그 -->
@@ -296,6 +294,30 @@
     .add-post-btn:hover { background: #fff; color: #000; }
     body.admin-mode .add-post-btn { display: inline-flex; }
 
+    /* 작품 슬라이더 래퍼 및 내비게이션 화살표 스타일 */
+    .work-slider-wrapper {
+      position: relative; width: 100%;
+    }
+
+    .scroll-arrow-btn {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      width: 48px; height: 48px; border-radius: 50%;
+      background: rgba(10, 10, 10, 0.85); border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #ffffff; font-size: 1.2rem; display: flex; justify-content: center; align-items: center;
+      cursor: pointer; z-index: 10; opacity: 0; pointer-events: none;
+      transition: opacity 0.3s ease, background 0.2s ease, transform 0.2s ease;
+      backdrop-filter: blur(8px); box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+    }
+    .scroll-arrow-btn:hover {
+      background: #ffb703; color: #000; transform: translateY(-50%) scale(1.1); border-color: #ffb703;
+    }
+    .scroll-arrow-left { left: 10px; }
+    .scroll-arrow-right { right: 10px; }
+
+    .work-slider-wrapper:hover .scroll-arrow-btn {
+      opacity: 1; pointer-events: auto;
+    }
+
     /* 가로 스크롤 컨테이너 */
     .work-scroll-container {
       display: flex; gap: 60px; overflow-x: auto; overflow-y: hidden;
@@ -543,7 +565,8 @@
       
       .work-scroll-container { gap: 15px; padding-right: 20px; }
       .work-card-wrapper { flex: 0 0 78vw; }
-      
+      .scroll-arrow-btn { display: none !important; }
+
       .work-card-info { padding: 16px; }
       .work-category { font-size: 0.7rem; letter-spacing: 2px; margin-bottom: 4px; }
       .work-title { font-size: 1.05rem; margin-bottom: 4px; line-height: 1.2; }
@@ -937,7 +960,7 @@
 
     const CLOUD_API_KEY = "$2a$10$STrJtNXDgV2ITq3pF1PHzuJtjeHvJhEHjYS5fu302XnpdwLPdm9ai";
     const BIN_ID = "6a720229f5f4af5e29ea5959";
-    const APP_VERSION = "v3.2_img_fix";
+    const APP_VERSION = "v3.3_arrow_nav";
 
     const defaultSiteConfig = {
       logoText: "STUDIO.",
@@ -1150,7 +1173,6 @@
 
       const idCard = config.idCard || defaultSiteConfig.idCard;
 
-      // 앞면 사원증 이미지 갱신 보장
       const idCardPhotoElem = document.getElementById('idCardPhoto');
       if (idCardPhotoElem) {
         idCardPhotoElem.src = idCard.photo || defaultSiteConfig.idCard.photo;
@@ -1160,7 +1182,6 @@
       document.getElementById('idCardRole').innerText = idCard.role || defaultSiteConfig.idCard.role;
       document.getElementById('idStrapText').innerText = idCard.strap || defaultSiteConfig.idCard.strap;
 
-      // 앞면 태그 동적 삽입
       const tagsContainer = document.getElementById('idCardTagsContainer');
       if (tagsContainer) {
         let tagsHtml = '';
@@ -1174,7 +1195,6 @@
         tagsContainer.innerHTML = tagsHtml;
       }
 
-      // 뒷면 사원증 이미지 갱신 보장
       const idCardBackPhotoElem = document.getElementById('idCardBackPhoto');
       if (idCardBackPhotoElem) {
         idCardBackPhotoElem.src = idCard.backPhoto || defaultSiteConfig.idCard.backPhoto;
@@ -1229,7 +1249,11 @@
                 <h2 class="section-title">${cat.name}</h2>
                 <button class="add-post-btn" onclick="openModal('${cat.id}')"><i class="fa-solid fa-plus"></i> ADD WORK</button>
               </div>
-              <div class="work-scroll-container" id="grid-${cat.id}"></div>
+              <div class="work-slider-wrapper">
+                <button class="scroll-arrow-btn scroll-arrow-left" onclick="slideWorkContainer('grid-${cat.id}', -1)" title="Previous"><i class="fa-solid fa-chevron-left"></i></button>
+                <div class="work-scroll-container" id="grid-${cat.id}"></div>
+                <button class="scroll-arrow-btn scroll-arrow-right" onclick="slideWorkContainer('grid-${cat.id}', 1)" title="Next"><i class="fa-solid fa-chevron-right"></i></button>
+              </div>
             </section>
           `;
         });
@@ -1260,6 +1284,17 @@
         }
         socialContainer.innerHTML = socialHtml;
       }
+    }
+
+    function slideWorkContainer(containerId, direction) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      
+      const scrollAmount = 780 * direction;
+      container.scrollBy({
+        left: scrollAmount,
+        behavior: 'smooth'
+      });
     }
 
     function renderWorks() {
