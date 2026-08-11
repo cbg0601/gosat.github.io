@@ -403,7 +403,7 @@
     .detail-category { font-family: 'Syncopate', sans-serif; color: #ffb703; letter-spacing: 3px; margin-bottom: 12px; font-size: 1rem; }
     .detail-title { font-size: 3rem; font-weight: 700; margin-bottom: 10px; word-break: break-word; letter-spacing: -0.5px; white-space: pre-line; line-height: 1.2; }
 
-    /* 블로그형 세부 페이지 컨테이너 및 블록 스타일 */
+    /* 세부 페이지 텍스트 박스 스타일 및 테두리 옵션 */
     .detail-content-blocks { display: flex; flex-direction: column; gap: 40px; margin-top: 40px; }
     
     .detail-block-item {
@@ -432,14 +432,61 @@
     }
 
     .detail-text-wrapper {
-      width: 100%; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08);
+      width: 100%; background: rgba(255,255,255,0.02);
       padding: 30px; border-radius: 12px; color: #d0d0d0;
       white-space: pre-line; position: relative; letter-spacing: -0.2px;
+      transition: border 0.3s ease, box-shadow 0.3s ease;
     }
+
+    /* 테두리 옵션 스타일 커스텀 */
+    .border-style-solid { border: 1px solid rgba(255,255,255,0.12); }
+    .border-style-gold { border: 1px solid #ffb703; box-shadow: 0 0 15px rgba(255, 183, 3, 0.15); }
+    .border-style-dashed { border: 1px dashed rgba(255,255,255,0.3); }
+    .border-style-none { border: none; background: transparent; padding: 10px 0; }
+
     .text-style-normal { font-size: 0.95rem; line-height: 1.75; font-weight: 300; }
     .text-style-large { font-size: 1.15rem; line-height: 1.8; font-weight: 400; color: #eee; }
     .text-style-heading { font-size: 1.6rem; font-weight: 700; color: #ffb703; font-family: 'Syncopate', sans-serif; letter-spacing: 1px; }
     .text-style-quote { font-size: 1.1rem; font-style: italic; border-left: 3px solid #ffb703; padding-left: 20px; background: transparent; border-top: none; border-right: none; border-bottom: none; border-radius: 0; }
+
+    /* 노션 스타일 토글(Toggle) 컴포넌트 */
+    .notion-toggle-details {
+      width: 100%;
+      border-radius: 8px;
+      transition: background 0.2s;
+    }
+    .notion-toggle-summary {
+      font-size: 1.05rem;
+      font-weight: bold;
+      color: #ffffff;
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      user-select: none;
+      padding: 5px 0;
+    }
+    .notion-toggle-summary::-webkit-details-marker {
+      display: none;
+    }
+    .notion-toggle-icon {
+      font-size: 0.8rem;
+      color: #ffb703;
+      transition: transform 0.25s ease;
+    }
+    .notion-toggle-details[open] .notion-toggle-icon {
+      transform: rotate(90deg);
+    }
+    .notion-toggle-content {
+      margin-top: 12px;
+      padding-left: 20px;
+      color: #bbbbbb;
+      font-size: 0.95rem;
+      line-height: 1.7;
+      border-left: 2px solid rgba(255, 183, 3, 0.3);
+      white-space: pre-line;
+    }
 
     .block-item-actions {
       position: absolute; top: 15px; right: 15px; display: none; gap: 8px; z-index: 20;
@@ -701,7 +748,7 @@
     </div>
   </div>
 
-  <!-- 사원증 전용 개별 수정 모달 (앞면 / 뒷면 태그 각각 수정 가능) -->
+  <!-- 사원증 전용 개별 수정 모달 -->
   <div class="modal-overlay" id="idCardConfigModal">
     <div class="modal-box">
       <h3 class="modal-title">EDIT ID CARD</h3>
@@ -865,7 +912,7 @@
     </div>
   </div>
 
-  <!-- 블로그형 커스텀 텍스트 블록 생성/수정 모달 -->
+  <!-- 블로그형 커스텀 텍스트 블록 생성/수정 모달 (토글 및 테두리 옵션 추가) -->
   <div class="modal-overlay" id="textBlockModal">
     <div class="modal-box">
       <h3 class="modal-title" id="textBlockModalTitle">TEXT BLOCK EDITOR</h3>
@@ -874,11 +921,27 @@
         
         <div class="form-group">
           <label>TEXT STYLE TYPE</label>
-          <select id="textBlockStyle">
+          <select id="textBlockStyle" onchange="toggleSummaryGroupVisibility()">
             <option value="normal">본문 (Normal Body Text)</option>
             <option value="large">대형 본문 (Large Text)</option>
             <option value="heading">소제목 (Section Heading)</option>
             <option value="quote">인용구 (Block Quote)</option>
+            <option value="toggle">토글 (Toggle Block - 접기/펼치기)</option>
+          </select>
+        </div>
+
+        <div class="form-group" id="toggleSummaryGroup" style="display:none;">
+          <label>TOGGLE SUMMARY TITLE (접혔을 때 보일 제목)</label>
+          <input type="text" id="textBlockSummaryInput" placeholder="Ex: 자세한 작업 크레딧 보기">
+        </div>
+
+        <div class="form-group">
+          <label>TEXT BOX BORDER STYLE (테두리 스타일)</label>
+          <select id="textBlockBorderStyle">
+            <option value="solid">기본 테두리 (Solid Border)</option>
+            <option value="gold">강조 골드 (Glowing Gold)</option>
+            <option value="dashed">점선 테두리 (Dashed Border)</option>
+            <option value="none">테두리 없음 (No Border)</option>
           </select>
         </div>
 
@@ -960,7 +1023,7 @@
 
     const CLOUD_API_KEY = "$2a$10$STrJtNXDgV2ITq3pF1PHzuJtjeHvJhEHjYS5fu302XnpdwLPdm9ai";
     const BIN_ID = "6a720229f5f4af5e29ea5959";
-    const APP_VERSION = "v3.3_arrow_nav";
+    const APP_VERSION = "v3.4_toggle_border";
 
     const defaultSiteConfig = {
       logoText: "STUDIO.",
@@ -1449,6 +1512,7 @@
       history.pushState({ view: 'detail', id: id }, '');
     }
 
+    // 텍스트 블록 및 노션 토글, 테두리 스타일 동적 렌더링 함수
     function renderDetailContentBlocks(work) {
       const container = document.getElementById('detailBlocksList');
       container.innerHTML = '';
@@ -1470,8 +1534,25 @@
         let innerContentHtml = '';
 
         if (block.type === 'text') {
-          const styleClass = `text-style-${block.style || 'normal'}`;
-          innerContentHtml = `<div class="detail-text-wrapper ${styleClass}">${block.content}</div>`;
+          const borderClass = `border-style-${block.borderStyle || 'solid'}`;
+
+          if (block.style === 'toggle') {
+            const summaryTitle = block.summary || '자세히 보기';
+            innerContentHtml = `
+              <div class="detail-text-wrapper ${borderClass}">
+                <details class="notion-toggle-details">
+                  <summary class="notion-toggle-summary">
+                    <i class="fa-solid fa-chevron-right notion-toggle-icon"></i>
+                    <span>${summaryTitle}</span>
+                  </summary>
+                  <div class="notion-toggle-content">${block.content}</div>
+                </details>
+              </div>
+            `;
+          } else {
+            const styleClass = `text-style-${block.style || 'normal'}`;
+            innerContentHtml = `<div class="detail-text-wrapper ${styleClass} ${borderClass}">${block.content}</div>`;
+          }
         } else {
           const sizeClass = `media-size-${block.size || 'full'}`;
           const parsed = parseMediaUrl(block.content);
@@ -1522,13 +1603,26 @@
       });
     }
 
+    function toggleSummaryGroupVisibility() {
+      const styleSelect = document.getElementById('textBlockStyle');
+      const summaryGroup = document.getElementById('toggleSummaryGroup');
+      if (styleSelect.value === 'toggle') {
+        summaryGroup.style.display = 'block';
+      } else {
+        summaryGroup.style.display = 'none';
+      }
+    }
+
     function openTextBlockModal() {
       if (!currentDetailId || !isAdmin) return;
       document.getElementById('textBlockModalTitle').innerText = 'ADD TEXT BLOCK';
       document.getElementById('textBlockEditIndex').value = "-1";
       document.getElementById('textBlockStyle').value = "normal";
+      document.getElementById('textBlockSummaryInput').value = "";
+      document.getElementById('textBlockBorderStyle').value = "solid";
       document.getElementById('textBlockAlign').value = "left";
       document.getElementById('textBlockInput').value = "";
+      toggleSummaryGroupVisibility();
       document.getElementById('textBlockModal').classList.add('active');
     }
 
@@ -1542,8 +1636,11 @@
       document.getElementById('textBlockModalTitle').innerText = 'EDIT TEXT BLOCK';
       document.getElementById('textBlockEditIndex').value = blockIndex;
       document.getElementById('textBlockStyle').value = block.style || "normal";
+      document.getElementById('textBlockSummaryInput').value = block.summary || "";
+      document.getElementById('textBlockBorderStyle').value = block.borderStyle || "solid";
       document.getElementById('textBlockAlign').value = block.align || "left";
       document.getElementById('textBlockInput').value = block.content || "";
+      toggleSummaryGroupVisibility();
       document.getElementById('textBlockModal').classList.add('active');
     }
 
@@ -1557,6 +1654,8 @@
 
       const editIndex = parseInt(document.getElementById('textBlockEditIndex').value);
       const style = document.getElementById('textBlockStyle').value;
+      const summary = document.getElementById('textBlockSummaryInput').value.trim();
+      const borderStyle = document.getElementById('textBlockBorderStyle').value;
       const align = document.getElementById('textBlockAlign').value;
       const textContent = document.getElementById('textBlockInput').value.trim();
       if (!textContent) return;
@@ -1567,7 +1666,14 @@
 
       if (!work.blocks) work.blocks = [];
 
-      const blockData = { type: 'text', style, align, content: textContent };
+      const blockData = {
+        type: 'text',
+        style,
+        summary,
+        borderStyle,
+        align,
+        content: textContent
+      };
 
       if (editIndex >= 0) {
         work.blocks[editIndex] = blockData;
