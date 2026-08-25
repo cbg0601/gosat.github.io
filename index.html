@@ -315,6 +315,7 @@
 
     .work-card-wrapper {
       flex: 0 0 720px; perspective: 1000px; position: relative; scroll-snap-align: start;
+      opacity: 1; will-change: transform, opacity;
     }
 
     .work-card {
@@ -408,7 +409,6 @@
       margin-top: 10px; font-size: 0.85rem; color: #888; font-style: italic; line-height: 1.4;
     }
 
-    /* 노션형 리치 텍스트 블록 출력 컨테이너 (줄바꿈/띄어쓰기 pre-wrap 보존) */
     .detail-text-wrapper {
       width: 100%; background: rgba(255,255,255,0.02);
       padding: 35px; border-radius: 12px; color: #d0d0d0;
@@ -489,7 +489,6 @@
     }
     .panel-btn:hover { background: #fff; color: #000; }
 
-    /* 노션 스타일 리치 텍스트 툴바 */
     .notion-toolbar {
       display: flex; flex-wrap: wrap; gap: 6px; background: #222; padding: 10px; border-radius: 8px 8px 0 0;
       border: 1px solid #444; border-bottom: none; align-items: center;
@@ -1037,7 +1036,7 @@
 
     const CLOUD_API_KEY = "$2a$10$STrJtNXDgV2ITq3pF1PHzuJtjeHvJhEHjYS5fu302XnpdwLPdm9ai";
     const BIN_ID = "6a720229f5f4af5e29ea5959";
-    const APP_VERSION = "v3.7_paste_format_fix";
+    const APP_VERSION = "v3.8_cards_fix";
 
     const defaultSiteConfig = {
       logoText: "STUDIO.",
@@ -1066,8 +1065,6 @@
     function checkCacheVersion() {
       const savedVersion = localStorage.getItem('app_data_version');
       if (savedVersion !== APP_VERSION) {
-        localStorage.removeItem('site_config_v3_dynamic');
-        localStorage.removeItem('portfolio_works_3d_v1');
         localStorage.setItem('app_data_version', APP_VERSION);
       }
     }
@@ -1126,11 +1123,20 @@
         if (response.ok) {
           const resJson = await response.json();
           if (resJson.record) {
-            if (resJson.record.config) localStorage.setItem('site_config_v3_dynamic', JSON.stringify(resJson.record.config));
-            if (resJson.record.works) localStorage.setItem('portfolio_works_3d_v1', JSON.stringify(resJson.record.works));
+            let shouldRerender = false;
+            if (resJson.record.config) {
+              localStorage.setItem('site_config_v3_dynamic', JSON.stringify(resJson.record.config));
+              shouldRerender = true;
+            }
+            if (resJson.record.works && Array.isArray(resJson.record.works) && resJson.record.works.length > 0) {
+              localStorage.setItem('portfolio_works_3d_v1', JSON.stringify(resJson.record.works));
+              shouldRerender = true;
+            }
             
-            applySiteConfig();
-            renderWorks();
+            if (shouldRerender) {
+              applySiteConfig();
+              renderWorks();
+            }
           }
         }
       } catch (e) {
@@ -1485,20 +1491,22 @@
 
     function initScrollAnimations() {
       gsap.registerPlugin(ScrollTrigger);
+      ScrollTrigger.getAll().forEach(t => t.kill());
 
       gsap.utils.toArray('.section-title').forEach(title => {
         gsap.from(title, {
-          scrollTrigger: { trigger: title, start: 'top 90%' },
-          x: -50, opacity: 0, duration: 1, ease: 'power3.out'
+          scrollTrigger: { trigger: title, start: 'top 90%', once: true },
+          x: -50, opacity: 0, duration: 0.8, ease: 'power3.out'
         });
       });
 
       gsap.utils.toArray('.work-card-wrapper').forEach((card, i) => {
         gsap.from(card, {
           scrollTrigger: {
-            trigger: card, start: 'top 92%', toggleActions: 'play none none reverse'
+            trigger: card, start: 'top 95%', once: true
           },
-          y: 50, opacity: 0, duration: 0.8, delay: (i % 2) * 0.1, ease: 'power2.out'
+          y: 30, opacity: 0, duration: 0.6, delay: (i % 3) * 0.08, ease: 'power2.out',
+          clearProps: 'opacity,transform'
         });
       });
     }
@@ -2336,10 +2344,9 @@
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
         renderer.setSize(window.innerWidth, window.innerHeight);
-      });
+      }, { passive: true });
     }
 
-    // 붙여넣기 시 줄바꿈/띄어쓰기 서식 유지 핸들러 등록
     function initPasteHandler() {
       const editorArea = document.getElementById('notionEditorArea');
       if (!editorArea) return;
