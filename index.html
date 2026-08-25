@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <!-- 카카오톡, 인스타그램, 디스코드 등 소셜 공유 썸네일(Social Preview) 메타 태그 -->
   <meta property="og:type" content="website">
   <meta property="og:title" content="GOSAT">
   <meta property="og:description" content="">
@@ -13,26 +12,22 @@
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
 
-  <!-- 트위터 카드 메타 태그 -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="GOSAT">
   <meta name="twitter:description" content="">
   <meta name="twitter:image" content="https://github.com/cbg0601/gosat.github.io/blob/cbg0601-patch-1/images/%E1%84%89%E1%85%A1%E1%84%8B%E1%85%B5%E1%84%90%E1%85%B3%20%E1%84%86%E1%85%B5%E1%84%85%E1%85%B5%20%E1%84%87%E1%85%A9%E1%84%80%E1%85%B5%20%E1%84%8B%E1%85%B5%E1%84%86%E1%85%B5%E1%84%8C%E1%85%B5.png?raw=true">
 
-  <!-- 인앱 브라우저(카카오톡, 인스타그램) 캐시 방지 메타 태그 -->
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
 
   <title>GOSAT</title>
 
-  <!-- Google Fonts & FontAwesome -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-  <!-- GSAP & Three.js CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -48,7 +43,6 @@
     }
     a { color: inherit; text-decoration: none; }
 
-    /* 초기 데이터 로딩 스피너 */
     #app-loader {
       position: fixed; inset: 0; background: #050505; z-index: 99999;
       display: flex; justify-content: center; align-items: center;
@@ -61,21 +55,18 @@
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* WebGL Background Canvas */
     #webgl-canvas {
       position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
       z-index: -1; pointer-events: none;
     }
 
-    /* Custom Interactive Cursor */
     .custom-cursor {
       width: 20px; height: 20px;
       border: 1px solid rgba(255, 255, 255, 0.8);
       border-radius: 50%; position: fixed; pointer-events: none; z-index: 9999;
-      transform: translate(-50%, -50%); backdrop-filter: blur(2px);
+      transform: translate(-50%, -50%);
     }
 
-    /* Header Navigation */
     header {
       position: fixed; top: 0; left: 0; width: 100%;
       padding: 30px 50px; display: flex; justify-content: space-between; align-items: center;
@@ -128,7 +119,6 @@
       pointer-events: auto;
     }
 
-    /* Hero Section */
     .hero {
       position: relative; width: 100%; min-height: 100vh;
       display: flex; align-items: center; justify-content: space-between;
@@ -151,7 +141,6 @@
       text-shadow: 0 20px 40px rgba(0,0,0,0.8); white-space: pre-line;
     }
 
-    /* 데스크톱 사원 카드 (top: -4%) */
     .lanyard-container {
       position: absolute; top: -4%; right: calc(150px + 5vw); width: 320px; z-index: 5;
       display: flex; flex-direction: column; align-items: center;
@@ -160,7 +149,6 @@
       touch-action: none;
     }
 
-    /* 천장부터 이어지는 긴 끈 스트랩 */
     .lanyard-strap-wrapper {
       position: relative; width: 22px; height: 260px; display: flex;
       flex-direction: column; align-items: center; justify-content: flex-end;
@@ -184,7 +172,6 @@
       box-shadow: 0 5px 15px rgba(0,0,0,0.8); z-index: 6; flex-shrink: 0;
     }
 
-    /* 사원증 전용 개별 수정 버튼 */
     .id-card-edit-btn {
       position: relative; margin-top: 15px; z-index: 30;
       background: #ffb703; color: #000; border: none; padding: 8px 20px;
@@ -196,7 +183,6 @@
     .id-card-edit-btn:hover { transform: scale(1.08); background: #fff; }
     body.admin-mode .id-card-edit-btn { display: inline-flex; }
 
-    /* 카드 본체 */
     .id-card-flipper {
       position: relative; width: 320px; height: 460px;
       transform-style: preserve-3d; flex-shrink: 0; margin-top: 10px;
@@ -210,7 +196,6 @@
       transform: rotateY(180deg) scale(1.03);
     }
 
-    /* 앞면 / 뒷면 공통 스타일 */
     .id-card-face {
       position: absolute; inset: 0; width: 100%; height: 100%;
       background: linear-gradient(145deg, #1f2124 0%, #111215 50%, #08090b 100%);
@@ -221,7 +206,6 @@
       border: 1px solid rgba(255, 255, 255, 0.12); overflow: hidden;
     }
 
-    /* 실시간 조명 반사 광택 레이어 */
     .id-card-glare {
       position: absolute; inset: -150%;
       background: linear-gradient(
@@ -232,7 +216,7 @@
         rgba(255, 255, 255, 0.15) 55%,
         transparent 80%
       );
-      pointer-events: none; mix-blend-mode: overlay; opacity: 0.5;
+      pointer-events: none; opacity: 0.5;
       transform: translate(-30%, -30%);
       transition: transform 0.15s ease-out, opacity 0.3s ease;
     }
@@ -244,7 +228,6 @@
       border: 1px solid rgba(255, 183, 3, 0.3);
     }
 
-    /* 3:4 사진 비율 및 투명 PNG 배경 투영 처리 */
     .id-card-photo-wrapper {
       width: 100%; aspect-ratio: 3 / 4; border-radius: 12px; overflow: hidden;
       background: #050505; position: relative; box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
@@ -277,7 +260,6 @@
     .id-card-back .id-card-name { color: #ffb703; }
     .id-card-back .id-card-role { color: #888; }
 
-    /* Section & Cards */
     .section { padding: 120px 50px; position: relative; z-index: 3; }
     .section-title-wrap {
       display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px;
@@ -289,12 +271,11 @@
       background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3);
       color: #fff; padding: 10px 20px; border-radius: 4px; cursor: pointer;
       font-size: 0.85rem; display: none; align-items: center; gap: 8px; transition: 0.3s;
-      font-family: 'Syncopate', sans-serif; backdrop-filter: blur(10px);
+      font-family: 'Syncopate', sans-serif;
     }
     .add-post-btn:hover { background: #fff; color: #000; }
     body.admin-mode .add-post-btn { display: inline-flex; }
 
-    /* 작품 슬라이더 래퍼 및 내비게이션 화살표 스타일 */
     .work-slider-wrapper {
       position: relative; width: 100%;
     }
@@ -302,11 +283,11 @@
     .scroll-arrow-btn {
       position: absolute; top: 50%; transform: translateY(-50%);
       width: 48px; height: 48px; border-radius: 50%;
-      background: rgba(10, 10, 10, 0.85); border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(10, 10, 10, 0.9); border: 1px solid rgba(255, 255, 255, 0.2);
       color: #ffffff; font-size: 1.2rem; display: flex; justify-content: center; align-items: center;
       cursor: pointer; z-index: 10; opacity: 0; pointer-events: none;
       transition: opacity 0.3s ease, background 0.2s ease, transform 0.2s ease;
-      backdrop-filter: blur(8px); box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.6);
     }
     .scroll-arrow-btn:hover {
       background: #ffb703; color: #000; transform: translateY(-50%) scale(1.1); border-color: #ffb703;
@@ -318,7 +299,6 @@
       opacity: 1; pointer-events: auto;
     }
 
-    /* 가로 스크롤 컨테이너 */
     .work-scroll-container {
       display: flex; gap: 60px; overflow-x: auto; overflow-y: hidden;
       padding-bottom: 25px; padding-top: 10px; scroll-snap-type: x mandatory;
@@ -371,7 +351,6 @@
       white-space: pre-line; line-height: 1.5;
     }
 
-    /* 카드 관리자 버튼 스타일 */
     .card-admin-actions { display: none; gap: 8px; margin-top: 10px; z-index: 20; pointer-events: auto; flex-wrap: wrap; }
     body.admin-mode .card-admin-actions { display: flex; }
 
@@ -381,7 +360,6 @@
     .btn-order { background: rgba(255,255,255,0.2); color: #fff; border: 1px solid rgba(255,255,255,0.4); }
     .btn-order:hover { background: #ffb703; color: #000; border-color: #ffb703; }
 
-    /* DETAIL PAGE VIEW */
     #detailView {
       display: none; position: relative; z-index: 100;
       padding: 140px 50px 80px 50px; max-width: 1200px; margin: 0 auto; min-height: 100vh;
@@ -389,10 +367,10 @@
     .detail-nav-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
     .back-btn {
       font-family: 'Syncopate', sans-serif; font-size: 0.85rem;
-      background: rgba(255,255,255,0.05); border: 1px solid rgba(255, 255, 255, 0.3);
+      background: rgba(255,255,255,0.08); border: 1px solid rgba(255, 255, 255, 0.3);
       color: #fff; padding: 12px 24px; border-radius: 30px; cursor: pointer;
       transition: all 0.3s; display: inline-flex; align-items: center; gap: 10px;
-      backdrop-filter: blur(10px); -webkit-tap-highlight-color: transparent;
+      -webkit-tap-highlight-color: transparent;
     }
     .back-btn:hover { background: #fff; color: #000; }
 
@@ -403,7 +381,6 @@
     .detail-category { font-family: 'Syncopate', sans-serif; color: #ffb703; letter-spacing: 3px; margin-bottom: 12px; font-size: 1rem; }
     .detail-title { font-size: 3rem; font-weight: 700; margin-bottom: 10px; word-break: break-word; letter-spacing: -0.5px; white-space: pre-line; line-height: 1.2; }
 
-    /* 세부 페이지 텍스트 박스 스타일 및 테두리 옵션 */
     .detail-content-blocks { display: flex; flex-direction: column; gap: 40px; margin-top: 40px; }
     
     .detail-block-item {
@@ -431,61 +408,62 @@
       margin-top: 10px; font-size: 0.85rem; color: #888; font-style: italic; line-height: 1.4;
     }
 
+    /* 노션형 리치 텍스트 블록 출력 컨테이너 */
     .detail-text-wrapper {
       width: 100%; background: rgba(255,255,255,0.02);
-      padding: 30px; border-radius: 12px; color: #d0d0d0;
-      white-space: pre-line; position: relative; letter-spacing: -0.2px;
-      transition: border 0.3s ease, box-shadow 0.3s ease;
+      padding: 35px; border-radius: 12px; color: #d0d0d0;
+      position: relative; transition: border 0.3s ease, box-shadow 0.3s ease;
+      word-break: break-word;
     }
 
-    /* 테두리 옵션 스타일 커스텀 */
+    .detail-text-wrapper h1 { font-size: 2.2rem; font-weight: 700; margin: 15px 0 10px 0; color: #fff; line-height: 1.3; }
+    .detail-text-wrapper h2 { font-size: 1.6rem; font-weight: 700; margin: 12px 0 8px 0; color: #ffb703; line-height: 1.35; }
+    .detail-text-wrapper h3 { font-size: 1.25rem; font-weight: 600; margin: 10px 0 6px 0; color: #e0e0e0; }
+    .detail-text-wrapper p { margin-bottom: 12px; font-size: 1rem; }
+    .detail-text-wrapper blockquote { border-left: 3px solid #ffb703; padding-left: 15px; margin: 15px 0; color: #aaa; font-style: italic; }
+
+    /* 에디터 내부 삽입 이미지 및 2단 그리드 */
+    .editor-inline-img {
+      max-width: 100%; border-radius: 8px; margin: 15px 0; display: block; object-fit: cover;
+    }
+    .editor-grid-2col {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 15px 0;
+    }
+    .editor-grid-2col img {
+      width: 100%; height: 100%; border-radius: 8px; object-fit: cover; display: block;
+    }
+
+    /* 이미지 자르기(Crop) 비율 클래스 */
+    .crop-16-9 { aspect-ratio: 16 / 9; object-fit: cover !important; }
+    .crop-4-3 { aspect-ratio: 4 / 3; object-fit: cover !important; }
+    .crop-1-1 { aspect-ratio: 1 / 1; object-fit: cover !important; }
+    .crop-3-4 { aspect-ratio: 3 / 4; object-fit: cover !important; }
+    .crop-auto { aspect-ratio: auto; }
+
     .border-style-solid { border: 1px solid rgba(255,255,255,0.12); }
     .border-style-gold { border: 1px solid #ffb703; box-shadow: 0 0 15px rgba(255, 183, 3, 0.15); }
     .border-style-dashed { border: 1px dashed rgba(255,255,255,0.3); }
     .border-style-none { border: none; background: transparent; padding: 10px 0; }
 
-    .text-style-normal { font-size: 0.95rem; line-height: 1.75; font-weight: 300; }
-    .text-style-large { font-size: 1.15rem; line-height: 1.8; font-weight: 400; color: #eee; }
-    .text-style-heading { font-size: 1.6rem; font-weight: 700; color: #ffb703; font-family: 'Syncopate', sans-serif; letter-spacing: 1px; }
-    .text-style-quote { font-size: 1.1rem; font-style: italic; border-left: 3px solid #ffb703; padding-left: 20px; background: transparent; border-top: none; border-right: none; border-bottom: none; border-radius: 0; }
-
-    /* 노션 스타일 토글(Toggle) 컴포넌트 */
     .notion-toggle-details {
-      width: 100%;
-      border-radius: 8px;
-      transition: background 0.2s;
+      width: 100%; border-radius: 8px; margin: 10px 0;
     }
     .notion-toggle-summary {
-      font-size: 1.05rem;
-      font-weight: bold;
-      color: #ffffff;
-      cursor: pointer;
-      list-style: none;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      user-select: none;
-      padding: 5px 0;
+      font-size: 1.05rem; font-weight: bold; color: #ffffff;
+      cursor: pointer; list-style: none; display: flex; align-items: center;
+      gap: 10px; user-select: none; padding: 5px 0;
     }
-    .notion-toggle-summary::-webkit-details-marker {
-      display: none;
-    }
+    .notion-toggle-summary::-webkit-details-marker { display: none; }
     .notion-toggle-icon {
-      font-size: 0.8rem;
-      color: #ffb703;
-      transition: transform 0.25s ease;
+      font-size: 0.8rem; color: #ffb703; transition: transform 0.25s ease;
     }
     .notion-toggle-details[open] .notion-toggle-icon {
       transform: rotate(90deg);
     }
     .notion-toggle-content {
-      margin-top: 12px;
-      padding-left: 20px;
-      color: #bbbbbb;
-      font-size: 0.95rem;
-      line-height: 1.7;
+      margin-top: 12px; padding-left: 20px; color: #bbbbbb;
+      font-size: 0.95rem; line-height: 1.7;
       border-left: 2px solid rgba(255, 183, 3, 0.3);
-      white-space: pre-line;
     }
 
     .block-item-actions {
@@ -496,7 +474,7 @@
     .block-action-btn {
       background: rgba(0,0,0,0.85); color: #fff; border: 1px solid rgba(255,255,255,0.3);
       padding: 8px 12px; border-radius: 4px; font-size: 0.8rem; cursor: pointer;
-      backdrop-filter: blur(10px); transition: all 0.2s;
+      transition: all 0.2s;
     }
     .block-action-btn:hover { background: #ffb703; color: #000; }
 
@@ -512,82 +490,73 @@
     }
     .panel-btn:hover { background: #fff; color: #000; }
 
-    /* Modal Styles */
+    /* 노션 스타일 리치 텍스트 툴바 */
+    .notion-toolbar {
+      display: flex; flex-wrap: wrap; gap: 6px; background: #222; padding: 10px; border-radius: 8px 8px 0 0;
+      border: 1px solid #444; border-bottom: none; align-items: center;
+    }
+    .toolbar-btn {
+      background: #333; color: #fff; border: 1px solid #555; padding: 6px 10px; border-radius: 4px;
+      font-size: 0.85rem; cursor: pointer; font-weight: bold; transition: all 0.2s;
+    }
+    .toolbar-btn:hover { background: #ffb703; color: #000; }
+    .toolbar-select, .toolbar-input {
+      background: #333; color: #fff; border: 1px solid #555; padding: 5px 8px; border-radius: 4px; font-size: 0.8rem;
+    }
+    .notion-editor-area {
+      min-height: 220px; max-height: 400px; overflow-y: auto; background: #181818; border: 1px solid #444;
+      border-radius: 0 0 8px 8px; padding: 15px; color: #eee; font-size: 1rem; outline: none; line-height: 1.6;
+    }
+    .notion-editor-area:focus { border-color: #ffb703; }
+    .notion-editor-area h1 { font-size: 1.8rem; margin: 10px 0; color: #fff; }
+    .notion-editor-area h2 { font-size: 1.4rem; margin: 8px 0; color: #ffb703; }
+    .notion-editor-area h3 { font-size: 1.15rem; margin: 6px 0; color: #ddd; }
+
     .modal-overlay {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 20000;
-      display: none; justify-content: center; align-items: center; padding: 20px; backdrop-filter: blur(10px);
+      position: fixed; inset: 0; background: rgba(0,0,0,0.92); z-index: 20000;
+      display: none; justify-content: center; align-items: center; padding: 20px;
     }
     .modal-overlay.active { display: flex; }
     .modal-box {
-      background: #161616; border: 1px solid #333; width: 100%; max-width: 580px;
-      padding: 40px; border-radius: 16px; position: relative; box-shadow: 0 30px 60px rgba(0,0,0,0.8);
+      background: #161616; border: 1px solid #333; width: 100%; max-width: 680px;
+      padding: 35px; border-radius: 16px; position: relative; box-shadow: 0 30px 60px rgba(0,0,0,0.8);
       max-height: 90vh; overflow-y: auto;
     }
-    .modal-title { font-family: 'Syncopate', sans-serif; font-size: 1.5rem; margin-bottom: 25px; }
-    .form-group { margin-bottom: 20px; }
+    .modal-title { font-family: 'Syncopate', sans-serif; font-size: 1.4rem; margin-bottom: 20px; }
+    .form-group { margin-bottom: 18px; }
     .form-group label { display: block; font-size: 0.85rem; color: #aaa; margin-bottom: 8px; font-family: 'Syncopate', sans-serif; }
     .form-group input, .form-group select, .form-group textarea {
       width: 100%; padding: 12px; background: #222; border: 1px solid #444; border-radius: 6px;
       color: #fff; font-size: 0.95rem; font-family: inherit;
     }
     .form-group textarea { resize: vertical; height: 120px; }
-    .modal-btns { display: flex; justify-content: flex-end; gap: 12px; margin-top: 30px; }
+    .modal-btns { display: flex; justify-content: flex-end; gap: 12px; margin-top: 25px; }
     .btn-cancel { background: transparent; border: 1px solid #555; color: #ccc; padding: 10px 20px; border-radius: 6px; cursor: pointer; }
     .btn-save { background: #fff; color: #000; border: none; padding: 10px 24px; border-radius: 6px; font-weight: bold; cursor: pointer; }
 
     .cat-input-row { display: flex; gap: 10px; margin-bottom: 10px; align-items: center; }
     .btn-delete-cat { background: #e63946; color: #fff; border: none; padding: 10px 14px; border-radius: 6px; cursor: pointer; }
 
-    /* Footer */
     footer { padding: 60px 50px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; background: #050505; }
     .social-links { display: flex; gap: 25px; font-size: 1.3rem; align-items: center; }
 
-    /* 모바일 반응형 스타일 */
     @media (max-width: 992px) {
       .hero {
-        position: relative;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        padding: 100px 0 60px 0;
-        min-height: 100vh;
-        width: 100%;
+        position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center;
+        padding: 100px 0 60px 0; min-height: 100vh; width: 100%;
       }
       .hero-content {
-        position: relative;
-        width: 100%;
-        max-width: 100%;
-        text-align: center;
-        z-index: 2;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        padding: 0 15px;
+        position: relative; width: 100%; max-width: 100%; text-align: center;
+        z-index: 2; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0 15px;
       }
       .hero-subtitle-wrap, .hero-title-wrap {
-        justify-content: center;
-        width: 100%;
-        margin-left: 0;
-        margin-right: 0;
+        justify-content: center; width: 100%; margin-left: 0; margin-right: 0;
       }
-      .hero-title {
-        font-size: 2.2rem;
-        text-align: center;
-        width: 100%;
-      }
+      .hero-title { font-size: 2.2rem; text-align: center; width: 100%; }
       
       .lanyard-container {
-        position: absolute;
-        left: 50% !important;
-        right: auto !important;
-        top: -56px !important;
-        width: 300px;
-        height: 460px;
-        z-index: 10;
-        margin: 0 auto;
-        margin-left: -150px;
+        position: absolute; left: 50% !important; right: auto !important; top: -56px !important;
+        width: 300px; height: 460px; z-index: 10; margin: 0 auto; margin-left: -150px;
       }
       .id-card-flipper { width: 280px; height: 390px; }
       .id-card-face { padding: 16px; }
@@ -595,7 +564,7 @@
     }
 
     @media (max-width: 768px) {
-      header { padding: 20px; mix-blend-mode: normal; background: rgba(5,5,5,0.9); backdrop-filter: blur(10px); }
+      header { padding: 20px; mix-blend-mode: normal; background: rgba(5,5,5,0.95); }
       .mobile-menu-btn { display: block; }
       nav {
         position: fixed; top: 0; right: -100%; width: 80%; height: 100vh;
@@ -622,6 +591,7 @@
       #detailView { padding: 90px 20px 60px 20px; }
       .detail-title { font-size: 2rem; }
       .detail-text-wrapper { font-size: 0.88rem; padding: 20px; line-height: 1.7; }
+      .editor-grid-2col { grid-template-columns: 1fr; }
       .media-size-medium, .media-size-small { width: 100% !important; }
 
       footer { flex-direction: column; gap: 20px; text-align: center; padding: 40px 20px; }
@@ -631,12 +601,8 @@
 </head>
 <body>
 
-  <!-- 초기 데이터 로딩 스피너 -->
   <div id="app-loader"><div class="spinner"></div></div>
-
-  <!-- 3D Three.js WebGL Particle Background -->
   <canvas id="webgl-canvas"></canvas>
-
   <div class="custom-cursor"></div>
 
   <header>
@@ -648,13 +614,10 @@
     <button class="mobile-menu-btn" id="mobileMenuBtn" onclick="toggleMobileMenu(event)"><i class="fa-solid fa-bars"></i></button>
 
     <nav id="mobileNav">
-      <ul id="navCategoryList">
-        <!-- Dynamic Header Nav Links -->
-      </ul>
+      <ul id="navCategoryList"></ul>
     </nav>
   </header>
 
-  <!-- 메인 리스트 뷰 -->
   <div id="mainView">
     <section class="hero">
       <div class="hero-content">
@@ -668,7 +631,6 @@
         </div>
       </div>
 
-      <!-- 3D Lanyard ID Card (데스크톱 top: -4%) -->
       <div class="lanyard-container" id="lanyardCard" style="top: -4%;">
         <div class="lanyard-strap-wrapper" id="lanyardStrapWrapper">
           <div class="lanyard-strap">
@@ -678,7 +640,6 @@
         </div>
         
         <div class="id-card-flipper" id="idCardFlipper">
-          <!-- 앞면 -->
           <div class="id-card-face id-card-front">
             <div class="id-card-glare" id="idCardFrontGlare"></div>
             <div class="id-card-photo-wrapper">
@@ -687,13 +648,10 @@
             <div class="id-card-info-box">
               <div class="id-card-name" id="idCardName">GOSAT CREATOR</div>
               <div class="id-card-role" id="idCardRole">VFX Director & Producer</div>
-              <div class="id-card-tags-container" id="idCardTagsContainer">
-                <!-- 앞면 다중 태그 동적 삽입 -->
-              </div>
+              <div class="id-card-tags-container" id="idCardTagsContainer"></div>
             </div>
           </div>
 
-          <!-- 뒷면 (더블클릭/더블탭 시 앞면/뒷면 토글) -->
           <div class="id-card-face id-card-back">
             <div class="id-card-glare" id="idCardBackGlare"></div>
             <div class="id-card-photo-wrapper">
@@ -702,26 +660,20 @@
             <div class="id-card-info-box">
               <div class="id-card-name" id="idCardBackTitle">SECRET EASTER EGG</div>
               <div class="id-card-role" id="idCardBackRole">Special Thanks & Concept Art</div>
-              <div class="id-card-tags-container" id="idCardBackTagsContainer">
-                <!-- 뒷면 다중 태그 동적 삽입 -->
-              </div>
+              <div class="id-card-tags-container" id="idCardBackTagsContainer"></div>
             </div>
           </div>
         </div>
 
-        <!-- 사원증 카드 하단에 배치된 수정 버튼 -->
         <button class="id-card-edit-btn" id="idCardEditBtn" onclick="openIdCardConfigModal(event)">
           <i class="fa-solid fa-pen"></i> EDIT CARD
         </button>
       </div>
     </section>
 
-    <main id="sectionsContainer">
-      <!-- Dynamic Sections Container -->
-    </main>
+    <main id="sectionsContainer"></main>
   </div>
 
-  <!-- 세부 페이지 뷰 -->
   <div id="detailView">
     <div class="detail-nav-bar">
       <button class="back-btn" onclick="handleBackBtnClick()"><i class="fa-solid fa-arrow-left"></i> BACK TO LIST</button>
@@ -736,13 +688,12 @@
       <h1 class="detail-title" id="detailTitle"></h1>
     </div>
 
-    <!-- 미디어 & 텍스트 동적 블록 컨테이너 -->
     <div class="detail-content-blocks" id="detailBlocksList"></div>
 
     <div class="detail-add-panel">
       <h4 style="font-family:'Syncopate';"><i class="fa-solid fa-plus-circle"></i> ADD NEW BLOCK TO DETAIL PAGE</h4>
       <div class="add-panel-btns">
-        <button class="panel-btn" onclick="openTextBlockModal()"><i class="fa-solid fa-font"></i> ADD TEXT BLOCK</button>
+        <button class="panel-btn" onclick="openTextBlockModal()"><i class="fa-solid fa-font"></i> ADD NOTION RICH TEXT BLOCK</button>
         <button class="panel-btn" onclick="openMediaBlockModal()"><i class="fa-solid fa-photo-film"></i> ADD MEDIA (IMAGE / VIDEO / YOUTUBE)</button>
       </div>
     </div>
@@ -856,7 +807,7 @@
     </div>
   </div>
 
-  <!-- 관리자 모달 -->
+  <!-- 관리자 로그인 모달 -->
   <div class="modal-overlay" id="authModal">
     <div class="modal-box" style="max-width: 400px;">
       <h3 class="modal-title">ADMIN LOGIN</h3>
@@ -912,58 +863,130 @@
     </div>
   </div>
 
-  <!-- 블로그형 커스텀 텍스트 블록 생성/수정 모달 (토글 및 테두리 옵션 추가) -->
+  <!-- 노션형 리치 텍스트 블록 에디터 모달 (제목/소제목/본문/이미지삽입/2단배치/자르기/서식) -->
   <div class="modal-overlay" id="textBlockModal">
     <div class="modal-box">
-      <h3 class="modal-title" id="textBlockModalTitle">TEXT BLOCK EDITOR</h3>
+      <h3 class="modal-title" id="textBlockModalTitle">NOTION RICH TEXT EDITOR</h3>
       <form id="textBlockForm" onsubmit="saveTextBlockModal(event)">
         <input type="hidden" id="textBlockEditIndex" value="-1">
         
-        <div class="form-group">
-          <label>TEXT STYLE TYPE</label>
-          <select id="textBlockStyle" onchange="toggleSummaryGroupVisibility()">
-            <option value="normal">본문 (Normal Body Text)</option>
-            <option value="large">대형 본문 (Large Text)</option>
-            <option value="heading">소제목 (Section Heading)</option>
-            <option value="quote">인용구 (Block Quote)</option>
-            <option value="toggle">토글 (Toggle Block - 접기/펼치기)</option>
-          </select>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+          <div class="form-group" style="margin: 0;">
+            <label>BLOCK TYPE (형태)</label>
+            <select id="textBlockStyle" onchange="toggleSummaryGroupVisibility()">
+              <option value="normal">일반 노션 블록 (Standard Rich Block)</option>
+              <option value="toggle">토글 블록 (Toggle Dropdown)</option>
+            </select>
+          </div>
+
+          <div class="form-group" style="margin: 0;">
+            <label>BORDER (테두리 스타일)</label>
+            <select id="textBlockBorderStyle">
+              <option value="solid">기본 테두리 (Solid Border)</option>
+              <option value="gold">골드 글로우 (Glowing Gold)</option>
+              <option value="dashed">점선 테두리 (Dashed Border)</option>
+              <option value="none">테두리 없음 (No Border)</option>
+            </select>
+          </div>
         </div>
 
         <div class="form-group" id="toggleSummaryGroup" style="display:none;">
-          <label>TOGGLE SUMMARY TITLE (접혔을 때 보일 제목)</label>
-          <input type="text" id="textBlockSummaryInput" placeholder="Ex: 자세한 작업 크레딧 보기">
+          <label>TOGGLE TITLE (토글 제목)</label>
+          <input type="text" id="textBlockSummaryInput" placeholder="Ex: 자세한 컨셉 스토리 및 크레딧 펼치기">
         </div>
 
-        <div class="form-group">
-          <label>TEXT BOX BORDER STYLE (테두리 스타일)</label>
-          <select id="textBlockBorderStyle">
-            <option value="solid">기본 테두리 (Solid Border)</option>
-            <option value="gold">강조 골드 (Glowing Gold)</option>
-            <option value="dashed">점선 테두리 (Dashed Border)</option>
-            <option value="none">테두리 없음 (No Border)</option>
-          </select>
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 15px;">
+          <div>
+            <label style="font-size:0.75rem; color:#aaa;">글자 간격 (자간)</label>
+            <select id="textBlockLetterSpacing" class="toolbar-select" style="width:100%;">
+              <option value="-0.5px">좁게 (-0.5px)</option>
+              <option value="0px" selected>보통 (0px)</option>
+              <option value="1px">넓게 (1px)</option>
+              <option value="2px">매우 넓게 (2px)</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:0.75rem; color:#aaa;">줄 간격 (행간)</label>
+            <select id="textBlockLineHeight" class="toolbar-select" style="width:100%;">
+              <option value="1.4">좁게 (1.4)</option>
+              <option value="1.7" selected>보통 (1.7)</option>
+              <option value="2.0">넓게 (2.0)</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:0.75rem; color:#aaa;">정렬 (Align)</label>
+            <select id="textBlockAlign" class="toolbar-select" style="width:100%;">
+              <option value="left">좌측 정렬</option>
+              <option value="center">중앙 정렬</option>
+              <option value="right">우측 정렬</option>
+            </select>
+          </div>
         </div>
 
-        <div class="form-group">
-          <label>TEXT ALIGNMENT</label>
-          <select id="textBlockAlign">
-            <option value="left">좌측 정렬 (Left)</option>
-            <option value="center">중앙 정렬 (Center)</option>
-            <option value="right">우측 정렬 (Right)</option>
-          </select>
+        <!-- 텍스트 서식 툴바 -->
+        <div class="notion-toolbar">
+          <button type="button" class="toolbar-btn" onclick="execFormat('formatBlock', '<h1>')">H1</button>
+          <button type="button" class="toolbar-btn" onclick="execFormat('formatBlock', '<h2>')">H2</button>
+          <button type="button" class="toolbar-btn" onclick="execFormat('formatBlock', '<h3>')">H3</button>
+          <button type="button" class="toolbar-btn" onclick="execFormat('formatBlock', '<p>')">본문</button>
+          <button type="button" class="toolbar-btn" onclick="execFormat('bold')"><i class="fa-solid fa-bold"></i></button>
+          <button type="button" class="toolbar-btn" onclick="execFormat('italic')"><i class="fa-solid fa-italic"></i></button>
+          <button type="button" class="toolbar-btn" onclick="execFormat('underline')"><i class="fa-solid fa-underline"></i></button>
+          <button type="button" class="toolbar-btn" onclick="execFormat('formatBlock', '<blockquote>')"><i class="fa-solid fa-quote-left"></i></button>
+          
+          <label style="display:flex; align-items:center; gap:4px; font-size:0.75rem; color:#aaa; margin-left:5px;">
+            색상: <input type="color" id="editorTextColor" onchange="execFormat('foreColor', this.value)" style="width:24px; height:24px; border:none; background:transparent; cursor:pointer;">
+          </label>
+
+          <button type="button" class="toolbar-btn" style="background:#ffb703; color:#000; margin-left:auto;" onclick="openInlineImageInsertModal()">
+            <i class="fa-solid fa-image"></i> + 이미지 삽입
+          </button>
         </div>
 
-        <div class="form-group">
-          <label>TEXT CONTENT (ENTER NEW LINES FREELY)</label>
-          <textarea id="textBlockInput" placeholder="Enter concepts, credits, or narrative text here..." required style="height:140px;"></textarea>
-        </div>
+        <!-- 실시간 노션형 에디터 본문 영역 -->
+        <div id="notionEditorArea" class="notion-editor-area" contenteditable="true" placeholder="내용을 작성하거나 상단 툴바로 서식/이미지를 추가하세요..."></div>
 
         <div class="modal-btns">
           <button type="button" class="btn-cancel" onclick="closeTextBlockModal()">CANCEL</button>
-          <button type="submit" class="btn-save">SAVE TEXT BLOCK</button>
+          <button type="submit" class="btn-save">SAVE NOTION BLOCK</button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <!-- 에디터 내부 이미지 삽입/자르기/2단배치 서브 모달 -->
+  <div class="modal-overlay" id="inlineImgModal" style="z-index: 25000;">
+    <div class="modal-box" style="max-width: 480px;">
+      <h4 style="font-family:'Syncopate'; font-size:1.1rem; margin-bottom:15px; color:#ffb703;">INSERT INLINE IMAGE</h4>
+      <div class="form-group">
+        <label>IMAGE URL 1 (첫 번째 이미지 주소)</label>
+        <input type="url" id="inlineImgUrl1" placeholder="https://..." required>
+      </div>
+      <div class="form-group">
+        <label>LAYOUT TYPE (배치 방식)</label>
+        <select id="inlineImgLayout" onchange="toggleSecondImageInput()">
+          <option value="single">단독 1장 배치 (Single Center)</option>
+          <option value="grid">2장 양옆 나란히 배치 (2-Column Grid)</option>
+        </select>
+      </div>
+      <div class="form-group" id="inlineImg2Group" style="display:none;">
+        <label>IMAGE URL 2 (두 번째 이미지 주소)</label>
+        <input type="url" id="inlineImgUrl2" placeholder="https://...">
+      </div>
+      <div class="form-group">
+        <label>IMAGE CROP (비율 자르기)</label>
+        <select id="inlineImgCrop">
+          <option value="crop-auto">원본 비율 유지 (Auto)</option>
+          <option value="crop-16-9">16 : 9 (와이드)</option>
+          <option value="crop-4-3">4 : 3 (표준)</option>
+          <option value="crop-1-1">1 : 1 (정사각형)</option>
+          <option value="crop-3-4">3 : 4 (세로)</option>
+        </select>
+      </div>
+      <div class="modal-btns">
+        <button type="button" class="btn-cancel" onclick="closeInlineImageInsertModal()">CANCEL</button>
+        <button type="button" class="btn-save" onclick="applyInlineImageToEditor()">INSERT</button>
+      </div>
     </div>
   </div>
 
@@ -1023,7 +1046,7 @@
 
     const CLOUD_API_KEY = "$2a$10$STrJtNXDgV2ITq3pF1PHzuJtjeHvJhEHjYS5fu302XnpdwLPdm9ai";
     const BIN_ID = "6a720229f5f4af5e29ea5959";
-    const APP_VERSION = "v3.4_toggle_border";
+    const APP_VERSION = "v3.6_notion_rich_editor";
 
     const defaultSiteConfig = {
       logoText: "STUDIO.",
@@ -1058,7 +1081,6 @@
       }
     }
 
-    // 브라우저 뒤로가기 연동
     window.onpopstate = function(event) {
       if (document.getElementById('detailView').style.display === 'block') {
         showMainView(false);
@@ -1512,7 +1534,6 @@
       history.pushState({ view: 'detail', id: id }, '');
     }
 
-    // 텍스트 블록 및 노션 토글, 테두리 스타일 동적 렌더링 함수
     function renderDetailContentBlocks(work) {
       const container = document.getElementById('detailBlocksList');
       container.innerHTML = '';
@@ -1535,11 +1556,12 @@
 
         if (block.type === 'text') {
           const borderClass = `border-style-${block.borderStyle || 'solid'}`;
+          const customStyle = `letter-spacing: ${block.letterSpacing || '0px'}; line-height: ${block.lineHeight || '1.7'}; text-align: ${block.align || 'left'};`;
 
           if (block.style === 'toggle') {
             const summaryTitle = block.summary || '자세히 보기';
             innerContentHtml = `
-              <div class="detail-text-wrapper ${borderClass}">
+              <div class="detail-text-wrapper ${borderClass}" style="${customStyle}">
                 <details class="notion-toggle-details">
                   <summary class="notion-toggle-summary">
                     <i class="fa-solid fa-chevron-right notion-toggle-icon"></i>
@@ -1550,8 +1572,7 @@
               </div>
             `;
           } else {
-            const styleClass = `text-style-${block.style || 'normal'}`;
-            innerContentHtml = `<div class="detail-text-wrapper ${styleClass} ${borderClass}">${block.content}</div>`;
+            innerContentHtml = `<div class="detail-text-wrapper ${borderClass}" style="${customStyle}">${block.content}</div>`;
           }
         } else {
           const sizeClass = `media-size-${block.size || 'full'}`;
@@ -1613,15 +1634,77 @@
       }
     }
 
+    function execFormat(command, value = null) {
+      document.execCommand(command, false, value);
+      document.getElementById('notionEditorArea').focus();
+    }
+
+    function openInlineImageInsertModal() {
+      document.getElementById('inlineImgUrl1').value = '';
+      document.getElementById('inlineImgUrl2').value = '';
+      document.getElementById('inlineImgLayout').value = 'single';
+      document.getElementById('inlineImgCrop').value = 'crop-auto';
+      toggleSecondImageInput();
+      document.getElementById('inlineImgModal').classList.add('active');
+    }
+
+    function closeInlineImageInsertModal() {
+      document.getElementById('inlineImgModal').classList.remove('active');
+    }
+
+    function toggleSecondImageInput() {
+      const layout = document.getElementById('inlineImgLayout').value;
+      const group2 = document.getElementById('inlineImg2Group');
+      if (layout === 'grid') {
+        group2.style.display = 'block';
+      } else {
+        group2.style.display = 'none';
+      }
+    }
+
+    function applyInlineImageToEditor() {
+      const url1 = document.getElementById('inlineImgUrl1').value.trim();
+      const url2 = document.getElementById('inlineImgUrl2').value.trim();
+      const layout = document.getElementById('inlineImgLayout').value;
+      const crop = document.getElementById('inlineImgCrop').value;
+
+      if (!url1) {
+        alert('이미지 URL을 입력해주세요.');
+        return;
+      }
+
+      let insertHtml = '';
+      if (layout === 'grid' && url2) {
+        insertHtml = `
+          <div class="editor-grid-2col">
+            <img src="${url1}" class="${crop}" alt="Inline Image 1">
+            <img src="${url2}" class="${crop}" alt="Inline Image 2">
+          </div>
+          <p><br></p>
+        `;
+      } else {
+        insertHtml = `
+          <img src="${url1}" class="editor-inline-img ${crop}" alt="Inline Image">
+          <p><br></p>
+        `;
+      }
+
+      document.getElementById('notionEditorArea').focus();
+      document.execCommand('insertHTML', false, insertHtml);
+      closeInlineImageInsertModal();
+    }
+
     function openTextBlockModal() {
       if (!currentDetailId || !isAdmin) return;
-      document.getElementById('textBlockModalTitle').innerText = 'ADD TEXT BLOCK';
+      document.getElementById('textBlockModalTitle').innerText = 'ADD NOTION RICH TEXT BLOCK';
       document.getElementById('textBlockEditIndex').value = "-1";
       document.getElementById('textBlockStyle').value = "normal";
       document.getElementById('textBlockSummaryInput').value = "";
       document.getElementById('textBlockBorderStyle').value = "solid";
+      document.getElementById('textBlockLetterSpacing').value = "0px";
+      document.getElementById('textBlockLineHeight').value = "1.7";
       document.getElementById('textBlockAlign').value = "left";
-      document.getElementById('textBlockInput').value = "";
+      document.getElementById('notionEditorArea').innerHTML = "<p>여기에 내용을 작성하세요...</p>";
       toggleSummaryGroupVisibility();
       document.getElementById('textBlockModal').classList.add('active');
     }
@@ -1633,13 +1716,15 @@
       if (!work || !work.blocks[blockIndex]) return;
 
       const block = work.blocks[blockIndex];
-      document.getElementById('textBlockModalTitle').innerText = 'EDIT TEXT BLOCK';
+      document.getElementById('textBlockModalTitle').innerText = 'EDIT NOTION RICH TEXT BLOCK';
       document.getElementById('textBlockEditIndex').value = blockIndex;
       document.getElementById('textBlockStyle').value = block.style || "normal";
       document.getElementById('textBlockSummaryInput').value = block.summary || "";
       document.getElementById('textBlockBorderStyle').value = block.borderStyle || "solid";
+      document.getElementById('textBlockLetterSpacing').value = block.letterSpacing || "0px";
+      document.getElementById('textBlockLineHeight').value = block.lineHeight || "1.7";
       document.getElementById('textBlockAlign').value = block.align || "left";
-      document.getElementById('textBlockInput').value = block.content || "";
+      document.getElementById('notionEditorArea').innerHTML = block.content || "";
       toggleSummaryGroupVisibility();
       document.getElementById('textBlockModal').classList.add('active');
     }
@@ -1656,9 +1741,12 @@
       const style = document.getElementById('textBlockStyle').value;
       const summary = document.getElementById('textBlockSummaryInput').value.trim();
       const borderStyle = document.getElementById('textBlockBorderStyle').value;
+      const letterSpacing = document.getElementById('textBlockLetterSpacing').value;
+      const lineHeight = document.getElementById('textBlockLineHeight').value;
       const align = document.getElementById('textBlockAlign').value;
-      const textContent = document.getElementById('textBlockInput').value.trim();
-      if (!textContent) return;
+      const htmlContent = document.getElementById('notionEditorArea').innerHTML.trim();
+      
+      if (!htmlContent) return;
 
       let works = getWorks();
       const work = works.find(w => w.id === currentDetailId);
@@ -1671,8 +1759,10 @@
         style,
         summary,
         borderStyle,
+        letterSpacing,
+        lineHeight,
         align,
-        content: textContent
+        content: htmlContent
       };
 
       if (editIndex >= 0) {
@@ -2047,9 +2137,6 @@
       }
     }
 
-    // -------------------------------------------------------------
-    // 탄성 물리학 및 더블클릭/더블탭 토글 뒤집기 완벽 지원
-    // -------------------------------------------------------------
     function initLanyardPhysics() {
       const lanyardContainer = document.getElementById('lanyardCard');
       const cardFlipper = document.getElementById('idCardFlipper');
@@ -2064,7 +2151,6 @@
       let hasMoved = false;
       const baseStrapHeight = 240;
 
-      // 초기 등장 바운스
       gsap.from(lanyardContainer, {
         y: -250,
         rotation: 12,
@@ -2072,14 +2158,12 @@
         ease: "bounce.out"
       });
 
-      // 데스크톱 더블클릭 시 앞/뒤 토글 뒤집기
       cardFlipper.addEventListener('dblclick', (e) => {
         if (e.target.closest('#idCardEditBtn')) return;
         e.stopPropagation();
         cardFlipper.classList.toggle('flipped');
       });
 
-      // 모바일 더블탭 지원
       let lastTap = 0;
       cardFlipper.addEventListener('touchend', (e) => {
         if (e.target.closest('#idCardEditBtn')) return;
@@ -2095,7 +2179,6 @@
         lastTap = currentTime;
       });
 
-      // 드래그 시작
       function startDrag(clientX, clientY, target) {
         if (target.closest && target.closest('#idCardEditBtn')) return;
         isDragging = true;
@@ -2176,12 +2259,10 @@
         if (backGlare) gsap.to(backGlare, { opacity: 0.5, duration: 0.8 });
       }
 
-      // 마우스 이벤트
       lanyardContainer.addEventListener('mousedown', (e) => startDrag(e.clientX, e.clientY, e.target));
       window.addEventListener('mousemove', (e) => moveDrag(e.clientX, e.clientY));
       window.addEventListener('mouseup', endDrag);
 
-      // 모바일 터치 이벤트
       lanyardContainer.addEventListener('touchstart', (e) => {
         if (e.touches.length === 1) {
           startDrag(e.touches[0].clientX, e.touches[0].clientY, e.target);
@@ -2199,7 +2280,6 @@
       window.addEventListener('touchcancel', endDrag);
     }
 
-    // Custom Interactive Cursor
     const cursor = document.querySelector('.custom-cursor');
     if (window.innerWidth > 768) {
       window.addEventListener('mousemove', (e) => {
@@ -2207,7 +2287,6 @@
       });
     }
 
-    // THREE.JS 3D PARTICLE CANVAS SYSTEM
     function initThreeJS() {
       const canvas = document.getElementById('webgl-canvas');
       const scene = new THREE.Scene();
@@ -2215,11 +2294,11 @@
       const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
       camera.position.z = 400;
 
-      const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+      const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: false, powerPreference: "low-power" });
       renderer.setSize(window.innerWidth, window.innerHeight);
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
 
-      const particlesCount = 700;
+      const particlesCount = 250;
       const geometry = new THREE.BufferGeometry();
       const positions = new Float32Array(particlesCount * 3);
 
@@ -2232,7 +2311,7 @@
       geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
 
       const material = new THREE.PointsMaterial({
-        color: 0xffffff, size: 2.5, transparent: true, opacity: 0.4, blending: THREE.AdditiveBlending
+        color: 0xffffff, size: 2.2, transparent: true, opacity: 0.35
       });
 
       const particleSystem = new THREE.Points(geometry, material);
@@ -2240,20 +2319,23 @@
 
       let mouseX = 0, mouseY = 0;
       window.addEventListener('mousemove', (e) => {
-        mouseX = (e.clientX - window.innerWidth / 2) * 0.05;
-        mouseY = (e.clientY - window.innerHeight / 2) * 0.05;
-      });
+        mouseX = (e.clientX - window.innerWidth / 2) * 0.03;
+        mouseY = (e.clientY - window.innerHeight / 2) * 0.03;
+      }, { passive: true });
 
-      let scrollY = 0;
-      window.addEventListener('scroll', () => { scrollY = window.scrollY; });
+      let isPageVisible = true;
+      document.addEventListener("visibilitychange", () => {
+        isPageVisible = !document.hidden;
+      });
 
       function animate() {
         requestAnimationFrame(animate);
-        particleSystem.rotation.y += 0.001;
-        particleSystem.rotation.x += 0.0005;
-        camera.position.x += (mouseX - camera.position.x) * 0.05;
-        camera.position.y += (-mouseY - camera.position.y) * 0.05;
-        camera.position.z = 400 + scrollY * 0.2;
+        if (!isPageVisible) return;
+
+        particleSystem.rotation.y += 0.0006;
+        particleSystem.rotation.x += 0.0003;
+        camera.position.x += (mouseX - camera.position.x) * 0.03;
+        camera.position.y += (-mouseY - camera.position.y) * 0.03;
         renderer.render(scene, camera);
       }
 
@@ -2263,10 +2345,9 @@
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
         renderer.setSize(window.innerWidth, window.innerHeight);
-      });
+      }, { passive: true });
     }
 
-    // 초기화 파이프라인
     async function initApp() {
       const loader = document.getElementById('app-loader');
       checkCacheVersion();
