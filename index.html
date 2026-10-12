@@ -8,14 +8,15 @@
   <meta property="og:title" content="GOSAT">
   <meta property="og:description" content="">
   <meta property="og:site_name" content="GOSAT">
-  <meta property="og:image" content="https://github.com/cbg0601/gosat.github.io/blob/cbg0601-patch-1/images/%E1%84%89%E1%85%A1%E1%84%8B%E1%85%B5%E1%84%90%E1%85%B3%20%E1%84%86%E1%85%B5%E1%84%85%E1%85%B5%20%E1%84%87%E1%85%A9%E1%84%80%E1%85%B5%20%E1%84%8B%E1%85%B5%E1%84%86%E1%85%B5%E1%84%8C%E1%85%B5.png?raw=true">
+  <!-- GitHub 차단 우회 및 고속 전송을 위해 jsDelivr CDN 경로로 수정 -->
+  <meta property="og:image" content="https://cdn.jsdelivr.net/gh/cbg0601/gosat.github.io@cbg0601-patch-1/images/%E1%84%89%E1%85%A1%E1%84%8B%E1%85%B5%E1%84%90%E1%85%B3%20%E1%84%86%E1%85%B5%E1%84%85%E1%85%B5%20%E1%84%87%E1%85%A9%E1%84%80%E1%85%B5%20%E1%84%8B%E1%85%B5%E1%84%86%E1%85%B5%E1%84%8C%E1%85%B5.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="GOSAT">
   <meta name="twitter:description" content="">
-  <meta name="twitter:image" content="https://github.com/cbg0601/gosat.github.io/blob/cbg0601-patch-1/images/%E1%84%89%E1%85%A1%E1%84%8B%E1%85%B5%E1%84%90%E1%85%B3%20%E1%84%86%E1%85%B5%E1%84%85%E1%85%B5%20%E1%84%87%E1%85%A9%E1%84%80%E1%85%B5%20%E1%84%8B%E1%85%B5%E1%84%86%E1%85%B5%E1%84%8C%E1%85%B5.png?raw=true">
+  <meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/cbg0601/gosat.github.io@cbg0601-patch-1/images/%E1%84%89%E1%85%A1%E1%84%8B%E1%85%B5%E1%84%90%E1%85%B3%20%E1%84%86%E1%85%B5%E1%84%85%E1%85%B5%20%E1%84%87%E1%85%A9%E1%84%80%E1%85%B5%20%E1%84%8B%E1%85%B5%E1%84%86%E1%85%B5%E1%84%8C%E1%85%B5.png">
 
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
@@ -1049,7 +1050,7 @@
 
     const CLOUD_API_KEY = "$2a$10$STrJtNXDgV2ITq3pF1PHzuJtjeHvJhEHjYS5fu302XnpdwLPdm9ai";
     const BIN_ID = "6a720229f5f4af5e29ea5959";
-    const APP_VERSION = "v3.9_png_transparency";
+    const APP_VERSION = "v4.0_cdn_fix";
 
     const defaultSiteConfig = {
       logoText: "STUDIO.",
@@ -1074,6 +1075,22 @@
       social: { instagram: "", vimeo: "", youtube: "" }
     };
     const defaultWorks = [];
+
+    // GitHub Blob/Raw 링크를 초고속 jsDelivr CDN 주소로 자동 변환하는 안전 보정 함수
+    function resolveSafeImageUrl(url) {
+      if (!url) return '';
+      let trimmed = url.trim();
+
+      // GitHub blob/raw 링크 형태인 경우 jsDelivr CDN으로 변환
+      if (trimmed.includes('github.com') && (trimmed.includes('/blob/') || trimmed.includes('/raw/'))) {
+        trimmed = trimmed
+          .replace('github.com/', 'cdn.jsdelivr.net/gh/')
+          .replace('/blob/', '@')
+          .replace('/raw/', '@')
+          .replace('?raw=true', '');
+      }
+      return trimmed;
+    }
 
     function checkCacheVersion() {
       const savedVersion = localStorage.getItem('app_data_version');
@@ -1207,7 +1224,7 @@
 
     function parseMediaUrl(url) {
       if (!url) return { type: 'image', src: '', isTransparent: false };
-      const trimmed = url.trim();
+      const trimmed = resolveSafeImageUrl(url);
 
       const playlistRegExp = /[?&]list=([^#\&\?]+)/;
       const playlistMatch = trimmed.match(playlistRegExp);
@@ -1233,7 +1250,7 @@
         return { type: 'video', src: trimmed, isTransparent: false };
       } else {
         const lower = trimmed.toLowerCase();
-        const isTransparent = lower.includes('.png') || lower.includes('.webp') || lower.includes('png?raw=true');
+        const isTransparent = lower.includes('.png') || lower.includes('.webp');
         return { type: 'image', src: trimmed, isTransparent };
       }
     }
@@ -1274,7 +1291,7 @@
 
       const idCardPhotoElem = document.getElementById('idCardPhoto');
       if (idCardPhotoElem) {
-        idCardPhotoElem.src = idCard.photo || defaultSiteConfig.idCard.photo;
+        idCardPhotoElem.src = resolveSafeImageUrl(idCard.photo) || defaultSiteConfig.idCard.photo;
       }
 
       document.getElementById('idCardName').innerText = idCard.name || defaultSiteConfig.idCard.name;
@@ -1296,7 +1313,7 @@
 
       const idCardBackPhotoElem = document.getElementById('idCardBackPhoto');
       if (idCardBackPhotoElem) {
-        idCardBackPhotoElem.src = idCard.backPhoto || defaultSiteConfig.idCard.backPhoto;
+        idCardBackPhotoElem.src = resolveSafeImageUrl(idCard.backPhoto) || defaultSiteConfig.idCard.backPhoto;
       }
 
       document.getElementById('idCardBackTitle').innerText = idCard.backTitle || defaultSiteConfig.idCard.backTitle;
@@ -1453,7 +1470,7 @@
           } else if (work.type === 'video' || parsedMedia.type === 'video') {
             mediaHtml = `<video src="${parsedMedia.src}" autoplay loop muted playsinline></video>`;
           } else {
-            mediaHtml = `<img src="${parsedMedia.src}" alt="${work.title}" loading="eager">`;
+            mediaHtml = `<img src="${parsedMedia.src}" alt="${work.title}" loading="eager" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800';">`;
           }
 
           const previewText = work.cardDesc || '';
@@ -1574,6 +1591,11 @@
           const borderClass = `border-style-${block.borderStyle || 'solid'}`;
           const customStyle = `letter-spacing: ${block.letterSpacing || '0px'}; line-height: ${block.lineHeight || '1.7'}; text-align: ${block.align || 'left'};`;
 
+          // 텍스트 블록 내부 inline 이미지 주소도 CDN/안전 주소로 치환
+          let safeTextContent = block.content.replace(/src="([^"]+)"/g, (match, srcUrl) => {
+            return `src="${resolveSafeImageUrl(srcUrl)}"`;
+          });
+
           if (block.style === 'toggle') {
             const summaryTitle = block.summary || '자세히 보기';
             innerContentHtml = `
@@ -1583,12 +1605,12 @@
                     <i class="fa-solid fa-chevron-right notion-toggle-icon"></i>
                     <span>${summaryTitle}</span>
                   </summary>
-                  <div class="notion-toggle-content">${block.content}</div>
+                  <div class="notion-toggle-content">${safeTextContent}</div>
                 </details>
               </div>
             `;
           } else {
-            innerContentHtml = `<div class="detail-text-wrapper ${borderClass}" style="${customStyle}">${block.content}</div>`;
+            innerContentHtml = `<div class="detail-text-wrapper ${borderClass}" style="${customStyle}">${safeTextContent}</div>`;
           }
         } else {
           const sizeClass = `media-size-${block.size || 'full'}`;
@@ -1601,7 +1623,7 @@
           } else if (parsed.type === 'video') {
             mediaElement = `<video src="${parsed.src}" controls loop muted playsinline></video>`;
           } else {
-            mediaElement = `<img src="${parsed.src}" alt="Detail Media" loading="eager">`;
+            mediaElement = `<img src="${parsed.src}" alt="Detail Media" loading="eager" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800';">`;
           }
 
           const captionHtml = block.caption ? `<div class="media-caption">${block.caption}</div>` : '';
@@ -1680,15 +1702,18 @@
     }
 
     function applyInlineImageToEditor() {
-      const url1 = document.getElementById('inlineImgUrl1').value.trim();
-      const url2 = document.getElementById('inlineImgUrl2').value.trim();
+      const rawUrl1 = document.getElementById('inlineImgUrl1').value.trim();
+      const rawUrl2 = document.getElementById('inlineImgUrl2').value.trim();
       const layout = document.getElementById('inlineImgLayout').value;
       const crop = document.getElementById('inlineImgCrop').value;
 
-      if (!url1) {
+      if (!rawUrl1) {
         alert('이미지 URL을 입력해주세요.');
         return;
       }
+
+      const url1 = resolveSafeImageUrl(rawUrl1);
+      const url2 = resolveSafeImageUrl(rawUrl2);
 
       let insertHtml = '';
       if (layout === 'grid' && url2) {
@@ -1842,7 +1867,7 @@
 
       if (!work.blocks) work.blocks = [];
 
-      const blockData = { type: 'media', content: url, size, align, caption };
+      const blockData = { type: 'media', content: resolveSafeImageUrl(url), size, align, caption };
 
       if (editIndex >= 0) {
         work.blocks[editIndex] = blockData;
@@ -2103,7 +2128,7 @@
       const title = document.getElementById('postTitle').value;
       const cardDesc = document.getElementById('postCardDesc').value;
       const type = document.getElementById('postMediaType').value;
-      const mediaUrl = document.getElementById('postMediaUrl').value;
+      const mediaUrl = resolveSafeImageUrl(document.getElementById('postMediaUrl').value);
       
       let works = getWorks();
 
