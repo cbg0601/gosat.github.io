@@ -8,7 +8,6 @@
   <meta property="og:title" content="GOSAT">
   <meta property="og:description" content="">
   <meta property="og:site_name" content="GOSAT">
-  <!-- GitHub 차단 우회 및 고속 전송을 위해 jsDelivr CDN 경로로 수정 -->
   <meta property="og:image" content="https://cdn.jsdelivr.net/gh/cbg0601/gosat.github.io@cbg0601-patch-1/images/%E1%84%89%E1%85%A1%E1%84%8B%E1%85%B5%E1%84%90%E1%85%B3%20%E1%84%86%E1%85%B5%E1%84%85%E1%85%B5%20%E1%84%87%E1%85%A9%E1%84%80%E1%85%B5%20%E1%84%8B%E1%85%B5%E1%84%86%E1%85%B5%E1%84%8C%E1%85%B5.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -142,24 +141,27 @@
       text-shadow: 0 20px 40px rgba(0,0,0,0.8); white-space: pre-line;
     }
 
+    /* 단단한 플라스틱 강체 사원증 (Rigid Lanyard) */
     .lanyard-container {
       position: absolute; top: -4%; right: calc(150px + 5vw); width: 320px; z-index: 5;
       display: flex; flex-direction: column; align-items: center;
-      perspective: 1200px; user-select: none;
+      perspective: 2000px; user-select: none;
       transform-origin: top center;
-      touch-action: none;
+      touch-action: none; will-change: transform;
     }
 
     .lanyard-strap-wrapper {
-      position: relative; width: 22px; height: 260px; display: flex;
+      position: relative; width: 22px; height: 240px; display: flex;
       flex-direction: column; align-items: center; justify-content: flex-end;
       transform-origin: top center; will-change: height, transform;
     }
     .lanyard-strap {
-      width: 100%; height: 100%; background: #181818;
-      border: 1px solid rgba(255,255,255,0.15); border-radius: 2px;
+      width: 100%; height: 100%;
+      background: repeating-linear-gradient(45deg, #161616, #161616 4px, #1f1f1f 4px, #1f1f1f 8px);
+      border-left: 1px solid rgba(255,255,255,0.12);
+      border-right: 1px solid rgba(255,255,255,0.12);
       display: flex; justify-content: center; align-items: center;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.6); overflow: hidden;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.7); overflow: hidden;
       position: absolute; top: 0; bottom: 0;
     }
     .lanyard-strap-text {
@@ -167,9 +169,14 @@
       font-size: 0.55rem; letter-spacing: 3px; color: #ffb703; font-weight: bold;
       opacity: 0.85;
     }
+    .lanyard-clip {
+      width: 36px; height: 18px; background: linear-gradient(90deg, #555, #999, #444);
+      border-radius: 4px; z-index: 7; box-shadow: 0 4px 10px rgba(0,0,0,0.8);
+      margin-bottom: -6px; border: 1px solid rgba(255,255,255,0.3);
+    }
     .lanyard-ring {
-      width: 28px; height: 28px; border: 3px solid #ccc;
-      border-radius: 50%; background: #222; margin-bottom: -14px;
+      width: 26px; height: 26px; border: 3px solid #bbb;
+      border-radius: 50%; background: #1a1a1a; margin-bottom: -12px;
       box-shadow: 0 5px 15px rgba(0,0,0,0.8); z-index: 6; flex-shrink: 0;
     }
 
@@ -186,56 +193,67 @@
 
     .id-card-flipper {
       position: relative; width: 320px; height: 460px;
-      transform-style: preserve-3d; flex-shrink: 0; margin-top: 10px;
-      cursor: grab;
-      transform-origin: top center;
-      transition: transform 0.9s cubic-bezier(0.34, 1.56, 0.64, 1);
-      touch-action: none;
+      transform-style: preserve-3d; flex-shrink: 0; margin-top: 8px;
+      cursor: grab; transform-origin: top center;
+      transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+      touch-action: none; will-change: transform;
     }
     .id-card-flipper:active { cursor: grabbing; }
     .id-card-flipper.flipped {
-      transform: rotateY(180deg) scale(1.03);
+      transform: rotateY(180deg);
     }
 
     .id-card-face {
       position: absolute; inset: 0; width: 100%; height: 100%;
-      background: linear-gradient(145deg, #1f2124 0%, #111215 50%, #08090b 100%);
-      border-radius: 20px; padding: 20px; color: #ffffff;
-      box-shadow: 0 30px 60px rgba(0,0,0,0.9), inset 0 0 3px rgba(255,255,255,0.15);
+      background: linear-gradient(145deg, #24272c 0%, #141619 55%, #090a0c 100%);
+      border-radius: 18px; padding: 20px; color: #ffffff;
+      /* 단단한 플라스틱 두께감을 표현하는 하드 베벨 테두리 */
+      box-shadow: 
+        0 25px 50px rgba(0,0,0,0.9),
+        0 0 0 1px rgba(255,255,255,0.18),
+        inset 0 1px 0 rgba(255,255,255,0.35),
+        inset 0 -2px 0 rgba(0,0,0,0.8);
       display: flex; flex-direction: column; justify-content: space-between;
       backface-visibility: hidden; -webkit-backface-visibility: hidden;
-      border: 1px solid rgba(255, 255, 255, 0.12); overflow: hidden;
+      overflow: hidden;
+    }
+    .id-card-slot {
+      width: 54px; height: 8px; background: #050505; border-radius: 10px;
+      margin: -8px auto 8px auto; box-shadow: inset 0 2px 5px rgba(0,0,0,0.9), 0 1px 1px rgba(255,255,255,0.15);
     }
 
     .id-card-glare {
       position: absolute; inset: -150%;
       background: linear-gradient(
         115deg,
-        transparent 20%,
-        rgba(255, 255, 255, 0.15) 45%,
-        rgba(255, 255, 255, 0.3) 50%,
-        rgba(255, 255, 255, 0.15) 55%,
-        transparent 80%
+        transparent 30%,
+        rgba(255, 255, 255, 0.08) 46%,
+        rgba(255, 255, 255, 0.22) 50%,
+        rgba(255, 255, 255, 0.08) 54%,
+        transparent 70%
       );
-      pointer-events: none; opacity: 0.5;
-      transform: translate(-30%, -30%);
-      transition: transform 0.15s ease-out, opacity 0.3s ease;
+      pointer-events: none; opacity: 0.45;
+      transform: translate(-30%, -30%) rotate(25deg); will-change: transform;
     }
 
     .id-card-front { z-index: 2; transform: rotateY(0deg); }
     .id-card-back {
       transform: rotateY(180deg);
       background: linear-gradient(145deg, #16181b 0%, #0c0d0f 100%);
-      border: 1px solid rgba(255, 183, 3, 0.3);
+      box-shadow: 
+        0 25px 50px rgba(0,0,0,0.9),
+        0 0 0 1px rgba(255, 183, 3, 0.35),
+        inset 0 1px 0 rgba(255, 183, 3, 0.25),
+        inset 0 -2px 0 rgba(0,0,0,0.8);
     }
 
     .id-card-photo-wrapper {
-      width: 100%; aspect-ratio: 3 / 4; border-radius: 12px; overflow: hidden;
+      width: 100%; aspect-ratio: 3 / 4; border-radius: 10px; overflow: hidden;
       background: #050505; position: relative; box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
     }
     .id-card-photo-wrapper img {
       width: 100%; height: 100%; object-fit: cover; filter: grayscale(10%) contrast(1.1);
-      background-color: transparent; display: block;
+      background-color: transparent; display: block; pointer-events: none;
     }
 
     .id-card-info-box {
@@ -277,9 +295,7 @@
     .add-post-btn:hover { background: #fff; color: #000; }
     body.admin-mode .add-post-btn { display: inline-flex; }
 
-    .work-slider-wrapper {
-      position: relative; width: 100%;
-    }
+    .work-slider-wrapper { position: relative; width: 100%; }
 
     .scroll-arrow-btn {
       position: absolute; top: 50%; transform: translateY(-50%);
@@ -296,9 +312,7 @@
     .scroll-arrow-left { left: 10px; }
     .scroll-arrow-right { right: 10px; }
 
-    .work-slider-wrapper:hover .scroll-arrow-btn {
-      opacity: 1; pointer-events: auto;
-    }
+    .work-slider-wrapper:hover .scroll-arrow-btn { opacity: 1; pointer-events: auto; }
 
     .work-scroll-container {
       display: flex; gap: 60px; overflow-x: auto; overflow-y: hidden;
@@ -343,15 +357,8 @@
     .work-card:hover img, .work-card:hover video { filter: brightness(1); }
 
     .work-category { font-family: 'Syncopate', sans-serif; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 3px; color: #ffb703; margin-bottom: 10px; }
-    
-    .work-title {
-      font-size: 2rem; font-weight: 700; margin-bottom: 10px; letter-spacing: -0.5px;
-      white-space: pre-line; line-height: 1.25;
-    }
-    .work-desc {
-      font-size: 1rem; color: #aaa; margin-bottom: 15px;
-      white-space: pre-line; line-height: 1.5;
-    }
+    .work-title { font-size: 2rem; font-weight: 700; margin-bottom: 10px; letter-spacing: -0.5px; white-space: pre-line; line-height: 1.25; }
+    .work-desc { font-size: 1rem; color: #aaa; margin-bottom: 15px; white-space: pre-line; line-height: 1.5; }
 
     .card-admin-actions { display: none; gap: 8px; margin-top: 10px; z-index: 20; pointer-events: auto; flex-wrap: wrap; }
     body.admin-mode .card-admin-actions { display: flex; }
@@ -384,10 +391,7 @@
     .detail-title { font-size: 3rem; font-weight: 700; margin-bottom: 10px; word-break: break-word; letter-spacing: -0.5px; white-space: pre-line; line-height: 1.2; }
 
     .detail-content-blocks { display: flex; flex-direction: column; gap: 40px; margin-top: 40px; }
-    
-    .detail-block-item {
-      position: relative; width: 100%; display: flex; flex-direction: column;
-    }
+    .detail-block-item { position: relative; width: 100%; display: flex; flex-direction: column; }
 
     .align-left { align-items: flex-start; text-align: left; }
     .align-center { align-items: center; text-align: center; }
@@ -397,29 +401,73 @@
     .media-size-medium { width: 80%; }
     .media-size-small { width: 50%; }
 
-    /* 미디어 래퍼 및 투명 PNG 전용 투명 배경 클래스 */
     .detail-media-wrapper {
       position: relative; border-radius: 12px; overflow: hidden;
       background: #121212; border: 1px solid rgba(255,255,255,0.1);
       box-shadow: 0 20px 50px rgba(0,0,0,0.8); aspect-ratio: 16/9;
     }
     .detail-media-wrapper.transparent-bg {
-      background: transparent !important;
-      border: none !important;
-      box-shadow: none !important;
-      aspect-ratio: auto !important;
+      background: transparent !important; border: none !important;
+      box-shadow: none !important; aspect-ratio: auto !important;
     }
     .detail-media-wrapper img, .detail-media-wrapper video, .detail-media-wrapper iframe {
       width: 100%; height: 100%; object-fit: contain; display: block; background: #050505; border: none;
     }
-    .detail-media-wrapper.transparent-bg img {
-      background: transparent !important;
-      max-height: 80vh;
-    }
+    .detail-media-wrapper img { cursor: zoom-in; }
+    .detail-media-wrapper.transparent-bg img { background: transparent !important; max-height: 80vh; }
 
-    .media-caption {
-      margin-top: 10px; font-size: 0.85rem; color: #888; font-style: italic; line-height: 1.4;
+    .media-caption { margin-top: 10px; font-size: 0.85rem; color: #888; font-style: italic; line-height: 1.4; }
+
+    /* Before / After 2-Way 비교 슬라이더 스타일 */
+    .ba-slider-container {
+      position: relative; overflow: hidden; border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.15); box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+      aspect-ratio: 16/9; user-select: none; background: #0a0a0a; touch-action: pan-y;
     }
+    .ba-slider-container img {
+      width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none;
+    }
+    .ba-before-layer {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      clip-path: inset(0 50% 0 0); will-change: clip-path;
+    }
+    .ba-handle {
+      position: absolute; top: 0; bottom: 0; left: 50%; width: 3px;
+      background: #ffb703; transform: translateX(-50%); cursor: ew-resize; z-index: 10;
+      box-shadow: 0 0 12px rgba(0,0,0,0.9);
+    }
+    .ba-handle-btn {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      width: 42px; height: 42px; border-radius: 50%; background: #ffb703; color: #000;
+      display: flex; justify-content: center; align-items: center; font-size: 0.9rem;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.7); border: 2px solid #fff;
+    }
+    .ba-badge {
+      position: absolute; top: 16px; padding: 5px 12px; background: rgba(0,0,0,0.75);
+      color: #fff; font-family: 'Syncopate', sans-serif; font-size: 0.7rem; font-weight: bold;
+      border-radius: 20px; border: 1px solid rgba(255,255,255,0.2); pointer-events: none; z-index: 5;
+    }
+    .ba-badge-before { left: 16px; color: #ffb703; }
+    .ba-badge-after { right: 16px; }
+
+    /* 이미지 라이트박스(Lightbox) 전체화면 확대 뷰어 */
+    #lightboxOverlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.94); z-index: 95000;
+      display: none; justify-content: center; align-items: center; padding: 30px;
+      cursor: zoom-out; opacity: 0; transition: opacity 0.25s ease;
+    }
+    #lightboxOverlay.active { display: flex; opacity: 1; }
+    #lightboxImg {
+      max-width: 92vw; max-height: 88vh; object-fit: contain; border-radius: 8px;
+      box-shadow: 0 25px 70px rgba(0,0,0,0.9); transform: scale(0.95); transition: transform 0.25s ease;
+    }
+    #lightboxOverlay.active #lightboxImg { transform: scale(1); }
+    .lightbox-close-btn {
+      position: absolute; top: 25px; right: 35px; background: rgba(255,255,255,0.1);
+      color: #fff; border: 1px solid rgba(255,255,255,0.3); width: 44px; height: 44px;
+      border-radius: 50%; font-size: 1.2rem; cursor: pointer; display: flex; justify-content: center; align-items: center;
+    }
+    .lightbox-close-btn:hover { background: #ffb703; color: #000; }
 
     /* 노션형 리치 텍스트 블록 출력 컨테이너 */
     .detail-text-wrapper {
@@ -428,21 +476,21 @@
       position: relative; transition: border 0.3s ease, box-shadow 0.3s ease;
       white-space: pre-wrap; word-break: break-word;
     }
-
     .detail-text-wrapper h1 { font-size: 2.2rem; font-weight: 700; margin: 15px 0 10px 0; color: #fff; line-height: 1.3; }
     .detail-text-wrapper h2 { font-size: 1.6rem; font-weight: 700; margin: 12px 0 8px 0; color: #ffb703; line-height: 1.35; }
     .detail-text-wrapper h3 { font-size: 1.25rem; font-weight: 600; margin: 10px 0 6px 0; color: #e0e0e0; }
     .detail-text-wrapper p { margin-bottom: 12px; font-size: 1rem; }
     .detail-text-wrapper blockquote { border-left: 3px solid #ffb703; padding-left: 15px; margin: 15px 0; color: #aaa; font-style: italic; }
+    .detail-text-wrapper hr { border: none; border-top: 1px solid rgba(255,255,255,0.15); margin: 20px 0; }
 
     .editor-inline-img {
-      max-width: 100%; border-radius: 8px; margin: 15px 0; display: block; object-fit: cover; background: transparent;
+      max-width: 100%; border-radius: 8px; margin: 15px 0; display: block; object-fit: cover; background: transparent; cursor: zoom-in;
     }
     .editor-grid-2col {
       display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 15px 0;
     }
     .editor-grid-2col img {
-      width: 100%; height: 100%; border-radius: 8px; object-fit: cover; display: block; background: transparent;
+      width: 100%; height: 100%; border-radius: 8px; object-fit: cover; display: block; background: transparent; cursor: zoom-in;
     }
 
     .crop-16-9 { aspect-ratio: 16 / 9; object-fit: cover !important; }
@@ -456,21 +504,15 @@
     .border-style-dashed { border: 1px dashed rgba(255,255,255,0.3); }
     .border-style-none { border: none; background: transparent; padding: 10px 0; }
 
-    .notion-toggle-details {
-      width: 100%; border-radius: 8px; margin: 10px 0;
-    }
+    .notion-toggle-details { width: 100%; border-radius: 8px; margin: 10px 0; }
     .notion-toggle-summary {
       font-size: 1.05rem; font-weight: bold; color: #ffffff;
       cursor: pointer; list-style: none; display: flex; align-items: center;
       gap: 10px; user-select: none; padding: 5px 0;
     }
     .notion-toggle-summary::-webkit-details-marker { display: none; }
-    .notion-toggle-icon {
-      font-size: 0.8rem; color: #ffb703; transition: transform 0.25s ease;
-    }
-    .notion-toggle-details[open] .notion-toggle-icon {
-      transform: rotate(90deg);
-    }
+    .notion-toggle-icon { font-size: 0.8rem; color: #ffb703; transition: transform 0.25s ease; }
+    .notion-toggle-details[open] .notion-toggle-icon { transform: rotate(90deg); }
     .notion-toggle-content {
       margin-top: 12px; padding-left: 20px; color: #bbbbbb;
       font-size: 0.95rem; line-height: 1.7;
@@ -478,15 +520,12 @@
       white-space: pre-wrap; word-break: break-word;
     }
 
-    .block-item-actions {
-      position: absolute; top: 15px; right: 15px; display: none; gap: 8px; z-index: 20;
-    }
+    .block-item-actions { position: absolute; top: 15px; right: 15px; display: none; gap: 8px; z-index: 20; }
     body.admin-mode .block-item-actions { display: flex; }
 
     .block-action-btn {
       background: rgba(0,0,0,0.85); color: #fff; border: 1px solid rgba(255,255,255,0.3);
-      padding: 8px 12px; border-radius: 4px; font-size: 0.8rem; cursor: pointer;
-      transition: all 0.2s;
+      padding: 8px 12px; border-radius: 4px; font-size: 0.8rem; cursor: pointer; transition: all 0.2s;
     }
     .block-action-btn:hover { background: #ffb703; color: #000; }
 
@@ -500,9 +539,9 @@
       padding: 12px 24px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3);
       color: #fff; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.3s;
     }
-    .panel-btn:hover { background: #fff; color: #000; }
+    .panel-btn:hover { background: #ffb703; color: #000; border-color: #ffb703; }
 
-    /* 노션 스타일 리치 텍스트 툴바 */
+    /* 노션 스타일 리치 텍스트 툴바 & 슬래시(/) 커맨드 메뉴 */
     .notion-toolbar {
       display: flex; flex-wrap: wrap; gap: 6px; background: #222; padding: 10px; border-radius: 8px 8px 0 0;
       border: 1px solid #444; border-bottom: none; align-items: center;
@@ -515,6 +554,7 @@
     .toolbar-select, .toolbar-input {
       background: #333; color: #fff; border: 1px solid #555; padding: 5px 8px; border-radius: 4px; font-size: 0.8rem;
     }
+    .editor-wrapper-rel { position: relative; }
     .notion-editor-area {
       min-height: 220px; max-height: 400px; overflow-y: auto; background: #181818; border: 1px solid #444;
       border-radius: 0 0 8px 8px; padding: 15px; color: #eee; font-size: 1rem; outline: none; line-height: 1.6;
@@ -524,6 +564,23 @@
     .notion-editor-area h1 { font-size: 1.8rem; margin: 10px 0; color: #fff; }
     .notion-editor-area h2 { font-size: 1.4rem; margin: 8px 0; color: #ffb703; }
     .notion-editor-area h3 { font-size: 1.15rem; margin: 6px 0; color: #ddd; }
+
+    /* 슬래시(/) 플로팅 커맨드 팝업 */
+    #slashCommandMenu {
+      position: absolute; left: 15px; top: 50px; width: 220px; background: #222;
+      border: 1px solid #ffb703; border-radius: 8px; box-shadow: 0 15px 35px rgba(0,0,0,0.85);
+      display: none; flex-direction: column; overflow: hidden; z-index: 30000;
+    }
+    #slashCommandMenu.active { display: flex; }
+    .slash-menu-header {
+      padding: 6px 12px; font-size: 0.7rem; color: #ffb703; background: #191919;
+      font-family: 'Syncopate', sans-serif; border-bottom: 1px solid #333;
+    }
+    .slash-item {
+      padding: 9px 12px; font-size: 0.85rem; color: #eee; cursor: pointer;
+      display: flex; align-items: center; gap: 10px; background: transparent; border: none; text-align: left;
+    }
+    .slash-item:hover { background: #ffb703; color: #000; font-weight: bold; }
 
     .modal-overlay {
       position: fixed; inset: 0; background: rgba(0,0,0,0.92); z-index: 20000;
@@ -562,9 +619,7 @@
         position: relative; width: 100%; max-width: 100%; text-align: center;
         z-index: 2; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0 15px;
       }
-      .hero-subtitle-wrap, .hero-title-wrap {
-        justify-content: center; width: 100%; margin-left: 0; margin-right: 0;
-      }
+      .hero-subtitle-wrap, .hero-title-wrap { justify-content: center; width: 100%; margin-left: 0; margin-right: 0; }
       .hero-title { font-size: 2.2rem; text-align: center; width: 100%; }
       
       .lanyard-container {
@@ -618,6 +673,12 @@
   <canvas id="webgl-canvas"></canvas>
   <div class="custom-cursor"></div>
 
+  <!-- 이미지 라이트박스(Lightbox) 모달 -->
+  <div id="lightboxOverlay" onclick="closeLightbox()">
+    <button class="lightbox-close-btn" onclick="closeLightbox()"><i class="fa-solid fa-xmark"></i></button>
+    <img id="lightboxImg" src="" alt="Zoomed View">
+  </div>
+
   <header>
     <div class="logo-container">
       <div class="logo" id="siteLogoText" onclick="handleLogoClick()"></div>
@@ -644,16 +705,19 @@
         </div>
       </div>
 
+      <!-- 단단한 플라스틱 강체 사원증 -->
       <div class="lanyard-container" id="lanyardCard" style="top: -4%;">
         <div class="lanyard-strap-wrapper" id="lanyardStrapWrapper">
           <div class="lanyard-strap">
             <span class="lanyard-strap-text" id="idStrapText">GOSAT LAB</span>
           </div>
           <div class="lanyard-ring"></div>
+          <div class="lanyard-clip"></div>
         </div>
         
         <div class="id-card-flipper" id="idCardFlipper">
           <div class="id-card-face id-card-front">
+            <div class="id-card-slot"></div>
             <div class="id-card-glare" id="idCardFrontGlare"></div>
             <div class="id-card-photo-wrapper">
               <img id="idCardPhoto" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=800&auto=format&fit=crop" alt="Profile Photo" loading="eager">
@@ -666,6 +730,7 @@
           </div>
 
           <div class="id-card-face id-card-back">
+            <div class="id-card-slot"></div>
             <div class="id-card-glare" id="idCardBackGlare"></div>
             <div class="id-card-photo-wrapper">
               <img id="idCardBackPhoto" src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop" alt="Easter Egg Back Photo" loading="eager">
@@ -706,12 +771,14 @@
     <div class="detail-add-panel">
       <h4 style="font-family:'Syncopate';"><i class="fa-solid fa-plus-circle"></i> ADD NEW BLOCK TO DETAIL PAGE</h4>
       <div class="add-panel-btns">
-        <button class="panel-btn" onclick="openTextBlockModal()"><i class="fa-solid fa-font"></i> ADD NOTION RICH TEXT BLOCK</button>
-        <button class="panel-btn" onclick="openMediaBlockModal()"><i class="fa-solid fa-photo-film"></i> ADD MEDIA (IMAGE / VIDEO / YOUTUBE)</button>
+        <button class="panel-btn" onclick="openTextBlockModal()"><i class="fa-solid fa-font"></i> + NOTION RICH TEXT</button>
+        <button class="panel-btn" onclick="openMediaBlockModal()"><i class="fa-solid fa-photo-film"></i> + MEDIA (IMG / VIDEO / YT)</button>
+        <button class="panel-btn" onclick="openBeforeAfterModal()" style="border-color:#ffb703; color:#ffb703;"><i class="fa-solid fa-sliders"></i> + BEFORE / AFTER SLIDER</button>
       </div>
     </div>
   </div>
 
+  <!-- 사원증 설정 모달 -->
   <div class="modal-overlay" id="idCardConfigModal">
     <div class="modal-box">
       <h3 class="modal-title">EDIT ID CARD</h3>
@@ -765,6 +832,7 @@
     </div>
   </div>
 
+  <!-- 사이트 설정 모달 -->
   <div class="modal-overlay" id="siteConfigModal">
     <div class="modal-box">
       <h3 class="modal-title">EDIT SITE CONFIG</h3>
@@ -818,6 +886,7 @@
     </div>
   </div>
 
+  <!-- 관리자 로그인 모달 -->
   <div class="modal-overlay" id="authModal">
     <div class="modal-box" style="max-width: 400px;">
       <h3 class="modal-title">ADMIN LOGIN</h3>
@@ -834,6 +903,7 @@
     </div>
   </div>
 
+  <!-- 포스트 편집 모달 -->
   <div class="modal-overlay" id="postModal">
     <div class="modal-box">
       <h3 class="modal-title" id="modalHeaderTitle">ADD NEW WORK</h3>
@@ -872,6 +942,7 @@
     </div>
   </div>
 
+  <!-- 노션 리치 텍스트 에디터 모달 -->
   <div class="modal-overlay" id="textBlockModal">
     <div class="modal-box">
       <h3 class="modal-title" id="textBlockModalTitle">NOTION RICH TEXT EDITOR</h3>
@@ -950,7 +1021,20 @@
           </button>
         </div>
 
-        <div id="notionEditorArea" class="notion-editor-area" contenteditable="true"></div>
+        <div class="editor-wrapper-rel">
+          <div id="notionEditorArea" class="notion-editor-area" contenteditable="true"></div>
+          <div id="slashCommandMenu">
+            <div class="slash-menu-header">SLASH COMMANDS (/)</div>
+            <button type="button" class="slash-item" onclick="applySlashCommand('h1')"><i class="fa-solid fa-heading"></i> 제목 1 (H1)</button>
+            <button type="button" class="slash-item" onclick="applySlashCommand('h2')"><i class="fa-solid fa-heading"></i> 소제목 2 (H2)</button>
+            <button type="button" class="slash-item" onclick="applySlashCommand('h3')"><i class="fa-solid fa-heading"></i> 소제목 3 (H3)</button>
+            <button type="button" class="slash-item" onclick="applySlashCommand('p')"><i class="fa-solid fa-paragraph"></i> 일반 본문 (Text)</button>
+            <button type="button" class="slash-item" onclick="applySlashCommand('quote')"><i class="fa-solid fa-quote-left"></i> 인용구 (Quote)</button>
+            <button type="button" class="slash-item" onclick="applySlashCommand('hr')"><i class="fa-solid fa-minus"></i> 구분선 (Divider)</button>
+            <button type="button" class="slash-item" onclick="applySlashCommand('image')"><i class="fa-solid fa-image"></i> 이미지 삽입 (Image)</button>
+          </div>
+        </div>
+        <div style="font-size:0.75rem; color:#777; margin-top:6px;">💡 팁: 에디터에서 <b>/</b> 키를 누르면 노션 단축 메뉴가 열립니다.</div>
 
         <div class="modal-btns">
           <button type="button" class="btn-cancel" onclick="closeTextBlockModal()">CANCEL</button>
@@ -960,6 +1044,7 @@
     </div>
   </div>
 
+  <!-- 인라인 이미지 삽입 모달 -->
   <div class="modal-overlay" id="inlineImgModal" style="z-index: 25000;">
     <div class="modal-box" style="max-width: 480px;">
       <h4 style="font-family:'Syncopate'; font-size:1.1rem; margin-bottom:15px; color:#ffb703;">INSERT INLINE IMAGE</h4>
@@ -995,6 +1080,7 @@
     </div>
   </div>
 
+  <!-- 미디어 블록 모달 -->
   <div class="modal-overlay" id="mediaBlockModal">
     <div class="modal-box">
       <h3 class="modal-title" id="mediaBlockModalTitle">MEDIA BLOCK EDITOR</h3>
@@ -1037,6 +1123,66 @@
     </div>
   </div>
 
+  <!-- Before / After 비교 슬라이더 추가/수정 모달 -->
+  <div class="modal-overlay" id="beforeAfterModal">
+    <div class="modal-box">
+      <h3 class="modal-title" id="baModalTitle">BEFORE / AFTER SLIDER</h3>
+      <form id="beforeAfterForm" onsubmit="saveBeforeAfterModal(event)">
+        <input type="hidden" id="baEditIndex" value="-1">
+
+        <div class="form-group">
+          <label>BEFORE IMAGE URL (원본 / 작업 전 이미지)</label>
+          <input type="url" id="baBeforeUrl" placeholder="https://..." required>
+        </div>
+
+        <div class="form-group">
+          <label>AFTER IMAGE URL (VFX / 색보정 완료 이미지)</label>
+          <input type="url" id="baAfterUrl" placeholder="https://..." required>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+          <div class="form-group">
+            <label>BEFORE LABEL</label>
+            <input type="text" id="baBeforeLabel" value="BEFORE" placeholder="BEFORE">
+          </div>
+          <div class="form-group">
+            <label>AFTER LABEL</label>
+            <input type="text" id="baAfterLabel" value="AFTER" placeholder="AFTER">
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+          <div class="form-group">
+            <label>DISPLAY SIZE</label>
+            <select id="baBlockSize">
+              <option value="full">FULL WIDTH (100%)</option>
+              <option value="medium">MEDIUM (80%)</option>
+              <option value="small">SMALL (50%)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>ALIGNMENT</label>
+            <select id="baBlockAlign">
+              <option value="center">중앙 정렬 (Center)</option>
+              <option value="left">좌측 정렬 (Left)</option>
+              <option value="right">우측 정렬 (Right)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>CAPTION (OPTIONAL)</label>
+          <input type="text" id="baBlockCaption" placeholder="Ex: Color Grading & CGI Compositing Breakdown">
+        </div>
+
+        <div class="modal-btns">
+          <button type="button" class="btn-cancel" onclick="closeBeforeAfterModal()">CANCEL</button>
+          <button type="submit" class="btn-save">SAVE SLIDER</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <footer>
     <div style="color:#666; font-size:0.9rem;" id="siteFooterText"></div>
     <i class="fa-solid fa-pen-to-square inline-edit-icon" onclick="openSiteConfigModal()" title="Edit Footer"></i>
@@ -1050,7 +1196,7 @@
 
     const CLOUD_API_KEY = "$2a$10$STrJtNXDgV2ITq3pF1PHzuJtjeHvJhEHjYS5fu302XnpdwLPdm9ai";
     const BIN_ID = "6a720229f5f4af5e29ea5959";
-    const APP_VERSION = "v4.0_cdn_fix";
+    const APP_VERSION = "v4.2_rigid_card_physics";
 
     const defaultSiteConfig = {
       logoText: "STUDIO.",
@@ -1076,12 +1222,9 @@
     };
     const defaultWorks = [];
 
-    // GitHub Blob/Raw 링크를 초고속 jsDelivr CDN 주소로 자동 변환하는 안전 보정 함수
     function resolveSafeImageUrl(url) {
       if (!url) return '';
       let trimmed = url.trim();
-
-      // GitHub blob/raw 링크 형태인 경우 jsDelivr CDN으로 변환
       if (trimmed.includes('github.com') && (trimmed.includes('/blob/') || trimmed.includes('/raw/'))) {
         trimmed = trimmed
           .replace('github.com/', 'cdn.jsdelivr.net/gh/')
@@ -1405,12 +1548,7 @@
     function slideWorkContainer(containerId, direction) {
       const container = document.getElementById(containerId);
       if (!container) return;
-      
-      const scrollAmount = 780 * direction;
-      container.scrollBy({
-        left: scrollAmount,
-        behavior: 'smooth'
-      });
+      container.scrollBy({ left: 780 * direction, behavior: 'smooth' });
     }
 
     function renderWorks() {
@@ -1445,10 +1583,8 @@
             const rect = card.getBoundingClientRect();
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
-            const centerX = rect.width / 2;
-            const centerY = rect.height / 2;
-            const rotateX = ((y - centerY) / centerY) * -10;
-            const rotateY = ((x - centerX) / centerX) * 10;
+            const rotateX = ((y - rect.height / 2) / (rect.height / 2)) * -10;
+            const rotateY = ((x - rect.width / 2) / (rect.width / 2)) * 10;
 
             gsap.to(card, {
               rotateX: rotateX, rotateY: rotateY, scale: 1.02,
@@ -1536,9 +1672,7 @@
 
       gsap.utils.toArray('.work-card-wrapper').forEach((card, i) => {
         gsap.from(card, {
-          scrollTrigger: {
-            trigger: card, start: 'top 95%', once: true
-          },
+          scrollTrigger: { trigger: card, start: 'top 95%', once: true },
           y: 30, opacity: 0, duration: 0.6, delay: (i % 3) * 0.08, ease: 'power2.out',
           clearProps: 'opacity,transform'
         });
@@ -1579,19 +1713,19 @@
       }
 
       fullBlocks.forEach((block, index) => {
-        if (!block.content || !block.content.trim()) return;
-
         const alignClass = `align-${block.align || 'left'}`;
         const itemDiv = document.createElement('div');
         itemDiv.className = `detail-block-item ${alignClass}`;
 
         let innerContentHtml = '';
+        let editFnCall = '';
 
         if (block.type === 'text') {
+          if (!block.content || !block.content.trim()) return;
+          editFnCall = `openTextBlockModalForEdit(${index})`;
           const borderClass = `border-style-${block.borderStyle || 'solid'}`;
           const customStyle = `letter-spacing: ${block.letterSpacing || '0px'}; line-height: ${block.lineHeight || '1.7'}; text-align: ${block.align || 'left'};`;
 
-          // 텍스트 블록 내부 inline 이미지 주소도 CDN/안전 주소로 치환
           let safeTextContent = block.content.replace(/src="([^"]+)"/g, (match, srcUrl) => {
             return `src="${resolveSafeImageUrl(srcUrl)}"`;
           });
@@ -1612,7 +1746,32 @@
           } else {
             innerContentHtml = `<div class="detail-text-wrapper ${borderClass}" style="${customStyle}">${safeTextContent}</div>`;
           }
+        } else if (block.type === 'beforeAfter') {
+          editFnCall = `openBeforeAfterModalForEdit(${index})`;
+          const sizeClass = `media-size-${block.size || 'full'}`;
+          const beforeSrc = resolveSafeImageUrl(block.beforeUrl);
+          const afterSrc = resolveSafeImageUrl(block.afterUrl);
+          const bLabel = block.beforeLabel || 'BEFORE';
+          const aLabel = block.afterLabel || 'AFTER';
+          const captionHtml = block.caption ? `<div class="media-caption">${block.caption}</div>` : '';
+
+          innerContentHtml = `
+            <div class="ba-slider-container ${sizeClass}" data-ba-slider>
+              <img src="${afterSrc}" alt="After Image">
+              <div class="ba-before-layer">
+                <img src="${beforeSrc}" alt="Before Image">
+              </div>
+              <span class="ba-badge ba-badge-before">${bLabel}</span>
+              <span class="ba-badge ba-badge-after">${aLabel}</span>
+              <div class="ba-handle">
+                <div class="ba-handle-btn"><i class="fa-solid fa-arrows-left-right"></i></div>
+              </div>
+            </div>
+            ${captionHtml}
+          `;
         } else {
+          if (!block.content || !block.content.trim()) return;
+          editFnCall = `openMediaBlockModalForEdit(${index})`;
           const sizeClass = `media-size-${block.size || 'full'}`;
           const parsed = parseMediaUrl(block.content);
           let mediaElement = '';
@@ -1623,7 +1782,7 @@
           } else if (parsed.type === 'video') {
             mediaElement = `<video src="${parsed.src}" controls loop muted playsinline></video>`;
           } else {
-            mediaElement = `<img src="${parsed.src}" alt="Detail Media" loading="eager" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800';">`;
+            mediaElement = `<img src="${parsed.src}" class="zoomable-detail-img" alt="Detail Media" loading="eager" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800';">`;
           }
 
           const captionHtml = block.caption ? `<div class="media-caption">${block.caption}</div>` : '';
@@ -1641,7 +1800,7 @@
           <div class="block-item-actions">
             <button class="block-action-btn" onclick="moveBlockItem(${index}, -1)" title="Move Up"><i class="fa-solid fa-arrow-up"></i></button>
             <button class="block-action-btn" onclick="moveBlockItem(${index}, 1)" title="Move Down"><i class="fa-solid fa-arrow-down"></i></button>
-            <button class="block-action-btn" onclick="${block.type === 'text' ? `openTextBlockModalForEdit(${index})` : `openMediaBlockModalForEdit(${index})`}" title="Edit Block"><i class="fa-solid fa-pen"></i> EDIT</button>
+            <button class="block-action-btn" onclick="${editFnCall}" title="Edit Block"><i class="fa-solid fa-pen"></i> EDIT</button>
             <button class="block-action-btn" style="background:#e63946;" onclick="removeBlockItem(${index})" title="Delete"><i class="fa-solid fa-trash"></i></button>
           </div>
         `;
@@ -1649,7 +1808,151 @@
       });
 
       initIframeBlurHandler();
+      initBeforeAfterSliders();
+      initLightboxTriggers();
     }
+
+    function initBeforeAfterSliders() {
+      const sliders = document.querySelectorAll('[data-ba-slider]');
+      sliders.forEach(slider => {
+        const beforeLayer = slider.querySelector('.ba-before-layer');
+        const handle = slider.querySelector('.ba-handle');
+        let isSliding = false;
+
+        function updateSliderPos(clientX) {
+          const rect = slider.getBoundingClientRect();
+          let posX = clientX - rect.left;
+          posX = Math.max(0, Math.min(posX, rect.width));
+          const percent = (posX / rect.width) * 100;
+          beforeLayer.style.clipPath = `inset(0 ${100 - percent}% 0 0)`;
+          handle.style.left = `${percent}%`;
+        }
+
+        slider.addEventListener('mousedown', (e) => {
+          if (e.target.closest('.block-item-actions')) return;
+          isSliding = true;
+          updateSliderPos(e.clientX);
+        });
+        window.addEventListener('mousemove', (e) => {
+          if (!isSliding) return;
+          updateSliderPos(e.clientX);
+        }, { passive: true });
+        window.addEventListener('mouseup', () => { isSliding = false; });
+
+        slider.addEventListener('touchstart', (e) => {
+          if (e.target.closest('.block-item-actions')) return;
+          isSliding = true;
+          updateSliderPos(e.touches[0].clientX);
+        }, { passive: true });
+        slider.addEventListener('touchmove', (e) => {
+          if (!isSliding) return;
+          updateSliderPos(e.touches[0].clientX);
+        }, { passive: true });
+        slider.addEventListener('touchend', () => { isSliding = false; });
+      });
+    }
+
+    function openBeforeAfterModal() {
+      if (!currentDetailId || !isAdmin) return;
+      document.getElementById('baModalTitle').innerText = 'ADD BEFORE / AFTER SLIDER';
+      document.getElementById('baEditIndex').value = '-1';
+      document.getElementById('baBeforeUrl').value = '';
+      document.getElementById('baAfterUrl').value = '';
+      document.getElementById('baBeforeLabel').value = 'BEFORE';
+      document.getElementById('baAfterLabel').value = 'AFTER';
+      document.getElementById('baBlockSize').value = 'full';
+      document.getElementById('baBlockAlign').value = 'center';
+      document.getElementById('baBlockCaption').value = '';
+      document.getElementById('beforeAfterModal').classList.add('active');
+    }
+
+    function openBeforeAfterModalForEdit(index) {
+      if (!currentDetailId || !isAdmin) return;
+      const works = getWorks();
+      const work = works.find(w => w.id === currentDetailId);
+      if (!work || !work.blocks[index]) return;
+
+      const b = work.blocks[index];
+      document.getElementById('baModalTitle').innerText = 'EDIT BEFORE / AFTER SLIDER';
+      document.getElementById('baEditIndex').value = index;
+      document.getElementById('baBeforeUrl').value = b.beforeUrl || '';
+      document.getElementById('baAfterUrl').value = b.afterUrl || '';
+      document.getElementById('baBeforeLabel').value = b.beforeLabel || 'BEFORE';
+      document.getElementById('baAfterLabel').value = b.afterLabel || 'AFTER';
+      document.getElementById('baBlockSize').value = b.size || 'full';
+      document.getElementById('baBlockAlign').value = b.align || 'center';
+      document.getElementById('baBlockCaption').value = b.caption || '';
+      document.getElementById('beforeAfterModal').classList.add('active');
+    }
+
+    function closeBeforeAfterModal() {
+      document.getElementById('beforeAfterModal').classList.remove('active');
+    }
+
+    function saveBeforeAfterModal(e) {
+      e.preventDefault();
+      if (!currentDetailId || !isAdmin) return;
+
+      const editIndex = parseInt(document.getElementById('baEditIndex').value);
+      const beforeUrl = resolveSafeImageUrl(document.getElementById('baBeforeUrl').value);
+      const afterUrl = resolveSafeImageUrl(document.getElementById('baAfterUrl').value);
+      const beforeLabel = document.getElementById('baBeforeLabel').value.trim() || 'BEFORE';
+      const afterLabel = document.getElementById('baAfterLabel').value.trim() || 'AFTER';
+      const size = document.getElementById('baBlockSize').value;
+      const align = document.getElementById('baBlockAlign').value;
+      const caption = document.getElementById('baBlockCaption').value.trim();
+
+      let works = getWorks();
+      const work = works.find(w => w.id === currentDetailId);
+      if (!work) return;
+      if (!work.blocks) work.blocks = [];
+
+      const blockData = {
+        type: 'beforeAfter',
+        content: 'ba_slider',
+        beforeUrl, afterUrl, beforeLabel, afterLabel, size, align, caption
+      };
+
+      if (editIndex >= 0) {
+        work.blocks[editIndex] = blockData;
+      } else {
+        work.blocks.push(blockData);
+      }
+
+      saveWorks(works);
+      closeBeforeAfterModal();
+      openDetailPage(currentDetailId);
+    }
+
+    function initLightboxTriggers() {
+      const imgs = document.querySelectorAll('#detailBlocksList .detail-media-wrapper img, #detailBlocksList .detail-text-wrapper img');
+      imgs.forEach(img => {
+        img.addEventListener('click', (e) => {
+          e.stopPropagation();
+          openLightbox(img.src);
+        });
+      });
+    }
+
+    function openLightbox(src) {
+      if (!src) return;
+      const overlay = document.getElementById('lightboxOverlay');
+      const img = document.getElementById('lightboxImg');
+      img.src = src;
+      overlay.classList.add('active');
+    }
+
+    function closeLightbox() {
+      const overlay = document.getElementById('lightboxOverlay');
+      overlay.classList.remove('active');
+    }
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeLightbox();
+        hideSlashMenu();
+      }
+    });
 
     function initIframeBlurHandler() {
       const mediaWrappers = document.querySelectorAll('.detail-media-wrapper, .work-card');
@@ -1666,16 +1969,47 @@
     function toggleSummaryGroupVisibility() {
       const styleSelect = document.getElementById('textBlockStyle');
       const summaryGroup = document.getElementById('toggleSummaryGroup');
-      if (styleSelect.value === 'toggle') {
-        summaryGroup.style.display = 'block';
-      } else {
-        summaryGroup.style.display = 'none';
-      }
+      summaryGroup.style.display = (styleSelect.value === 'toggle') ? 'block' : 'none';
     }
 
     function execFormat(command, value = null) {
       document.execCommand(command, false, value);
       document.getElementById('notionEditorArea').focus();
+    }
+
+    function initSlashCommands() {
+      const editor = document.getElementById('notionEditorArea');
+      const menu = document.getElementById('slashCommandMenu');
+      if (!editor || !menu) return;
+
+      editor.addEventListener('keyup', (e) => {
+        if (e.key === '/') {
+          menu.classList.add('active');
+        } else if (e.key === 'Backspace' || e.key === ' ' || e.key === 'Enter') {
+          menu.classList.remove('active');
+        }
+      });
+    }
+
+    function hideSlashMenu() {
+      const menu = document.getElementById('slashCommandMenu');
+      if (menu) menu.classList.remove('active');
+    }
+
+    function applySlashCommand(type) {
+      const editor = document.getElementById('notionEditorArea');
+      hideSlashMenu();
+      editor.focus();
+
+      document.execCommand('delete', false, null);
+
+      if (type === 'h1') document.execCommand('formatBlock', false, '<h1>');
+      else if (type === 'h2') document.execCommand('formatBlock', false, '<h2>');
+      else if (type === 'h3') document.execCommand('formatBlock', false, '<h3>');
+      else if (type === 'p') document.execCommand('formatBlock', false, '<p>');
+      else if (type === 'quote') document.execCommand('formatBlock', false, '<blockquote>');
+      else if (type === 'hr') document.execCommand('insertHTML', false, '<hr><p><br></p>');
+      else if (type === 'image') openInlineImageInsertModal();
     }
 
     function openInlineImageInsertModal() {
@@ -1693,12 +2027,7 @@
 
     function toggleSecondImageInput() {
       const layout = document.getElementById('inlineImgLayout').value;
-      const group2 = document.getElementById('inlineImg2Group');
-      if (layout === 'grid') {
-        group2.style.display = 'block';
-      } else {
-        group2.style.display = 'none';
-      }
+      document.getElementById('inlineImg2Group').style.display = (layout === 'grid') ? 'block' : 'none';
     }
 
     function applyInlineImageToEditor() {
@@ -1746,7 +2075,7 @@
       document.getElementById('textBlockLetterSpacing').value = "0px";
       document.getElementById('textBlockLineHeight').value = "1.7";
       document.getElementById('textBlockAlign').value = "left";
-      document.getElementById('notionEditorArea').innerHTML = "<p>여기에 내용을 작성하거나 붙여넣으세요...</p>";
+      document.getElementById('notionEditorArea').innerHTML = "<p>여기에 내용을 작성하거나 / 를 눌러 메뉴를 여세요...</p>";
       toggleSummaryGroupVisibility();
       document.getElementById('textBlockModal').classList.add('active');
     }
@@ -1772,6 +2101,7 @@
     }
 
     function closeTextBlockModal() {
+      hideSlashMenu();
       document.getElementById('textBlockModal').classList.remove('active');
     }
 
@@ -1793,25 +2123,14 @@
       let works = getWorks();
       const work = works.find(w => w.id === currentDetailId);
       if (!work) return;
-
       if (!work.blocks) work.blocks = [];
 
       const blockData = {
-        type: 'text',
-        style,
-        summary,
-        borderStyle,
-        letterSpacing,
-        lineHeight,
-        align,
-        content: htmlContent
+        type: 'text', style, summary, borderStyle, letterSpacing, lineHeight, align, content: htmlContent
       };
 
-      if (editIndex >= 0) {
-        work.blocks[editIndex] = blockData;
-      } else {
-        work.blocks.push(blockData);
-      }
+      if (editIndex >= 0) work.blocks[editIndex] = blockData;
+      else work.blocks.push(blockData);
 
       saveWorks(works);
       closeTextBlockModal();
@@ -1864,16 +2183,12 @@
       let works = getWorks();
       const work = works.find(w => w.id === currentDetailId);
       if (!work) return;
-
       if (!work.blocks) work.blocks = [];
 
       const blockData = { type: 'media', content: resolveSafeImageUrl(url), size, align, caption };
 
-      if (editIndex >= 0) {
-        work.blocks[editIndex] = blockData;
-      } else {
-        work.blocks.push(blockData);
-      }
+      if (editIndex >= 0) work.blocks[editIndex] = blockData;
+      else work.blocks.push(blockData);
 
       saveWorks(works);
       closeMediaBlockModal();
@@ -1912,10 +2227,7 @@
       if (!detailMediaContainer) return;
 
       const videos = detailMediaContainer.querySelectorAll('video');
-      videos.forEach(v => {
-        v.pause(); v.currentTime = 0;
-      });
-
+      videos.forEach(v => { v.pause(); v.currentTime = 0; });
       detailMediaContainer.innerHTML = '';
     }
 
@@ -2029,7 +2341,6 @@
       localStorage.setItem('site_config_v3_dynamic', JSON.stringify(config));
       applySiteConfig();
       closeIdCardConfigModal();
-
       await syncToCloudData();
     }
 
@@ -2069,9 +2380,7 @@
       catRows.forEach(row => {
         const id = row.querySelector('.config-cat-id').value;
         const name = row.querySelector('.config-cat-name').value.trim();
-        if (name) {
-          newCategories.push({ id, name });
-        }
+        if (name) newCategories.push({ id, name });
       });
 
       const config = getSiteConfig();
@@ -2093,14 +2402,12 @@
       applySiteConfig();
       renderWorks();
       closeSiteConfigModal();
-
       await syncToCloudData();
     }
 
     async function saveWorks(works) {
       localStorage.setItem('portfolio_works_3d_v1', JSON.stringify(works));
       renderWorks();
-
       await syncToCloudData();
     }
 
@@ -2136,8 +2443,7 @@
         works = works.map(w => w.id === id ? { ...w, category, title, cardDesc, type, mediaUrl } : w);
       } else {
         const newWork = {
-          id: Date.now().toString(),
-          category, title, cardDesc, type, mediaUrl, blocks: []
+          id: Date.now().toString(), category, title, cardDesc, type, mediaUrl, blocks: []
         };
         works.unshift(newWork);
       }
@@ -2145,9 +2451,7 @@
       saveWorks(works);
       closeModal();
 
-      if (currentDetailId && currentDetailId === id) {
-        openDetailPage(id);
-      }
+      if (currentDetailId && currentDetailId === id) openDetailPage(id);
     });
 
     function editPost(id, e) {
@@ -2179,6 +2483,9 @@
       }
     }
 
+    // -------------------------------------------------------------
+    // 단단하고 평평한 플라스틱 판(Rigid Flat Body) 사원증 물리 엔진
+    // -------------------------------------------------------------
     function initLanyardPhysics() {
       const lanyardContainer = document.getElementById('lanyardCard');
       const cardFlipper = document.getElementById('idCardFlipper');
@@ -2188,18 +2495,82 @@
 
       if (!lanyardContainer || !cardFlipper || !strapWrapper) return;
 
+      const baseStrapHeight = 240;
       let isDragging = false;
+      let isAnimating = false;
       let startX = 0, startY = 0;
       let hasMoved = false;
-      const baseStrapHeight = 240;
 
-      gsap.from(lanyardContainer, {
-        y: -250,
-        rotation: 12,
-        duration: 1.8,
-        ease: "bounce.out"
-      });
+      // 물리 상태 변수 (고무줄 탄성 위치 + 단일 평면 진자 각도)
+      let posX = 0, posY = -160;
+      let velX = 0, velY = 0;
 
+      // 고무줄 스트랩 텐션 유지, 불필요한 3D 휘어짐(rotX, rotY) 제거
+      const stiffness = 0.095;
+      const damping = 0.82;
+
+      function wakeUpPhysics() {
+        if (!isAnimating) {
+          isAnimating = true;
+          requestAnimationFrame(physicsStep);
+        }
+      }
+
+      function physicsStep() {
+        if (!isDragging) {
+          const forceX = -stiffness * posX;
+          const forceY = -stiffness * posY;
+
+          velX = (velX + forceX) * damping;
+          velY = (velY + forceY) * damping;
+
+          posX += velX;
+          posY += velY;
+        }
+
+        // 천장 고정점 기준 스트랩 길이와 진자 각도 계산
+        const anchorY = -baseStrapHeight;
+        const vecX = posX;
+        const vecY = posY - anchorY;
+        const dist = Math.hypot(vecX, vecY);
+        const angleRad = Math.atan2(vecX, vecY);
+        const swingAngleDeg = -angleRad * (180 / Math.PI);
+
+        // 컨테이너 전체가 평평한 하나의 단단한 판처럼 이동 및 진자 회전만 수행
+        lanyardContainer.style.transform = `translate3d(${posX.toFixed(2)}px, ${posY.toFixed(2)}px, 0) rotateZ(${(swingAngleDeg * 0.45).toFixed(2)}deg)`;
+        
+        // 스트랩 고무줄 늘어남
+        strapWrapper.style.height = `${Math.max(baseStrapHeight, dist).toFixed(1)}px`;
+        strapWrapper.style.transform = `rotateZ(${(swingAngleDeg * 0.55).toFixed(2)}deg)`;
+
+        // 평면 플라스틱 표면 위의 직선형 빛 반사(Glare) 이동
+        const glareX = (posX * 0.9);
+        const glareY = (posY * 0.9);
+        if (frontGlare) {
+          frontGlare.style.transform = `translate3d(${glareX.toFixed(1)}px, ${glareY.toFixed(1)}px, 0) rotate(25deg)`;
+        }
+        if (backGlare) {
+          backGlare.style.transform = `translate3d(${-glareX.toFixed(1)}px, ${glareY.toFixed(1)}px, 0) rotate(25deg)`;
+        }
+
+        // 정지 임계치 도달 시 루프 종료 (Sleep)
+        const isSettled = !isDragging &&
+          Math.abs(posX) < 0.15 && Math.abs(posY) < 0.15 &&
+          Math.abs(velX) < 0.1 && Math.abs(velY) < 0.1;
+
+        if (isSettled) {
+          posX = 0; posY = 0; velX = 0; velY = 0;
+          lanyardContainer.style.transform = `translate3d(0px, 0px, 0) rotateZ(0deg)`;
+          strapWrapper.style.height = `${baseStrapHeight}px`;
+          strapWrapper.style.transform = `rotateZ(0deg)`;
+          isAnimating = false;
+          return;
+        }
+
+        requestAnimationFrame(physicsStep);
+      }
+
+      // 더블클릭 시 평평한 플라스틱 판 그대로 180도 깔끔하게 뒤집기
       cardFlipper.addEventListener('dblclick', (e) => {
         if (e.target.closest('#idCardEditBtn')) return;
         e.stopPropagation();
@@ -2209,14 +2580,12 @@
       let lastTap = 0;
       cardFlipper.addEventListener('touchend', (e) => {
         if (e.target.closest('#idCardEditBtn')) return;
-        const currentTime = new Date().getTime();
+        const currentTime = Date.now();
         const tapLength = currentTime - lastTap;
-        
         if (tapLength < 300 && tapLength > 0 && !hasMoved) {
           if (e.cancelable) e.preventDefault();
           cardFlipper.classList.toggle('flipped');
         }
-        
         endDrag();
         lastTap = currentTime;
       });
@@ -2225,90 +2594,39 @@
         if (target.closest && target.closest('#idCardEditBtn')) return;
         isDragging = true;
         hasMoved = false;
-        startX = clientX;
-        startY = clientY;
-        gsap.killTweensOf(lanyardContainer);
-        gsap.killTweensOf(strapWrapper);
+        startX = clientX - posX;
+        startY = clientY - posY;
+        velX = 0; velY = 0;
+        wakeUpPhysics();
       }
 
       function moveDrag(clientX, clientY) {
         if (!isDragging) return;
-        const deltaX = clientX - startX;
-        const deltaY = clientY - startY;
+        const nextX = clientX - startX;
+        const nextY = Math.max(-120, clientY - startY);
 
-        if (Math.abs(deltaX) > 4 || Math.abs(deltaY) > 4) {
+        if (Math.abs(nextX - posX) > 3 || Math.abs(nextY - posY) > 3) {
           hasMoved = true;
         }
 
-        const currentAnchorX = 0;
-        const currentAnchorY = -baseStrapHeight;
-
-        const vectorX = deltaX - currentAnchorX;
-        const vectorY = deltaY - currentAnchorY;
-
-        const distance = Math.hypot(vectorX, vectorY);
-        const angleRad = Math.atan2(vectorX, vectorY);
-        const angleDeg = -angleRad * (180 / Math.PI);
-
-        gsap.to(strapWrapper, {
-          height: Math.max(baseStrapHeight, distance),
-          rotation: angleDeg,
-          duration: 0.1,
-          overwrite: "auto"
-        });
-
-        gsap.to(lanyardContainer, {
-          x: deltaX,
-          y: deltaY,
-          rotation: angleDeg * 0.5,
-          duration: 0.1,
-          overwrite: "auto"
-        });
-
-        const glareX = deltaX * 1.5;
-        const glareY = deltaY * 1.5;
-
-        if (frontGlare) {
-          frontGlare.style.transform = `translate(${glareX}px, ${glareY}px) rotate(25deg)`;
-          frontGlare.style.opacity = '0.9';
-        }
-        if (backGlare) {
-          backGlare.style.transform = `translate(${-glareX}px, ${glareY}px) rotate(25deg)`;
-          backGlare.style.opacity = '0.9';
-        }
+        velX = (nextX - posX) * 0.5;
+        velY = (nextY - posY) * 0.5;
+        posX = nextX;
+        posY = nextY;
       }
 
       function endDrag() {
         if (!isDragging) return;
         isDragging = false;
-
-        gsap.to(lanyardContainer, {
-          x: 0,
-          y: 0,
-          rotation: 0,
-          duration: 2.2,
-          ease: "elastic.out(1.2, 0.25)"
-        });
-
-        gsap.to(strapWrapper, {
-          height: baseStrapHeight,
-          rotation: 0,
-          duration: 2.2,
-          ease: "elastic.out(1.2, 0.25)"
-        });
-
-        if (frontGlare) gsap.to(frontGlare, { opacity: 0.5, duration: 0.8 });
-        if (backGlare) gsap.to(backGlare, { opacity: 0.5, duration: 0.8 });
+        wakeUpPhysics();
       }
 
       lanyardContainer.addEventListener('mousedown', (e) => startDrag(e.clientX, e.clientY, e.target));
-      window.addEventListener('mousemove', (e) => moveDrag(e.clientX, e.clientY));
+      window.addEventListener('mousemove', (e) => moveDrag(e.clientX, e.clientY), { passive: true });
       window.addEventListener('mouseup', endDrag);
 
       lanyardContainer.addEventListener('touchstart', (e) => {
-        if (e.touches.length === 1) {
-          startDrag(e.touches[0].clientX, e.touches[0].clientY, e.target);
-        }
+        if (e.touches.length === 1) startDrag(e.touches[0].clientX, e.touches[0].clientY, e.target);
       }, { passive: true });
 
       window.addEventListener('touchmove', (e) => {
@@ -2320,13 +2638,15 @@
 
       window.addEventListener('touchend', endDrag);
       window.addEventListener('touchcancel', endDrag);
+
+      wakeUpPhysics();
     }
 
     const cursor = document.querySelector('.custom-cursor');
     if (window.innerWidth > 768) {
       window.addEventListener('mousemove', (e) => {
-        gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.15, ease: 'power2.out' });
-      });
+        gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.15, ease: 'power2.out', overwrite: 'auto' });
+      }, { passive: true });
     }
 
     function initThreeJS() {
@@ -2338,9 +2658,9 @@
 
       const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: false, powerPreference: "low-power" });
       renderer.setSize(window.innerWidth, window.innerHeight);
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.25));
 
-      const particlesCount = 250;
+      const particlesCount = 200;
       const geometry = new THREE.BufferGeometry();
       const positions = new Float32Array(particlesCount * 3);
 
@@ -2370,18 +2690,23 @@
         isPageVisible = !document.hidden;
       });
 
-      function animate() {
+      let lastFrameTime = 0;
+      const frameInterval = 1000 / 30;
+
+      function animate(now) {
         requestAnimationFrame(animate);
         if (!isPageVisible) return;
+        if (now - lastFrameTime < frameInterval) return;
+        lastFrameTime = now;
 
-        particleSystem.rotation.y += 0.0006;
-        particleSystem.rotation.x += 0.0003;
-        camera.position.x += (mouseX - camera.position.x) * 0.03;
-        camera.position.y += (-mouseY - camera.position.y) * 0.03;
+        particleSystem.rotation.y += 0.0008;
+        particleSystem.rotation.x += 0.0004;
+        camera.position.x += (mouseX - camera.position.x) * 0.04;
+        camera.position.y += (-mouseY - camera.position.y) * 0.04;
         renderer.render(scene, camera);
       }
 
-      animate();
+      requestAnimationFrame(animate);
 
       window.addEventListener('resize', () => {
         camera.aspect = window.innerWidth / window.innerHeight;
@@ -2416,6 +2741,7 @@
       initThreeJS();
       initLanyardPhysics();
       initPasteHandler();
+      initSlashCommands();
 
       if (loader) {
         loader.style.opacity = '0';
