@@ -8,14 +8,14 @@
   <meta property="og:title" content="GOSAT">
   <meta property="og:description" content="">
   <meta property="og:site_name" content="GOSAT">
-  <meta property="og:image" content="https://cdn.jsdelivr.net/gh/cbg0601/gosat.github.io@cbg0601-patch-1/images/%E1%84%89%E1%85%A1%E1%84%8B%E1%85%B5%E1%84%90%E1%85%B3%20%E1%84%86%E1%85%B5%E1%84%85%E1%85%B5%20%E1%84%87%E1%85%A9%E1%84%80%E1%85%B5%20%E1%84%8B%E1%85%B5%E1%84%86%E1%85%B5%E1%84%8C%E1%85%B5.png">
+  <meta property="og:image" content="https://raw.githubusercontent.com/cbg0601/gosat.github.io/cbg0601-patch-1/images/%E1%84%89%E1%85%A1%E1%84%8B%E1%85%B5%E1%84%90%E1%85%B3%20%E1%84%86%E1%85%B5%E1%84%85%E1%85%B5%20%E1%84%87%E1%85%A9%E1%84%80%E1%85%B5%20%E1%84%8B%E1%85%B5%E1%84%86%E1%85%B5%E1%84%8C%E1%85%B5.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="GOSAT">
   <meta name="twitter:description" content="">
-  <meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/cbg0601/gosat.github.io@cbg0601-patch-1/images/%E1%84%89%E1%85%A1%E1%84%8B%E1%85%B5%E1%84%90%E1%85%B3%20%E1%84%86%E1%85%B5%E1%84%85%E1%85%B5%20%E1%84%87%E1%85%A9%E1%84%80%E1%85%B5%20%E1%84%8B%E1%85%B5%E1%84%86%E1%85%B5%E1%84%8C%E1%85%B5.png">
+  <meta name="twitter:image" content="https://raw.githubusercontent.com/cbg0601/gosat.github.io/cbg0601-patch-1/images/%E1%84%89%E1%85%A1%E1%84%8B%E1%85%B5%E1%84%90%E1%85%B3%20%E1%84%86%E1%85%B5%E1%84%85%E1%85%B5%20%E1%84%87%E1%85%A9%E1%84%80%E1%85%B5%20%E1%84%8B%E1%85%B5%E1%84%86%E1%85%B5%E1%84%8C%E1%85%B5.png">
 
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
@@ -207,7 +207,6 @@
       position: absolute; inset: 0; width: 100%; height: 100%;
       background: linear-gradient(145deg, #24272c 0%, #141619 55%, #090a0c 100%);
       border-radius: 18px; padding: 20px; color: #ffffff;
-      /* 단단한 플라스틱 두께감을 표현하는 하드 베벨 테두리 */
       box-shadow: 
         0 25px 50px rgba(0,0,0,0.9),
         0 0 0 1px rgba(255,255,255,0.18),
@@ -565,7 +564,6 @@
     .notion-editor-area h2 { font-size: 1.4rem; margin: 8px 0; color: #ffb703; }
     .notion-editor-area h3 { font-size: 1.15rem; margin: 6px 0; color: #ddd; }
 
-    /* 슬래시(/) 플로팅 커맨드 팝업 */
     #slashCommandMenu {
       position: absolute; left: 15px; top: 50px; width: 220px; background: #222;
       border: 1px solid #ffb703; border-radius: 8px; box-shadow: 0 15px 35px rgba(0,0,0,0.85);
@@ -1196,7 +1194,7 @@
 
     const CLOUD_API_KEY = "$2a$10$STrJtNXDgV2ITq3pF1PHzuJtjeHvJhEHjYS5fu302XnpdwLPdm9ai";
     const BIN_ID = "6a720229f5f4af5e29ea5959";
-    const APP_VERSION = "v4.2_rigid_card_physics";
+    const APP_VERSION = "v4.3_direct_image_speed";
 
     const defaultSiteConfig = {
       logoText: "STUDIO.",
@@ -1222,14 +1220,24 @@
     };
     const defaultWorks = [];
 
+    // GitHub 링크를 외부 CDN 우회 없이 가장 빠르고 제한 없는 공식 raw.githubusercontent.com 주소로 직결
     function resolveSafeImageUrl(url) {
       if (!url) return '';
       let trimmed = url.trim();
+
+      // 이전에 변환된 jsDelivr 주소가 있다면 다시 공식 raw 서버로 복원 (20MB 용량 제한 해제)
+      if (trimmed.includes('cdn.jsdelivr.net/gh/')) {
+        trimmed = trimmed
+          .replace('https://cdn.jsdelivr.net/gh/', 'https://raw.githubusercontent.com/')
+          .replace('@', '/');
+      }
+
+      // github.com/.../blob/...?raw=true 형태를 공식 raw.githubusercontent.com 직결 주소로 변환
       if (trimmed.includes('github.com') && (trimmed.includes('/blob/') || trimmed.includes('/raw/'))) {
         trimmed = trimmed
-          .replace('github.com/', 'cdn.jsdelivr.net/gh/')
-          .replace('/blob/', '@')
-          .replace('/raw/', '@')
+          .replace('github.com/', 'raw.githubusercontent.com/')
+          .replace('/blob/', '/')
+          .replace('/raw/', '/')
           .replace('?raw=true', '');
       }
       return trimmed;
@@ -1606,7 +1614,8 @@
           } else if (work.type === 'video' || parsedMedia.type === 'video') {
             mediaHtml = `<video src="${parsedMedia.src}" autoplay loop muted playsinline></video>`;
           } else {
-            mediaHtml = `<img src="${parsedMedia.src}" alt="${work.title}" loading="eager" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800';">`;
+            // 성급한 Unsplash 강제 대체를 제거하고 원본 이미지를 끝까지 불러오도록 개선
+            mediaHtml = `<img src="${parsedMedia.src}" alt="${work.title}" loading="eager">`;
           }
 
           const previewText = work.cardDesc || '';
@@ -1782,7 +1791,7 @@
           } else if (parsed.type === 'video') {
             mediaElement = `<video src="${parsed.src}" controls loop muted playsinline></video>`;
           } else {
-            mediaElement = `<img src="${parsed.src}" class="zoomable-detail-img" alt="Detail Media" loading="eager" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800';">`;
+            mediaElement = `<img src="${parsed.src}" class="zoomable-detail-img" alt="Detail Media" loading="eager">`;
           }
 
           const captionHtml = block.caption ? `<div class="media-caption">${block.caption}</div>` : '';
@@ -2483,9 +2492,6 @@
       }
     }
 
-    // -------------------------------------------------------------
-    // 단단하고 평평한 플라스틱 판(Rigid Flat Body) 사원증 물리 엔진
-    // -------------------------------------------------------------
     function initLanyardPhysics() {
       const lanyardContainer = document.getElementById('lanyardCard');
       const cardFlipper = document.getElementById('idCardFlipper');
@@ -2501,11 +2507,9 @@
       let startX = 0, startY = 0;
       let hasMoved = false;
 
-      // 물리 상태 변수 (고무줄 탄성 위치 + 단일 평면 진자 각도)
       let posX = 0, posY = -160;
       let velX = 0, velY = 0;
 
-      // 고무줄 스트랩 텐션 유지, 불필요한 3D 휘어짐(rotX, rotY) 제거
       const stiffness = 0.095;
       const damping = 0.82;
 
@@ -2528,7 +2532,6 @@
           posY += velY;
         }
 
-        // 천장 고정점 기준 스트랩 길이와 진자 각도 계산
         const anchorY = -baseStrapHeight;
         const vecX = posX;
         const vecY = posY - anchorY;
@@ -2536,14 +2539,10 @@
         const angleRad = Math.atan2(vecX, vecY);
         const swingAngleDeg = -angleRad * (180 / Math.PI);
 
-        // 컨테이너 전체가 평평한 하나의 단단한 판처럼 이동 및 진자 회전만 수행
         lanyardContainer.style.transform = `translate3d(${posX.toFixed(2)}px, ${posY.toFixed(2)}px, 0) rotateZ(${(swingAngleDeg * 0.45).toFixed(2)}deg)`;
-        
-        // 스트랩 고무줄 늘어남
         strapWrapper.style.height = `${Math.max(baseStrapHeight, dist).toFixed(1)}px`;
         strapWrapper.style.transform = `rotateZ(${(swingAngleDeg * 0.55).toFixed(2)}deg)`;
 
-        // 평면 플라스틱 표면 위의 직선형 빛 반사(Glare) 이동
         const glareX = (posX * 0.9);
         const glareY = (posY * 0.9);
         if (frontGlare) {
@@ -2553,7 +2552,6 @@
           backGlare.style.transform = `translate3d(${-glareX.toFixed(1)}px, ${glareY.toFixed(1)}px, 0) rotate(25deg)`;
         }
 
-        // 정지 임계치 도달 시 루프 종료 (Sleep)
         const isSettled = !isDragging &&
           Math.abs(posX) < 0.15 && Math.abs(posY) < 0.15 &&
           Math.abs(velX) < 0.1 && Math.abs(velY) < 0.1;
@@ -2570,7 +2568,6 @@
         requestAnimationFrame(physicsStep);
       }
 
-      // 더블클릭 시 평평한 플라스틱 판 그대로 180도 깔끔하게 뒤집기
       cardFlipper.addEventListener('dblclick', (e) => {
         if (e.target.closest('#idCardEditBtn')) return;
         e.stopPropagation();
