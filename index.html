@@ -73,10 +73,11 @@
       z-index: 10000; mix-blend-mode: difference;
     }
     
-    .logo-container { display: flex; align-items: center; gap: 10px; }
+    .logo-container { display: flex; align-items: center; gap: 10px; user-select: none; -webkit-user-select: none; }
     .logo {
       font-family: 'Syncopate', sans-serif; font-weight: 700;
       font-size: 1.4rem; letter-spacing: 4px; cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
     }
 
     .inline-edit-icon {
@@ -98,20 +99,24 @@
     }
     nav a:hover::after { width: 100%; }
 
+    /* 평상시에는 Admin 버튼을 완전히 숨김 (관리자 모드 활성화 시에만 노출) */
+    .admin-control-li { display: none; align-items: center; }
+    body.admin-mode .admin-control-li { display: flex; }
+
     .admin-btn {
-      background: #ffffff; color: #000; padding: 8px 18px; border-radius: 20px;
+      background: #ffb703; color: #000; padding: 8px 18px; border-radius: 20px;
       font-weight: 700; cursor: pointer; transition: all 0.3s; border: none;
       font-family: 'Syncopate', sans-serif; font-size: 0.8rem;
     }
-    .admin-btn:hover { background: #e0e0e0; transform: scale(1.05); }
+    .admin-btn:hover { background: #ffffff; transform: scale(1.05); }
 
     .site-settings-btn {
-      display: none; background: #ffb703; color: #000;
+      background: rgba(255,255,255,0.15); color: #fff; border: 1px solid rgba(255,255,255,0.4);
       padding: 8px 16px; border-radius: 20px; font-weight: 700;
       cursor: pointer; font-family: 'Syncopate', sans-serif;
-      font-size: 0.8rem; border: none; margin-right: 10px;
+      font-size: 0.8rem; margin-right: 10px; transition: all 0.2s;
     }
-    body.admin-mode .site-settings-btn { display: inline-block; }
+    .site-settings-btn:hover { background: #ffb703; color: #000; border-color: #ffb703; }
 
     .mobile-menu-btn {
       display: none; background: none; border: none; color: #fff;
@@ -679,7 +684,8 @@
 
   <header>
     <div class="logo-container">
-      <div class="logo" id="siteLogoText" onclick="handleLogoClick()"></div>
+      <!-- 1번 클릭: 홈으로 이동 / 1.5초 내 5연속 클릭: 시크릿 Admin 모달 오픈 -->
+      <div class="logo" id="siteLogoText" onclick="handleLogoClick(event)"></div>
       <i class="fa-solid fa-pen-to-square inline-edit-icon" onclick="openSiteConfigModal()" title="Edit Logo Text"></i>
     </div>
     
@@ -1194,7 +1200,7 @@
 
     const CLOUD_API_KEY = "$2a$10$STrJtNXDgV2ITq3pF1PHzuJtjeHvJhEHjYS5fu302XnpdwLPdm9ai";
     const BIN_ID = "6a720229f5f4af5e29ea5959";
-    const APP_VERSION = "v4.3_direct_image_speed";
+    const APP_VERSION = "v4.4_secret_admin_triggers";
 
     const defaultSiteConfig = {
       logoText: "STUDIO.",
@@ -1220,19 +1226,16 @@
     };
     const defaultWorks = [];
 
-    // GitHub 링크를 외부 CDN 우회 없이 가장 빠르고 제한 없는 공식 raw.githubusercontent.com 주소로 직결
     function resolveSafeImageUrl(url) {
       if (!url) return '';
       let trimmed = url.trim();
 
-      // 이전에 변환된 jsDelivr 주소가 있다면 다시 공식 raw 서버로 복원 (20MB 용량 제한 해제)
       if (trimmed.includes('cdn.jsdelivr.net/gh/')) {
         trimmed = trimmed
           .replace('https://cdn.jsdelivr.net/gh/', 'https://raw.githubusercontent.com/')
           .replace('@', '/');
       }
 
-      // github.com/.../blob/...?raw=true 형태를 공식 raw.githubusercontent.com 직결 주소로 변환
       if (trimmed.includes('github.com') && (trimmed.includes('/blob/') || trimmed.includes('/raw/'))) {
         trimmed = trimmed
           .replace('github.com/', 'raw.githubusercontent.com/')
@@ -1269,15 +1272,95 @@
       closeMobileNav();
     }
 
-    function handleLogoClick() {
-      if (document.getElementById('detailView').style.display === 'block') {
-        if (window.history.state && window.history.state.view === 'detail') {
-          window.history.back();
-        } else {
-          showMainView(false);
+    // -------------------------------------------------------------
+    // 시크릿 트리거 1: 좌측 상단 로고 5연속 클릭 (PC & 모바일 겸용)
+    // -------------------------------------------------------------
+    let logoClickCount = 0;
+    let logoClickTimer = null;
+
+    function handleLogoClick(e) {
+      logoClickCount++;
+
+      if (logoClickTimer) clearTimeout(logoClickTimer);
+
+      // 1.5초 이내에 5번 연속 클릭 시 관리자 모드 모달 오픈
+      if (logoClickCount >= 5) {
+        logoClickCount = 0;
+        triggerSecretAdminAccess();
+        return;
+      }
+
+      // 일반 클릭 시 홈 화면 복귀 동작 유지
+      logoClickTimer = setTimeout(() => {
+        if (logoClickCount === 1) {
+          if (document.getElementById('detailView').style.display === 'block') {
+            if (window.history.state && window.history.state.view === 'detail') {
+              window.history.back();
+            } else {
+              showMainView(false);
+            }
+          } else {
+            showMainView(false);
+          }
         }
+        logoClickCount = 0;
+      }, 350);
+    }
+
+    // -------------------------------------------------------------
+    // 시크릿 트리거 2: PC 키보드 고나미 커맨드 & 치트키 타이핑
+    // -------------------------------------------------------------
+    function initSecretAdminKeyboard() {
+      const konamiSequence = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+      let konamiIndex = 0;
+      let typedBuffer = '';
+      let bufferTimer = null;
+
+      window.addEventListener('keydown', (e) => {
+        // 입력창(input, textarea, 에디터) 내부에서 타이핑 중일 때는 무시
+        const tag = document.activeElement ? document.activeElement.tagName : '';
+        const isEditable = document.activeElement && document.activeElement.isContentEditable;
+        if (tag === 'INPUT' || tag === 'TEXTAREA' || isEditable) return;
+
+        // 1) 정통 고나미 커맨드(↑↑↓↓←→←→ba) 체크
+        const keyLower = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+        const expectedKey = konamiSequence[konamiIndex];
+        if (keyLower === expectedKey || e.key === expectedKey) {
+          konamiIndex++;
+          if (konamiIndex === konamiSequence.length) {
+            konamiIndex = 0;
+            triggerSecretAdminAccess();
+            return;
+          }
+        } else {
+          konamiIndex = (e.key === konamiSequence[0]) ? 1 : 0;
+        }
+
+        // 2) 시크릿 단어 치트키('gosat' 또는 'admin') 연속 타이핑 체크
+        if (e.key.length === 1) {
+          typedBuffer += e.key.toLowerCase();
+          if (typedBuffer.length > 10) typedBuffer = typedBuffer.slice(-10);
+
+          if (bufferTimer) clearTimeout(bufferTimer);
+          bufferTimer = setTimeout(() => { typedBuffer = ''; }, 2000);
+
+          if (typedBuffer.endsWith('gosat') || typedBuffer.endsWith('admin')) {
+            typedBuffer = '';
+            triggerSecretAdminAccess();
+          }
+        }
+      });
+    }
+
+    function triggerSecretAdminAccess() {
+      closeMobileNav();
+      if (isAdmin) {
+        // 이미 관리자 모드인 경우 한번 더 치면 관리자 모드 종료
+        handleAdminClick();
       } else {
-        showMainView(false);
+        document.getElementById('adminCodeInput').value = '';
+        document.getElementById('authModal').classList.add('active');
+        setTimeout(() => document.getElementById('adminCodeInput').focus(), 100);
       }
     }
 
@@ -1494,16 +1577,14 @@
             </li>
           `;
         });
+        // 평상시에는 보이지 않고 admin-mode일 때만 표시되는 관리 컨트롤 버튼
         navHtml += `
-          <li>
+          <li class="admin-control-li">
             <button class="site-settings-btn" onclick="openSiteConfigModal()"><i class="fa-solid fa-gear"></i> EDIT SITE</button>
-            <button id="toggleAdminBtn" class="admin-btn" onclick="handleAdminClick()">${isAdmin ? '<i class="fa-solid fa-unlock"></i> ADMIN ON' : '<i class="fa-solid fa-lock"></i> ADMIN'}</button>
+            <button id="toggleAdminBtn" class="admin-btn" onclick="handleAdminClick()"><i class="fa-solid fa-unlock"></i> ADMIN OFF</button>
           </li>
         `;
         navList.innerHTML = navHtml;
-        if (isAdmin) {
-          document.getElementById('toggleAdminBtn').style.background = '#ffb703';
-        }
       }
 
       const sectionsContainer = document.getElementById('sectionsContainer');
@@ -1614,7 +1695,6 @@
           } else if (work.type === 'video' || parsedMedia.type === 'video') {
             mediaHtml = `<video src="${parsedMedia.src}" autoplay loop muted playsinline></video>`;
           } else {
-            // 성급한 Unsplash 강제 대체를 제거하고 원본 이미지를 끝까지 불러오도록 개선
             mediaHtml = `<img src="${parsedMedia.src}" alt="${work.title}" loading="eager">`;
           }
 
@@ -2265,8 +2345,6 @@
       if (isAdmin) {
         isAdmin = false;
         document.body.classList.remove('admin-mode');
-        document.getElementById('toggleAdminBtn').innerHTML = `<i class="fa-solid fa-lock"></i> ADMIN`;
-        document.getElementById('toggleAdminBtn').style.background = '#ffffff';
       } else {
         document.getElementById('adminCodeInput').value = '';
         document.getElementById('authModal').classList.add('active');
@@ -2283,8 +2361,6 @@
       if (inputCode === CORRECT_CODE) {
         isAdmin = true;
         document.body.classList.add('admin-mode');
-        document.getElementById('toggleAdminBtn').innerHTML = `<i class="fa-solid fa-unlock"></i> ADMIN ON`;
-        document.getElementById('toggleAdminBtn').style.background = '#ffb703';
         closeAuthModal();
       } else {
         alert('Incorrect admin code.');
@@ -2739,6 +2815,7 @@
       initLanyardPhysics();
       initPasteHandler();
       initSlashCommands();
+      initSecretAdminKeyboard();
 
       if (loader) {
         loader.style.opacity = '0';
